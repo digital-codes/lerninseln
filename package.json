@@ -2,6 +2,7 @@
   "name": "pickUp",
   "version": "0.0.1",
   "private": true,
+  "description": "An Ionic project",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -42,6 +43,5 @@
     "eslint-plugin-vue": "^7.0.0-0",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0"
-  },
-  "description": "An Ionic project"
+  }
 }
