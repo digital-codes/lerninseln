@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "pickUp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -15,8 +15,10 @@
     "@capacitor/haptics": "1.0.1",
     "@capacitor/keyboard": "1.0.1",
     "@capacitor/status-bar": "1.0.1",
+    "@ionic/storage": "^3.0.4",
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "vue": "^3.0.0-0",
     "vue-router": "^4.0.0-0"
