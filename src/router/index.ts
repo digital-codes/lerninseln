@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Tabs from '../views/PickUp.vue'
+import PickUp from '../views/PickUp.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-    component: Tabs,
+    component: PickUp,
     children: [
       {
         path: '',

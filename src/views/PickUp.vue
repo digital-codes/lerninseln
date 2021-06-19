@@ -36,7 +36,7 @@ import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage } from '@i
 import { ellipse, square, triangle } from 'ionicons/icons';
 
 export default {
-  name: 'Tabs',
+  name: 'PickUp',
   components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage },
   setup() {
     return {
