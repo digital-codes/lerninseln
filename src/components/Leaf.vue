@@ -4,14 +4,11 @@
   <l-map style="height:70vh"
     :zoom="zoom"
     :center="center"
-    :maxZoom="maxZoom"
+    :max-zoom="maxZoom"
     @click="addPoint"
     @update:center="centerUpdate"
     @update:zoom="zoomUpdate"
   >
-  <l-geo-json
-    :geojson="geojson" :key="geokey"
-    :options="geojsonOptions" />
 
  <l-tile-layer 
         :url="url" 
@@ -19,25 +16,12 @@
   >
   </l-tile-layer>
 
-  <l-marker :lat-lng="withPopup">
-        <l-popup>
-          <div @click="innerClick">
-            I am a popup
-            <p v-show="showParagraph">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-              sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-              Donec finibus semper metus id malesuada.
-            </p>
-          </div>
-        </l-popup>
-      </l-marker>
-
-    <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
-        @l-add="$event.target.openPopup()"
-    >
-        <l-popup :content="item.content">
-        </l-popup>
-    </l-marker>
+  <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
+      @l-add="$event.target.openPopup()"
+  >
+      <l-popup :content="item.content">
+      </l-popup>
+  </l-marker>
 
 
   
@@ -61,7 +45,6 @@ export default {
   name: "Leaf",
   components: {
     LMap,
-    LGeoJson,
     LTileLayer,
     LPopup,
     LMarker,
@@ -78,36 +61,8 @@ export default {
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: [49.004,  8.403],
       markers : [],
-      geojson: {
-        type: "FeatureCollection",
-        "features": [{
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [8.400170783538151, 49.00709328041582],
-            },
-            "properties": {
-              "NAME": "Staatliches Museum für Naturkunde",
-              "GRUPPENNAME_DE": "Museen, Ausstellungen",
-              "UPDATED": 1538352000000
-            }
-          },
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [8.383544112981063, 49.00070066892714]
-            },
-            "properties": {
-              "NAME": "Kultur-Institut Kunstsammlungen/Städtische Galerie",
-              "GRUPPENNAME_DE": "Museen, Ausstellungen",
-              "UPDATED": 1538352000000
-            }
-          }
-        ]
-      },
+      geojson: {},
       geojsonOptions: {
         /*
         "crs": {
@@ -130,24 +85,9 @@ export default {
     addPoint(e) {
     //console.log(`You clicked Add Point from`,e,"Type e",typeof(e),"Orig: ",e.originalEvent,"Target ",e.target,"Type target ",typeof(e.target))
     if (undefined == e.originalEvent) return
-    const features = this.geojson.features;
     this.startPnt[0] += .0003
     this.startPnt[1] += .0003
     console.log("Start:", this.startPnt)
-    /*
-    const pnt = {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": this.latLng(this.startPnt[0],this.startPnt[1]),
-          },
-          "properties": {
-            "NAME": "xyz",
-          }
-        }
-      features.push(pnt)
-      console.log(features)
-      */
       this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":"323"})
       this.geokey += 1
       //console.log(this.markers)
