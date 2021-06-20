@@ -10,7 +10,6 @@
     @update:zoom="zoomUpdate"
   >
   <l-geo-json
-    v-model="geojson" 
     :geojson="geojson" 
     :options="geojsonOptions" />
 
@@ -19,6 +18,7 @@
         :attribution="attribution"
   >
   </l-tile-layer>
+
   <l-marker :lat-lng="withPopup">
         <l-popup>
           <div @click="innerClick">
@@ -127,7 +127,7 @@ export default {
           "type": "Feature",
           "geometry": {
             "type": "Point",
-            "coordinates": this.startPnt,
+            "coordinates": this.latLng(this.startPnt[0],this.startPnt[1]),
           },
           "properties": {
             "NAME": "xyz",
@@ -139,7 +139,8 @@ export default {
   },
   async beforeMount() {
     // HERE is where to load Leaflet components!
-    const { map, marker, tileLayer, markerLayer, LayerGroup, latLng } = await import("leaflet/dist/leaflet-src.esm");
+    //const { map, marker, tileLayer, markerLayer, LayerGroup, latLng } = await import("leaflet/dist/leaflet-src.esm");
+    const { latLng } = await import("leaflet/dist/leaflet-src.esm");
     //const { LMarker, LPopup, LTileLayer } = await import("leaflet/dist/leaflet-src.esm");
 
     const kaLat = {
@@ -198,6 +199,7 @@ export default {
     //this.geojsonOptions.pointToLayer = (feature, latLng) =>
      // circleMarker(latLng, { radius: 8 });
     //this.geojsonOptions.latlng = (lat, lon) => latLng(lat,lon);
+    this.latLng = (lat, lon) => latLng(lat,lon);
 
     this.startPnt = [49.004,  8.403]
     this.mapIsReady = true;
