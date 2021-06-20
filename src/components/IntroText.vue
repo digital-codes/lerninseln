@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import {IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 
 export default  {

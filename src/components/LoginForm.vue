@@ -6,24 +6,25 @@
     </ion-card-header>
     <ion-card-content>
       <!-- login -->
-      <ion-input 
+      <ion-input id="email" 
         required=true 
         type="email" 
         placeholder="Email" 
         v-model="email" 
         ></ion-input>
-      <ion-input 
+      <ion-input id="pwd" 
         type="password" 
         placeholder="Password" 
         v-model="pwd" 
         ></ion-input>
         <ion-button @click="submit">Submit</ion-button>
+
     </ion-card-content>
   </ion-card>
 
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 
@@ -38,6 +39,23 @@ export default  {
   },
   methods: {
       submit() {
+        // there are issues with typescript compiler
+        // setting lang to ts will break this code whit ionic build
+        // but not with ionic serve.
+        // check transpiler ....
+        /*
+        const i = document.getElementById("email")
+        const iv = (<HTMLInputElement>i).value;
+        console.log(iv)
+        */
+        /*
+        const e = (<HTMLInputElement>document.getElementById("email")).value;
+        //const p = (<HTMLInputElement>document.getElementById("pwd")).value;
+        */
+        //const e = document.getElementById("email").value;
+        //const p = document.getElementById("pwd").value;
+        //const credentials = { "email":e, "pwd": p } ;
+        // this doesn't work with npm build!
         const credentials = {"email":this.email,"pwd":this.pwd}
         console.log("WARNING!!!", credentials)
         if ((credentials.email == "") || (credentials.pwd == ""))
