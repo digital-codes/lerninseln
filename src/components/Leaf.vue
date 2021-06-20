@@ -35,7 +35,8 @@
     <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
         @l-add="$event.target.openPopup()"
     >
-        <l-popup :content="item.content"></l-popup>
+        <l-popup :content="item.content">
+        </l-popup>
     </l-marker>
 
 
