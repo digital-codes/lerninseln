@@ -88,7 +88,7 @@ export default {
       this.startPnt[0] += .0003
       this.startPnt[1] += .0003
       console.log("Start:", this.startPnt)
-      const content = '234<br>Click for more<div v-show="isShow">Content testing<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
+      const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
       this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":content})
       this.geokey += 1
       //console.log(this.markers)
@@ -124,3 +124,8 @@ export default {
 };
 </script>
 
+<style>
+  .popInfo {
+    font-weight: bold;
+  }
+</style>
