@@ -12,13 +12,10 @@
         </ion-toolbar>
       </ion-header>
     
-      <ion-grid>
-    <ion-row>
-      <ion-col>
     <ion-card>
     <ion-card-header>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
       <ion-card-title>Card Title</ion-card-title>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
@@ -27,16 +24,17 @@
     </ion-card-content>
   </ion-card>
 
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
+    <ion-card>
+    <ion-card-header>
+      <ion-card-title>Login Form</ion-card-title>
+      <ion-card-subtitle>... fake, so ...</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
       <!-- login -->
-      <ion-input type="email" placeholder="Email"></ion-input>
-      <ion-input type="password" placeholder="Password"></ion-input>
-      </ion-col>
-    </ion-row>
-      </ion-grid>
+      <ion-input type="email" placeholder="Email" :email="email" ></ion-input>
+      <ion-input type="password" placeholder="Password" :pwd="pwd" ></ion-input>
+    </ion-card-content>
+  </ion-card>
 
 
     </ion-content>
@@ -44,11 +42,17 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCol, IonGrid, IonRow  } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 
 export default  {
   name: 'Intro',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCol, IonGrid, IonRow }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle },
+  data: function() {
+    return {
+      email: "",
+      pwd: "",
+    } 
+  },
 }
 </script>
