@@ -10,7 +10,7 @@
     @update:zoom="zoomUpdate"
   >
   <l-geo-json
-    :geojson="geojson" 
+    :geojson="geojson" :key="geokey"
     :options="geojsonOptions" />
 
  <l-tile-layer 
@@ -31,6 +31,12 @@
           </div>
         </l-popup>
       </l-marker>
+
+    <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
+        @l-add="$event.target.openPopup()"
+    >
+        <l-popup :content="item.content"></l-popup>
+    </l-marker>
 
 
   
@@ -55,10 +61,13 @@ export default {
   components: {
     LMap,
     LGeoJson,
-    LTileLayer
+    LTileLayer,
+    LPopup,
+    LMarker,
   },
   data() {
     return {
+      geokey:0,
       zoom:13,
       maxZoom:17,
       //center1: latlng(49.004,  8.403),
@@ -69,6 +78,7 @@ export default {
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       withPopup: [49.004,  8.403],
+      markers : [],
       geojson: {
         type: "FeatureCollection",
         "features": [{
@@ -120,9 +130,10 @@ export default {
     //console.log(`You clicked Add Point from`,e,"Type e",typeof(e),"Orig: ",e.originalEvent,"Target ",e.target,"Type target ",typeof(e.target))
     if (undefined == e.originalEvent) return
     const features = this.geojson.features;
-    this.startPnt[0] += .0001
-    this.startPnt[1] += .0001
+    this.startPnt[0] += .0003
+    this.startPnt[1] += .0003
     console.log("Start:", this.startPnt)
+    /*
     const pnt = {
           "type": "Feature",
           "geometry": {
@@ -135,6 +146,10 @@ export default {
         }
       features.push(pnt)
       console.log(features)
+      */
+      this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":"323"})
+      this.geokey += 1
+      //console.log(this.markers)
     }
   },
   async beforeMount() {
