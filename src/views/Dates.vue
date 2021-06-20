@@ -12,8 +12,6 @@
         </ion-toolbar>
       </ion-header>
       
-      <ExploreContainer name="Dates page" />
-
       <Cal></Cal>
 
     </ion-content>
@@ -22,11 +20,10 @@
 
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
 import Cal from "@/components/Cal.vue";
 
 export default  {
   name: 'Dates',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Cal }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Cal }
 }
 </script>

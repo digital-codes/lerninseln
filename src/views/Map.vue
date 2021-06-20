@@ -12,7 +12,6 @@
         </ion-toolbar>
       </ion-header>
       
-      <ExploreContainer name="Map page" />
       <Leaf></Leaf>
 
     </ion-content>
@@ -21,11 +20,10 @@
 
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
 import Leaf from "@/components/Leaf.vue";
 
 export default  {
   name: 'Map',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,Leaf }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage,Leaf }
 }
 </script>
