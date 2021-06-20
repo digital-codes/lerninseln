@@ -83,12 +83,13 @@ export default {
       this.currentCenter = center;
     },
     addPoint(e) {
-    //console.log(`You clicked Add Point from`,e,"Type e",typeof(e),"Orig: ",e.originalEvent,"Target ",e.target,"Type target ",typeof(e.target))
-    if (undefined == e.originalEvent) return
-    this.startPnt[0] += .0003
-    this.startPnt[1] += .0003
-    console.log("Start:", this.startPnt)
-      this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":"323"})
+      //console.log(`You clicked Add Point from`,e,"Type e",typeof(e),"Orig: ",e.originalEvent,"Target ",e.target,"Type target ",typeof(e.target))
+      if (undefined == e.originalEvent) return
+      this.startPnt[0] += .0003
+      this.startPnt[1] += .0003
+      console.log("Start:", this.startPnt)
+      const content = '234<br>Click for more<div v-show="isShow">Content testing<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
+      this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":content})
       this.geokey += 1
       //console.log(this.markers)
     }
@@ -109,46 +110,6 @@ export default {
       "min": 8.325,
       "max": 8.49
     };
- 
-    // points
-    //const mark = new LMarker([kaLat.center,kaLon.center]);
-    //const pop = new LPopup("<b><center>Hier bist du</center></b>");
-    //pop.bind(mark)
-    //mark.addTo(LMap);
-    /*    
-    theMarker.bindPopup("<b><center>Hier bist du</center></b>");
-    theMarker.openPopup();
-    theMarker.addTo(poiLayer);
-    //pm.bindPopup("<b>" + kaPois.info[p].name + "</b><br>" + kaPois.info[p].zone + story)
-    //"<img src=\"" + kaPois.info[p].thumb + "\">" + story)
-    //theMap.addLayer(poiLayer);
-    poiLayer.addTo(theMap);
-    //poiLayer.addTo(theMap);
-    */
-    /*
-    // streets
-    const streets = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      //maxBounds: bounds,
-      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-      //id: 'mapbox.streets'
-    })
-    streets.addTo(theMap);
-    //streets.addTo(poiLayer);
-    */
-    /*
-    const streets = new tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      //maxBounds: bounds,
-      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-      //id: 'mapbox.streets'
-    })
-
-    streets.addTo(LTileLayer)
-    */
-    //LMap.setView([kaLat.center, kaLon.center]);
-
-    //theMap.setZoom(12);
 
 
     // And now the Leaflet circleMarker function can be used by the options:
