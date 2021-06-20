@@ -1,18 +1,6 @@
 <template>
     <ion-card>
     <ion-card-header>
-      <ion-card-title>Card Title</ion-card-title>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-      Keep close to Nature's heart... and break clear away, once in awhile,
-      and climb a mountain or spend a week in the woods. Wash your spirit clean.
-    </ion-card-content>
-  </ion-card>
-
-    <ion-card>
-    <ion-card-header>
       <ion-card-title>Login Form</ion-card-title>
       <ion-card-subtitle>... fake, so ...</ion-card-subtitle>
     </ion-card-header>
@@ -52,6 +40,8 @@ export default  {
       submit() {
         const credentials = {"email":this.email,"pwd":this.pwd}
         console.log("WARNING!!!", credentials)
+        if ((credentials.email == "") || (credentials.pwd == ""))
+          return
         this.email = ""
         this.pwd = ""
       },

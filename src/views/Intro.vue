@@ -12,6 +12,8 @@
         </ion-toolbar>
       </ion-header>
     
+    <IntroText></IntroText>
+    
     <LoginForm></LoginForm>
 
     </ion-content>
@@ -19,13 +21,14 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,  } from '@ionic/vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 import LoginForm from '@/components/LoginForm.vue';
+import IntroText from '@/components/IntroText.vue';
 
 export default  {
   name: 'Intro',
-  components: { LoginForm, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: { LoginForm, IntroText, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   data: function() {
     return {
       email: "",
