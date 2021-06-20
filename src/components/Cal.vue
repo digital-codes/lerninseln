@@ -24,7 +24,7 @@
 		</calendar-view>
     </div>
 </template>
-<script>
+<script> 
 // https://tallent.us/vue-simple-calendar/
 // https://github.com/richardtallent/vue-simple-calendar
 // https://github.com/richardtallent/vue-simple-calendar-sample
