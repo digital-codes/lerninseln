@@ -28,7 +28,8 @@
     "core-js": "^3.6.5",
     "leaflet": "^1.7.1",
     "vue": "^3.0.0-0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "vue-simple-calendar": "^6.0.1"
   },
   "devDependencies": {
     "@capacitor/cli": "3.0.1",
