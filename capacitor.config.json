@@ -1,6 +1,6 @@
 {
 	"appId": "io.ionic.starter",
-	"appName": "app",
+	"appName": "PickUp",
 	"webDir": "dist",
 	"bundledWebRuntime": false
 }
