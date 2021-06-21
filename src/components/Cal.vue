@@ -63,6 +63,11 @@
               startDate: "2021-06-22",
               title: "Single-day item with a long title",
             }, 
+            {
+              id: "e1",
+              startDate: "2021-07-13",
+              title: "Fischertechik",
+            }, 
         ],
         }
 		},

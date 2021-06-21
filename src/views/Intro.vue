@@ -2,7 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Intro</ion-title>
+        <ion-title>Intro
+        <img alt="logo" height="40" style="vertical-align:middle"  src="/assets/img/logo.png" > 
+        </ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
