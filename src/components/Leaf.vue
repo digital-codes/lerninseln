@@ -92,7 +92,15 @@ export default {
       this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":content})
       this.geokey += 1
       //console.log(this.markers)
-    }
+    },
+    initialize() {
+      for (let i=0;i<5;i++) {
+        const pnt =  [this.startPnt[0] += .0005 * i, this.startPnt[1] += .0005]
+        const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
+        this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
+        this.geokey += 1
+      }
+    },
   },
   async beforeMount() {
     // HERE is where to load Leaflet components!
@@ -120,6 +128,9 @@ export default {
 
     this.startPnt = [49.004,  8.403]
     this.mapIsReady = true;
+
+    this.initialize();
+
   },
 };
 </script>
