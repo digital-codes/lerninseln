@@ -2,7 +2,7 @@
     <ion-card>
     <ion-card-header>
       <ion-card-title>Login Form</ion-card-title>
-      <ion-card-subtitle>... fake, so ...</ion-card-subtitle>
+      <ion-card-subtitle>Anmeldung nur für Buchung nötig, Stöbern geht auch ohne ...</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <!-- login -->

@@ -12,17 +12,17 @@
         </ion-toolbar>
       </ion-header>
       
-      <ExploreContainer name="Topics page" />
+      <Providers></Providers>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+import Providers from '@/components/Providers.vue';
 
 export default  {
   name: 'Topics',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
+  components: { Providers,IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
 }
 </script>
