@@ -3,27 +3,23 @@
     <ion-card class="w">
     <ion-card-header>
       <ion-card-title>Anzeigen</ion-card-title>
-      <ion-card-subtitle>...</ion-card-subtitle>
+      <ion-card-subtitle>Click Thumbnail to zoom</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
 
-  <ion-list>
-    <ion-item v-for="item in items" :key="item.src">
-      <ion-thumbnail slot="end" class="qrcode">
-        <ion-img :src="item.src" @click="zoom(item.id)"></ion-img>
-      </ion-thumbnail>
-      <ion-label class="qrlabel">{{item.text}}</ion-label>
-    </ion-item>
-  </ion-list>
 
-  <!--
-  <div>
-      <p>bla bla bla</p>
-      <ion-label class="qrlabel">bla vla dsd</ion-label>
-      <ion-img class="qrcode" src="/assets/img/qr1.png"></ion-img>
-  </div>
-  -->
+    <ul class="list">
+      <li v-for="item in items"  :key="item.id" class="listItem">
+            <h2 class="qrlabel">{{item.text}}</h2>
+            <img 
+              :src="item.src"  
+              :class="{ 'qrcode': isZoomed }"
+              @click="zoom(item.id)" 
+            >
+      </li>
+    </ul>
+
 
     </ion-card-content>
   </ion-card>
@@ -32,19 +28,16 @@
 
 <script> 
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, 
-  IonList, IonItem, 
-  IonLabel, IonImg, IonThumbnail,   
+import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle,    
   } from '@ionic/vue';
 import { defineComponent } from 'vue'; // ref for modal
 
 export default defineComponent({
   components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, 
-    IonList, IonItem,  
-    IonLabel, IonImg,    IonThumbnail, 
   },
   data: function() {
     return {
+      isZoomed: false,
       items: [{
       'text': '2021-06-21 12:00',
       'src': '/assets/img/qr1.png',
@@ -63,6 +56,8 @@ export default defineComponent({
   methods:{
     zoom(e) {
       console.log(e)
+      this.isZoomed = !this.isZoomed
+      console.log("zoomed:",this.isZoomed)
     }
   }
 }); 
@@ -70,12 +65,34 @@ export default defineComponent({
 
 <style scoped>
 
-.qrcode {
+img {
+  width:64px;
+  height:64px;
+}
 
+.qrcode {
+  width:90%;
+  height:90%;
 }
 
 .w {
   width:100%;
+}
+
+.list {
+  list-style: none;
+  padding: 0 2% 0 2%;
+}
+
+.listItem {
+  padding-top: .3rem;
+  padding-bottom: 1rem;
+  border-bottom: solid 1px;
+  border-bottom-color: #444;
+}
+
+h2 {
+  padding-bottom: .2rem;
 }
 
 </style>

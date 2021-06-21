@@ -8,7 +8,7 @@
 
     <ion-card-content>
 
-    <Event></Event>
+    <Events></Events>
 
     </ion-card-content>
   </ion-card>
@@ -19,10 +19,10 @@
 
 import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import Event from '@/components/Event.vue';
+import Events from '@/components/Events.vue';
 
 export default defineComponent({
-  components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, Event },
+  components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, Events },
 }); 
 </script>
 
@@ -30,4 +30,5 @@ export default defineComponent({
 .w {
   width:100%;
 }
+
 </style>
