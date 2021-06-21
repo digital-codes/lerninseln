@@ -3,27 +3,27 @@
     <ion-tabs>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="intro" href="/intro">
-          <ion-icon :icon="triangle" />
+          <ion-icon :icon="homeOutline" />
           <ion-label>Intro</ion-label>
         </ion-tab-button>
           
         <ion-tab-button tab="topics" href="/topics">
-          <ion-icon :icon="ellipse" />
+          <ion-icon :icon="albumsOutline" />
           <ion-label>Topics</ion-label>
         </ion-tab-button>
         
         <ion-tab-button tab="map" href="/map">
-          <ion-icon :icon="square" />
+          <ion-icon :icon="mapOutline" />
           <ion-label>Map</ion-label>
         </ion-tab-button>
         
         <ion-tab-button tab="dates" href="/dates">
-          <ion-icon :icon="square" />
+          <ion-icon :icon="calendarNumberOutline" />
           <ion-label>Dates</ion-label>
         </ion-tab-button>
         
         <ion-tab-button tab="tickets" href="/tickets">
-          <ion-icon :icon="square" />
+          <ion-icon :icon="cartOutline" />
           <ion-label>Tickets</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -31,18 +31,26 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script >
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage } from '@ionic/vue';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { 
+  homeOutline, 
+  albumsOutline,
+  mapOutline,
+  calendarNumberOutline,
+  cartOutline,
+ } from 'ionicons/icons';
 
 export default {
   name: 'PickUp',
   components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage },
   setup() {
     return {
-      ellipse, 
-      square, 
-      triangle,
+      homeOutline, 
+      albumsOutline,
+      mapOutline,
+      calendarNumberOutline,
+      cartOutline,
     }
   }
 }
