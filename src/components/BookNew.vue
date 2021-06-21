@@ -3,7 +3,7 @@
     <ion-card class="w">
     <ion-card-header>
       <ion-card-title>Reservieren</ion-card-title>
-      <ion-card-subtitle>...</ion-card-subtitle>
+      <ion-card-subtitle>Slide left to Show Codes</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>

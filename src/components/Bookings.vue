@@ -1,6 +1,6 @@
 <template>
 
- <ion-slides pager="true" :options="slideOpts">
+ <ion-slides pager="true"  :options="slideOpts">
     <ion-slide>
     <BookNew></BookNew>
     </ion-slide>

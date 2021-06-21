@@ -3,6 +3,7 @@
     <ion-card class="w">
     <ion-card-header>
       <ion-card-title>Anzeigen</ion-card-title>
+      <ion-card-subtitle>Slide right to make reservation</ion-card-subtitle>
       <ion-card-subtitle>Click Thumbnail to zoom</ion-card-subtitle>
     </ion-card-header>
 
