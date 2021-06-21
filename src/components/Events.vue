@@ -6,7 +6,7 @@
           :date=item.date 
           :text=item.text 
           :id=item.id 
-          @click="click(item.id)"
+          @click="open(item.id)"
           ></Event>
   </li>
 </ul>
@@ -19,6 +19,16 @@
     <br>
     {{ selection.text }} 
     </p> 
+    <p>Freie Plätze: {{ selection.avail }} </p>
+
+    <div class="eventAccess"  >
+    <Ion-item>
+      <Ion-button @click="access(selection.id, false)" v-model=tickets>-</Ion-button>
+        Tickets: {{ tickets }}
+      <Ion-button @click="access(selection.id, true)" v-model=tickets>+</Ion-button>
+    </Ion-item>
+    </div>
+
     <Ion-button  @click="modalOpen = false">
       Fertig
     </Ion-button>
@@ -29,7 +39,7 @@
 
 <script> 
 
-import { IonSlides, IonSlide, } from '@ionic/vue';
+import { IonSlides, IonSlide, IonButton, IonItem } from '@ionic/vue';
 
 import { defineComponent } from 'vue'; 
 import Event from '@/components/Event.vue';
@@ -41,27 +51,43 @@ export default defineComponent({
       items: [{
       'date': '2021-06-21 12:00',
       'text': 'Fischertechnik',
+      'avail': 1,
       "id":1,
     }, {
       'date': '2021-06-25 10:00',
       'text': 'Schach',
+      'avail': 10,
       "id":2,
     }, {
       'date': '2021-07-05 09:30',
       'text': 'Band-Projekt',
+      'avail': 0,
       "id":3,
     }],
     modalOpen:false,
     selection:0,
+    tickets: 0
     }
   },
   methods:{
-    click(e) {
+    open(e) {
       console.log(e,this.items[e-1].text)
       this.selection = this.items[e-1]
       this.modalOpen = true;
-    }
-  }
+      this.tickets = 0
+    },
+    access(id,e) {
+      console.log(id,e)
+      const avail = this.items[id-1].avail
+      if (e) {
+        if (avail - this.tickets > 0) {
+          this.tickets++
+        }
+      } else {
+        if (this.tickets) this.tickets --
+      }
+    },
+  },
 }); 
 </script>
 
@@ -113,6 +139,9 @@ button {
   padding: 5px;
 }
 
+.eventAccess button {
+  display: inline-block;
+}
 
 </style>
 
