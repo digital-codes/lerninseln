@@ -1,6 +1,6 @@
 <template>
 
- <ion-slides pager="true"  :options="slideOpts">
+ <ion-slides pager="true" :options=slideOpts >
     <ion-slide>
     <BookNew></BookNew>
     </ion-slide>
@@ -27,7 +27,7 @@ export default defineComponent({
     // Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
     const slideOpts = {
       initialSlide: 0,
-      speed: 400
+      speed: 400,
     };
     return { slideOpts }
   }
