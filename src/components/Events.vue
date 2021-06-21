@@ -29,7 +29,7 @@
     </Ion-item>
     </div>
 
-    <Ion-button  @click="modalOpen = false">
+    <Ion-button  @click="presentActionSheet(selection)">
       Fertig
     </Ion-button>
   </div>
@@ -39,13 +39,14 @@
 
 <script> 
 
-import { IonSlides, IonSlide, IonButton, IonItem } from '@ionic/vue';
+import { IonButton, IonItem, actionSheetController } from '@ionic/vue';
+import { rocket, trash,  } from 'ionicons/icons';
 
 import { defineComponent } from 'vue'; 
 import Event from '@/components/Event.vue';
 
 export default defineComponent({
-  components: {Event},
+  components: {Event, IonButton},
   data: function() {
     return {
       items: [{
@@ -86,6 +87,40 @@ export default defineComponent({
       } else {
         if (this.tickets) this.tickets --
       }
+    },
+    purchase(id,ticks) {
+      console.log("Buy: ",id, ticks)
+    },
+    async presentActionSheet(sel) {
+      this.modalOpen = false;
+      if (this.tickets == 0) {
+        console.log("No tickets ordered",sel.id)
+        return
+      }
+      const actionSheet = await actionSheetController
+        .create({
+          header: 'Buchung',
+          buttons: [
+            {
+              text: 'Bestätigen',
+              icon: rocket,
+              handler: () => {
+                this.purchase(sel.id,this.tickets)
+              }
+            },
+            {
+              text: 'Abbrechen',
+              icon: trash,
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked')
+              },
+            },
+          ],
+        });
+      await actionSheet.present();
+      const { role } = await actionSheet.onDidDismiss();
+      console.log('onDidDismiss resolved with role', role);
     },
   },
 }); 
