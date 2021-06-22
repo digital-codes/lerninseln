@@ -58,7 +58,9 @@ DROP_ALL = True
 
 ######### Part 1 ############
 
-engine = create_engine('sqlite:///lerninseln.db', echo=True)
+# engine = create_engine('sqlite:///lerninseln.db', echo=True)
+engine = create_engine('mysql://lerninseln:lerninseln@localhost/lerninseln', echo=True)
+
 Base = declarative_base()
 
 # to drop the table initially,
@@ -73,21 +75,42 @@ if DROP_ALL:
 
 
 ########################################################################
+class User(Base):
+    """"""
+    __tablename__ = "user"
+ 
+    id = Column(Integer, primary_key=True)
+    username = Column(String(255), nullable=False)
+    firstname = Column(String(255), nullable=False)
+    lastname = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False)
+    pwd = Column(String(255), nullable=False)
+
+    #----------------------------------------------------------------------
+    def __init__(self, username, firstname, lastname, email, pwd):
+        """"""
+        self.username = username
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email = email
+        self.pwd = pwd
+
+########################################################################
 class Provider(Base):
     """"""
     __tablename__ = "provider"
  
     id = Column(Integer, primary_key=True)
-    country = Column(String)
-    city = Column(String, nullable=False)
-    citycode = Column(String, nullable=False)
-    street = Column(String, nullable=False)
-    streetnum = Column(String)
-    latlon = Column(String) # json array
-    person = Column(String)
-    email = Column(String, nullable=False)
-    phone = Column(String)
-    www = Column(String, nullable=False)
+    country = Column(String(255))
+    city = Column(String(255), nullable=False)
+    citycode = Column(String(255), nullable=False)
+    street = Column(String(255), nullable=False)
+    streetnum = Column(String(255))
+    latlon = Column(String(255)) # json array
+    person = Column(String(255))
+    email = Column(String(255), nullable=False)
+    phone = Column(String(255))
+    www = Column(String(255), nullable=False)
 
 
     #----------------------------------------------------------------------
@@ -107,35 +130,14 @@ class Provider(Base):
 
 
 ########################################################################
-class User(Base):
-    """"""
-    __tablename__ = "user"
- 
-    id = Column(Integer, primary_key=True)
-    username = Column(String, nullable=False)
-    firstname = Column(String, nullable=False)
-    lastname = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    pwd = Column(String, nullable=False)
-
-    #----------------------------------------------------------------------
-    def __init__(self, username, firstname, lastname, email, pwd):
-        """"""
-        self.username = username
-        self.firstname = firstname
-        self.lastname = lastname
-        self.email = email
-        self.pwd = pwd
-
-########################################################################
 class Category(Base):
     """"""
     __tablename__ = "category"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    color = Column(String, nullable=False)
-    logo = Column(String)
+    name = Column(String(255), nullable=False)
+    color = Column(String(255), nullable=False)
+    logo = Column(String(255))
                             
 
     #----------------------------------------------------------------------
@@ -151,8 +153,8 @@ class Code(Base):
     __tablename__ = "code"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    name = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False)
     count = Column(Integer, nullable=False)
     ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"))
     # next one only for sqlalch orm to get access to addr.user.<key>
@@ -169,69 +171,63 @@ class Code(Base):
 
 
 ########################################################################
-class Addr(Base):
+class Event(Base):
     """"""
-    __tablename__ = "addr"
+    __tablename__ = "event"
  
     id = Column(Integer, primary_key=True)
-    addr = Column(String)
-    email = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"))
+    title = Column(String(255), nullable=False)
+    date = Column(String(255), nullable=False)
+    time = Column(String(255), nullable=False)
+    cost = Column(Integer, nullable=False)
+    costinfo = Column(String(255))
+
+    provider_id = Column(Integer, ForeignKey('provider.id', ondelete="CASCADE"))
+    provider = relationship("Provider", back_populates="event")
+
+    category_id = Column(Integer, ForeignKey('category.id', ondelete="CASCADE"))
     # next one only for sqlalch orm to get access to addr.user.<key>
-    user = relationship("User", back_populates="addr")
+    category = relationship("Category", back_populates="event")
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, addr, email, user):
+    def __init__(self, title, date, time, cost, costinfo, provider, category):
         """"""
-        self.addr = addr
-        self.email = email
-        self.user_id = user
+        self.title = title
+        self.date = date
+        self.time = time
+        self.cost = cost
+        self.costinfo = costinfo
+        self.provider_id = provider
+        self.category_id = category
 
 ########################################################################
-class Addr(Base):
+class Ticket(Base):
     """"""
-    __tablename__ = "addr"
+    __tablename__ = "ticket"
  
     id = Column(Integer, primary_key=True)
-    addr = Column(String)
-    email = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"))
+    avail = Column(Integer, nullable=False)
+    reserved = Column(Integer, nullable=False)
+    event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"))
     # next one only for sqlalch orm to get access to addr.user.<key>
-    user = relationship("User", back_populates="addr")
+    event = relationship("Event", back_populates="ticket")
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, addr, email, user):
+    def __init__(self, avail, reserved, event):
         """"""
-        self.addr = addr
-        self.email = email
-        self.user_id = user
+        self.addr = avail
+        self.email = reserved
+        self.user_id = event
 
-########################################################################
-class Addr(Base):
-    """"""
-    __tablename__ = "addr"
- 
-    id = Column(Integer, primary_key=True)
-    addr = Column(String)
-    email = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"))
-    # next one only for sqlalch orm to get access to addr.user.<key>
-    user = relationship("User", back_populates="addr")
-                            
-
-    #----------------------------------------------------------------------
-    def __init__(self, addr, email, user):
-        """"""
-        self.addr = addr
-        self.email = email
-        self.user_id = user
 
 # see above, only python
-User.addr = relationship("Addr", order_by=Addr.id, \
-    back_populates="user",cascade="all, delete, delete-orphan")
+Event.ticket = relationship("Ticket", order_by=Ticket.id, \
+    back_populates="event",cascade="all, delete, delete-orphan")
 
+
+##############################
 # create tables
 Base.metadata.create_all(engine)
 
@@ -240,6 +236,9 @@ Base.metadata.create_all(engine)
 # create a Session
 Session = sessionmaker(bind=engine)
 session = Session()
+
+session.commit()
+sys.exit()
 
 # Create objects  
 user = User("james","James","Boogie","MIT")
