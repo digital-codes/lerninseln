@@ -20,6 +20,7 @@ import sys
 import pandas as pd
 import json
 
+# see https://nitratine.net/blog/post/how-to-hash-passwords-in-python/
 import hashlib
 import os
 
@@ -340,7 +341,7 @@ USERS = [
     ("user3","first","last2","email3@nowhe.re","123456")
     ]
 
-salt = os.urandom(32) # Remember this
+salt = os.urandom(32) # Remember this. 32 bytes
 
 for u in USERS:
     key = hashlib.pbkdf2_hmac(
@@ -349,7 +350,9 @@ for u in USERS:
         salt, # Provide the salt
         100000 # It is recommended to use at least 100,000 iterations of SHA-256 
     )
-    user = User(*u[:-1],key.hex())
+    pwd = salt + key
+    hexPwd = pwd.hex()
+    user = User(*u[:-1],hexPwd)
     try:
         session.add(user)
         session.commit()
@@ -359,6 +362,18 @@ for u in USERS:
         session.rollback()
         continue # check audience and category still ##continue
     print("New user: ",u[0])
+
+    # verify pwd
+    p = bytes.fromhex(hexPwd)
+    s = bytes(p[:32])
+    k = bytes(p[32:])
+    new_key = hashlib.pbkdf2_hmac(
+    'sha256',
+    u[4].encode('utf-8'), # Convert the password to bytes
+    s, 100000 )
+    print("Pwd verified: ", new_key == k)
+
+    
 
 ######### generate some event ########
 
