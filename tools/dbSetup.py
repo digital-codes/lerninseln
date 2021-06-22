@@ -141,7 +141,7 @@ class Provider(Base):
         """"""
         self.name = name
         self.info = info
-        self.countr = country
+        self.country = country
         self.city = city
         self.citycode = citycode
         self.street = street
