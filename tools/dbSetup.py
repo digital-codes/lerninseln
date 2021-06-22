@@ -20,6 +20,10 @@ import sys
 import pandas as pd
 import json
 
+import hashlib
+import os
+
+
 ######### Notes #############
 ##Users familiar with the syntax of CREATE TABLE may notice
 ##that the VARCHAR columns were generated without a length;
@@ -226,7 +230,7 @@ class Event(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, title, date, time, cost, costinfo, provider, category):
+    def __init__(self, title, date, time, cost, costinfo, provider, category, audience):
         """"""
         self.title = title
         self.date = date
@@ -235,6 +239,7 @@ class Event(Base):
         self.costinfo = costinfo
         self.provider_id = provider
         self.category_id = category
+        self.audience_id = audience
 
 
 
@@ -244,9 +249,9 @@ class Ticket(Base):
     __tablename__ = "ticket"
  
     id = Column(Integer, primary_key=True)
-    avail = Column(Integer, nullable=False)
+    avail = Column(Integer, nullable=False)  # cannot use not nullable on ints from 0
     reserved = Column(Integer, nullable=False)
-    event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"))
+    event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
     # next one only for sqlalch orm to get access to addr.user.<key>
     event = relationship("Event", back_populates="ticket")
                             
@@ -254,9 +259,9 @@ class Ticket(Base):
     #----------------------------------------------------------------------
     def __init__(self, avail, reserved, event):
         """"""
-        self.addr = avail
-        self.email = reserved
-        self.user_id = event
+        self.avail = avail
+        self.reserved = reserved
+        self.event_id = event
 
 
 # see above, only python
@@ -327,8 +332,61 @@ if DROP_ALL:
             session.commit()
             
         
+######### generate some users ########
 
-sys.exit()
+USERS = [
+    ("user1","first1","last1","email1@nowhe.re","1234"),
+    ("user2","first2","last1","email2@nowhe.re","12345"),
+    ("user3","first","last2","email3@nowhe.re","123456")
+    ]
+
+salt = os.urandom(32) # Remember this
+
+for u in USERS:
+    key = hashlib.pbkdf2_hmac(
+        'sha256', # The hash digest algorithm for HMAC
+        u[4].encode('utf-8'), # Convert the password to bytes
+        salt, # Provide the salt
+        100000 # It is recommended to use at least 100,000 iterations of SHA-256 
+    )
+    user = User(*u[:-1],key.hex())
+    try:
+        session.add(user)
+        session.commit()
+    except IntegrityError:
+        print("Duplication on user",u)
+        # important to rollback, else cannot complete
+        session.rollback()
+        continue # check audience and category still ##continue
+    print("New user: ",u[0])
+
+######### generate some event ########
+
+EVENTS = [
+    ("Schach","2021-06-30","10:00",0,"Kostenlos",1,1,3),
+    ("Sport","2021-07-13","19:00",0,"Kostenlos",10,2,2),
+    ("Robots","2021-07-20","15:00",0,"Kostenlos",20,3,1)
+    ]
+
+for e in EVENTS:
+    event = Event(*e)
+    session.add(event)
+    session.commit()
+    print("New event: ",e)
+
+######### generate some tickets ########
+
+TICKETS = [
+    (10,0,1),
+    (20,0,2),
+    (10,0,3)
+    ]
+
+for t in TICKETS:
+    ticket = Ticket(*t)
+    session.add(ticket)
+    session.commit()
+    print("New ticket: ",t)
 
 
 ######### Part 3 ############
@@ -337,10 +395,12 @@ sys.exit()
 for u in session.query(User).order_by(User.id):
     print (u.firstname, u.lastname)
 
-for a in session.query(Addr).order_by(Addr.id):
-    print (a.addr, a.email, a.user_id)
+for p in session.query(Provider).order_by(Provider.id):
+    print (p.name)
     # optional, see above
     # print (a.user.username)
+
+sys.exit()
 
 ######### Part 4 ############
 
