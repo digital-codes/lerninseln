@@ -15,6 +15,9 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 import sys
 
+import pandas as pd
+import json
+
 ######### Notes #############
 ##Users familiar with the syntax of CREATE TABLE may notice
 ##that the VARCHAR columns were generated without a length;
@@ -26,7 +29,7 @@ import sys
 
 ## Tables ##
 # providers
-#   id, city, plz, country, street, streetnum, geo, email, phone, www
+#   id, name, city, plz, country, street, streetnum, geo, email, phone, www
 
 # categories
 #   id, name, logo (base64 img)
@@ -58,21 +61,25 @@ DROP_ALL = True
 
 ######### Part 1 ############
 
-# engine = create_engine('sqlite:///lerninseln.db', echo=True)
-engine = create_engine('mysql://lerninseln:lerninseln@localhost/lerninseln', echo=True)
+engine = create_engine('sqlite:///lerninseln.db', echo=True)
+# engine = create_engine('mysql://lerninseln:lerninseln@localhost/lerninseln', echo=True)
 
 Base = declarative_base()
 
 # to drop the table initially,
 # check if it exists via schema metadata
-metadata = MetaData()
-metadata.reflect(bind=engine)
 
 if DROP_ALL:
-    for table in reversed(metadata.sorted_tables):
-        engine.execute(table.delete())
+    metadata1 = MetaData()
+    metadata1.reflect(bind=engine)
+    for table in reversed(metadata1.sorted_tables):
+        #engine.execute(table.delete()) # deletes content, but not table
+        Base.metadata.drop_all(engine, [table], checkfirst=True)
     print("All tables dropped")
 
+
+metadata = MetaData()
+metadata.reflect(bind=engine)
 
 ########################################################################
 class User(Base):
@@ -101,6 +108,7 @@ class Provider(Base):
     __tablename__ = "provider"
  
     id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
     country = Column(String(255))
     city = Column(String(255), nullable=False)
     citycode = Column(String(255), nullable=False)
@@ -114,9 +122,10 @@ class Provider(Base):
 
 
     #----------------------------------------------------------------------
-    def __init__(self, country, city, citycode, street,
+    def __init__(self, name, country, city, citycode, street,
                  streetnum, latlon, person, email, phone, www):
         """"""
+        self.name = name
         self.countr = country
         self.city = city
         self.citycode = citycode
@@ -201,6 +210,8 @@ class Event(Base):
         self.provider_id = provider
         self.category_id = category
 
+
+
 ########################################################################
 class Ticket(Base):
     """"""
@@ -226,6 +237,16 @@ class Ticket(Base):
 Event.ticket = relationship("Ticket", order_by=Ticket.id, \
     back_populates="event",cascade="all, delete, delete-orphan")
 
+Ticket.code = relationship("Code", order_by=Code.id, \
+    back_populates="ticket",cascade="all, delete, delete-orphan")
+
+Provider.event = relationship("Event", order_by=Event.id, \
+    back_populates="provider",cascade="all, delete, delete-orphan")
+
+Category.event = relationship("Event", order_by=Event.id, \
+    back_populates="category",cascade="all, delete, delete-orphan")
+
+
 
 ##############################
 # create tables
@@ -237,28 +258,29 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-session.commit()
+
+if DROP_ALL:
+    # read initial providers
+    p = pd.read_csv("lernorte1.csv")
+    def geo(x):
+        return json.dumps({"lat":x.lat,"lon":x.lon})
+    # create geo string
+    p["geo"] = p.apply(geo,axis=1)
+
+    for r in p.itertuples():
+        print(r)
+        provider = Provider(r.Name,"Deutschland",r.Ort,r.PLZ,
+                            " ".join(r.Strasse.split(" ")[:-1]),r.Strasse.split(" ")[-1],
+                            r.geo,"","","","")
+        session.add(provider)
+        
+    session.commit()
+    
+
+
+    
+
 sys.exit()
-
-# Create objects  
-user = User("james","James","Boogie","MIT")
-session.add(user)
-# need to commit in order to update id !
-session.commit()
-print("Created user: ",user.id)
-
-addr = Addr("address","123@abc",user.id)
-session.add(addr)
-
-
-user = User("lara","Lara","Miami","UU")
-session.add(user)
-
-user = User("eric","Eric","York","Stanford")
-session.add(user)
-
-# commit the record the database
-session.commit()
 
 
 ######### Part 3 ############
