@@ -12,6 +12,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm import sessionmaker
 
+from sqlalchemy.exc import IntegrityError
+
 import datetime
 import sys
 
@@ -29,13 +31,16 @@ import json
 
 ## Tables ##
 # providers
-#   id, name, city, plz, country, street, streetnum, geo, email, phone, www
+#   id, name, info, city, plz, country, street, streetnum, geo, email, phone, www
 
 # categories
-#   id, name, logo (base64 img)
+#   id, name, color, iconUrl
+
+# audience # zeilgruppe
+#   id, type
 
 # events
-#   id, title,date,time,cost (normally 0), category, provider id, category id
+#   id, title,date,time,cost (normally 0), category, provider id, category id, audiency id
 
 # tickets
 #   id, avail, reserved, event id
@@ -58,11 +63,14 @@ TABLES = [
 
 # initialize
 DROP_ALL = True
+USE_SQLITE = True
 
 ######### Part 1 ############
 
-engine = create_engine('sqlite:///lerninseln.db', echo=True)
-# engine = create_engine('mysql://lerninseln:lerninseln@localhost/lerninseln', echo=True)
+if USE_SQLITE:
+    engine = create_engine('sqlite:///lerninseln.db', echo=False)
+else:
+    engine = create_engine('mysql://lerninseln:lerninseln@localhost/lerninseln', echo=True)
 
 Base = declarative_base()
 
@@ -87,10 +95,10 @@ class User(Base):
     __tablename__ = "user"
  
     id = Column(Integer, primary_key=True)
-    username = Column(String(255), nullable=False)
+    username = Column(String(255), nullable=False, unique=True)
     firstname = Column(String(255), nullable=False)
     lastname = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False, unique=True)
     pwd = Column(String(255), nullable=False)
 
     #----------------------------------------------------------------------
@@ -108,7 +116,8 @@ class Provider(Base):
     __tablename__ = "provider"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False,unique=True)
+    info = Column(String(4096))
     country = Column(String(255))
     city = Column(String(255), nullable=False)
     citycode = Column(String(255), nullable=False)
@@ -122,10 +131,11 @@ class Provider(Base):
 
 
     #----------------------------------------------------------------------
-    def __init__(self, name, country, city, citycode, street,
+    def __init__(self, name, info, country, city, citycode, street,
                  streetnum, latlon, person, email, phone, www):
         """"""
         self.name = name
+        self.info = info
         self.countr = country
         self.city = city
         self.citycode = citycode
@@ -144,17 +154,31 @@ class Category(Base):
     __tablename__ = "category"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False, unique=True)
     color = Column(String(255), nullable=False)
-    logo = Column(String(255))
+    iconUrl = Column(String(255))
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, name,color, logo):
+    def __init__(self, name,color, iconUrl):
         """"""
         self.name = name
         self.color = color
-        self.logo = logo
+        self.iconUrl = iconUrl
+
+########################################################################
+class Audience(Base):
+    """"""
+    __tablename__ = "audience"
+ 
+    id = Column(Integer, primary_key=True)
+    description = Column(String(1024), nullable=False, unique=True)
+                            
+
+    #----------------------------------------------------------------------
+    def __init__(self, description):
+        """"""
+        self.description = description
 
 ########################################################################
 class Code(Base):
@@ -195,8 +219,10 @@ class Event(Base):
     provider = relationship("Provider", back_populates="event")
 
     category_id = Column(Integer, ForeignKey('category.id', ondelete="CASCADE"))
-    # next one only for sqlalch orm to get access to addr.user.<key>
     category = relationship("Category", back_populates="event")
+                            
+    audience_id = Column(Integer, ForeignKey('audience.id', ondelete="CASCADE"))
+    audience = relationship("Audience", back_populates="event")
                             
 
     #----------------------------------------------------------------------
@@ -246,6 +272,8 @@ Provider.event = relationship("Event", order_by=Event.id, \
 Category.event = relationship("Event", order_by=Event.id, \
     back_populates="category",cascade="all, delete, delete-orphan")
 
+Audience.event = relationship("Event", order_by=Event.id, \
+    back_populates="audience",cascade="all, delete, delete-orphan")
 
 
 ##############################
@@ -268,17 +296,37 @@ if DROP_ALL:
     p["geo"] = p.apply(geo,axis=1)
 
     for r in p.itertuples():
-        print(r)
-        provider = Provider(r.Name,"Deutschland",r.Ort,r.PLZ,
-                            " ".join(r.Strasse.split(" ")[:-1]),r.Strasse.split(" ")[-1],
-                            r.geo,"","","","")
-        session.add(provider)
+        #print(r)
+        try:
+            provider = Provider(r.Name,r.description,"Deutschland",r.Ort,r.PLZ,
+                                " ".join(r.Strasse.split(" ")[:-1]),r.Strasse.split(" ")[-1],
+                                r.geo,"","","","")
+            session.add(provider)
+            session.commit()
+            print("Provider inserted ",r.Name)
+            
+        # check for integrity error due to dupications
+        except IntegrityError:
+            print("Duplicate provider",r.Name)
+            # important to rollback, else cannot complete
+            session.rollback()
+            pass # check audience and category still ##continue
+
+        # alternative was to check existence
+        # if OK, check category and audience
+        if None == session.query(Category).filter(Category.name == r.Beschreibung).first():
+            print("Insert category: ",r.Beschreibung)
+            category = Category(r.Beschreibung,"#00ff00","")
+            session.add(category)
+            session.commit()
+            
+        if None == session.query(Audience).filter(Audience.description == r.Typ).first():
+            print("Insert audience: ",r.Typ)
+            audiency = Audience(r.Typ)
+            session.add(audiency)
+            session.commit()
+            
         
-    session.commit()
-    
-
-
-    
 
 sys.exit()
 
