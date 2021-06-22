@@ -68,7 +68,7 @@ TABLES = [
 
 # initialize
 DROP_ALL = True
-USE_SQLITE = True
+USE_SQLITE = False
 
 ######### Part 1 ############
 
@@ -295,7 +295,7 @@ session = Session()
 
 if DROP_ALL:
     # read initial providers
-    p = pd.read_csv("lernorte1.csv")
+    p = pd.read_csv("lernorte1.csv",encoding="utf-8")
     def geo(x):
         return json.dumps({"lat":x.lat,"lon":x.lon})
     # create geo string
