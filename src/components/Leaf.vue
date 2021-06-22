@@ -142,11 +142,13 @@ export default {
     this.startPnt = [49.004,  8.403]
     this.mapIsReady = true;
 
+    // cors: https://web.dev/cross-origin-resource-sharing/
     const axios = await import ('axios');
-    //const url = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=provider";
-    const url = "http://localhost:8080/simpleSrv.php?table=provider";
+    const url = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=provider";
+    //const url = "http://localhost:8080/simpleSrv.php?table=provider";
+    const config = { headers: {'Access-Control-Allow-Origin': '*'}}
     console.log("Axios from ",url);
-    axios.get(url)
+    axios.get(url,config)
     .then(response => {
       //console.log("Response:",response.data);
       this.providers = response.data; //JSON.parse(response.data);
