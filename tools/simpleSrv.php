@@ -16,11 +16,21 @@ values failing the filter condition (e.g. validate int) are FALSE
 */
 
 $parms = array(
-	"days" => FILTER_VALIDATE_INT,
-	"sens" => FILTER_VALIDATE_INT
+	"table" => FILTER_VALIDATE_STRING
 );
 
 $args = filter_input_array(INPUT_GET, $parms,TRUE);
+
+if ($args & ($args["table"] !== Null)) {
+	$table = $args["table"];
+} 
+
+define("TABLES", array("provider","category","audience","event","ticket","code"));
+
+if (array_search($table,TABLES) === false) {
+	header("HTTP/1.1 400 Bad request");
+	exit();
+}
 
 /*
  missing or wrong paramters are False or Null. Must check with triple ===
@@ -56,6 +66,7 @@ date_sub($d1, date_interval_create_from_date_string($per . " days"));
 $d2 = date_format($d1, $fmt);
 //echo "New: " . $d2 . PHP_EOL;
 */
+
 // setting utf-8 here is IMPORTANT !!!!
 $pdo = new PDO('mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"] , $cfg["dbuser"], $cfg["dbpass"],
 	array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8") );
@@ -63,7 +74,9 @@ $pdo = new PDO('mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"] , $c
 $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
 /* $query = "SELECT * from sensors order by `index` asc"; */
 /*$query = "SELECT id,count,co2,bat,pres,hum,temp,light,rssi,rfu,date,pkt,rep from sensors order by `index` asc"; */
-$query = "SELECT * from provider";
+
+$query = "SELECT * from " . $table;
+
 /* options to select sensor and to get only the last entry */
 /*	
 if ($args & ($args["sens"] !== Null) & ($args["sens"] !== False)) 
