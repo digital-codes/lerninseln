@@ -47,6 +47,12 @@ import Event from '@/components/Event.vue';
 
 export default defineComponent({
   components: {Event, IonButton},
+  props: { 
+    ticketLimit: {
+      type: Number,
+      default: 3
+    }
+  },
   data: function() {
     return {
       items: [{
@@ -82,7 +88,8 @@ export default defineComponent({
       const avail = this.items[id-1].avail
       if (e) {
         if (avail - this.tickets > 0) {
-          this.tickets++
+          if (this.tickets < this.ticketLimit)
+            this.tickets++
         }
       } else {
         if (this.tickets) this.tickets --
