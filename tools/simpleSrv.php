@@ -16,7 +16,7 @@ values failing the filter condition (e.g. validate int) are FALSE
 */
 
 $parms = array(
-	"table" => FILTER_VALIDATE_STRING
+	"table" => FILTER_SANITIZE_STRING
 );
 
 $args = filter_input_array(INPUT_GET, $parms,TRUE);
