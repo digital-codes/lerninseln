@@ -14,17 +14,37 @@
     </ion-card-content>
   </ion-card>
 
+      <ion-list>
+        <ion-item @click="randomTodo()" v-for="todo in store.state.todos" :key="todo.id">
+            <ion-label>{{ todo.title }}</ion-label>
+        </ion-item>
+      </ion-list>
+
 
 </template>
 
 <script lang="ts">
 import {IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
-//import ExploreContainer from '@/components/ExploreContainer.vue';
+import { defineComponent } from 'vue';
 
-export default  {
-  name: 'IntroText',
+import { useStore, Todo, MUTATIONS, ACTIONS } from '../store';
+
+export default defineComponent ({
+  name: "IntroText",
   components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle },
-}
+  // store
+  setup() {
+    const store = useStore();
+    const randomTodo = () =>  store.dispatch(ACTIONS.ADD_RND_TODO);
+    const complete = (todo: Todo) => {
+      store.commit(MUTATIONS.DEL_TODO, todo);
+    };
+    //return { complete, store, randomTodo};
+    console.log("store: ",store)
+    return { complete, store, randomTodo};
+  },
+
+});
 </script>
 
 <style scoped>

@@ -28,6 +28,14 @@
   </l-map>
   
   </div>
+
+      <ion-list>
+        <ion-item  v-for="todo in store.state.todos" :key="todo.id">
+            <ion-label>{{ todo.title }}</ion-label>
+        </ion-item>
+      </ion-list>
+
+
 </template>
 
 <script>
@@ -38,10 +46,13 @@
 // Its CSS is needed though, if not imported elsewhere in your application.
 import "leaflet/dist/leaflet.css"
 import { LMap, LGeoJson,LMarker, LPopup, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import { defineComponent } from 'vue';
+
+import { useStore, Todo, MUTATIONS, ACTIONS } from '../store';
 
 //let startPnt = [49.004,  8.403]
 
-export default {
+export default defineComponent ({
   name: "Leaf",
   components: {
     LMap,
@@ -93,25 +104,26 @@ export default {
       this.geokey += 1
       //console.log(this.markers)
     },
-    initialize() {
+    initialize(serverMode) {
       console.log("Providers",this.providers)
-      this.providers.forEach(p => {
-        const ll = JSON.parse(p.latlon)
-        const pnt =  [ll.lat,ll.lon]
-        console.log(ll)
-        const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
-        this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
-        this.geokey += 1
+      if (serverMode){
+        this.providers.forEach(p => {
+          const ll = JSON.parse(p.latlon)
+          const pnt =  [ll.lat,ll.lon]
+          console.log(ll)
+          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
+          this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
+          this.geokey += 1
 
-      })
-      /*
-      for (let i=0;i<5;i++) {
-        const pnt =  [this.startPnt[0] += .0005 * i, this.startPnt[1] += .0005]
-        const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
-        this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
-        this.geokey += 1
+        })
+      } else {
+        for (let i=0;i<5;i++) {
+          const pnt =  [this.startPnt[0] += .0005 * i, this.startPnt[1] += .0005]
+          const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
+          this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
+          this.geokey += 1
+        }
       }
-      */
     },
   },
   async beforeMount() {
@@ -152,15 +164,20 @@ export default {
     .then(response => {
       //console.log("Response:",response.data);
       this.providers = response.data; //JSON.parse(response.data);
-      this.initialize();
+      this.initialize(true);
     })
     .catch(error => {
         console.log("Axios error");
+      this.initialize(false);
     });
-
-
   },
-};
+  // store
+  setup() {
+    const store = useStore();
+    return { store};
+  },
+
+});
 </script>
 
 <style scoped>
