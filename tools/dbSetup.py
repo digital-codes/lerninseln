@@ -3,7 +3,7 @@
 # https://docs.sqlalchemy.org/en/14/orm/
 
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Date, Integer, String
+from sqlalchemy import Column, Date, Integer, String, DateTime
 
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.schema import DropTable, DropConstraint
@@ -49,6 +49,9 @@ import os
 
 # tickets
 #   id, avail, reserved, event id
+
+# pending (unfinished reservations)
+#   id, count, date, user_id, event_id
 
 # codes
 #   id, name, email, count, ticket id
@@ -194,18 +197,22 @@ class Code(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False)
     count = Column(Integer, nullable=False)
-    ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"))
-    # next one only for sqlalch orm to get access to addr.user.<key>
+    
+    ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
     ticket = relationship("Ticket", back_populates="code")
+                            
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    user = relationship("User", back_populates="code")
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, name, email, count, ticket):
+    def __init__(self, name, email, count, ticket, user):
         """"""
         self.name = name
         self.email = email
         self.count = count
         self.ticket_id = ticket
+        self.user_id = user
 
 
 ########################################################################
@@ -220,13 +227,13 @@ class Event(Base):
     cost = Column(Integer, nullable=False)
     costinfo = Column(String(255))
 
-    provider_id = Column(Integer, ForeignKey('provider.id', ondelete="CASCADE"))
+    provider_id = Column(Integer, ForeignKey('provider.id', ondelete="CASCADE"), nullable=False)
     provider = relationship("Provider", back_populates="event")
 
-    category_id = Column(Integer, ForeignKey('category.id', ondelete="CASCADE"))
+    category_id = Column(Integer, ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
     category = relationship("Category", back_populates="event")
                             
-    audience_id = Column(Integer, ForeignKey('audience.id', ondelete="CASCADE"))
+    audience_id = Column(Integer, ForeignKey('audience.id', ondelete="CASCADE"), nullable=False)
     audience = relationship("Audience", back_populates="event")
                             
 
@@ -264,13 +271,50 @@ class Ticket(Base):
         self.reserved = reserved
         self.event_id = event
 
+########################################################################
+class Pending(Base):
+    """"""
+    __tablename__ = "pending"
+ 
+    id = Column(Integer, primary_key=True)
+    count = Column(Integer, nullable=False)  
+    date = Column(DateTime, nullable=False)
+
+    event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
+    event = relationship("Event", back_populates="pending")
+                            
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    user = relationship("User", back_populates="pending")
+                            
+
+    #----------------------------------------------------------------------
+    def __init__(self, count, date, event, user):
+        """"""
+        self.count = count
+        self.date = date
+        self.event_id = event
+        self.user_id = user
+
+########################################################################
 
 # see above, only python
+User.pending = relationship("Pending", order_by=Pending.id, \
+    back_populates="user",cascade="all, delete, delete-orphan")
+
+Event.pending = relationship("Pending", order_by=Pending.id, \
+    back_populates="event",cascade="all, delete, delete-orphan")
+
+
 Event.ticket = relationship("Ticket", order_by=Ticket.id, \
     back_populates="event",cascade="all, delete, delete-orphan")
 
+
 Ticket.code = relationship("Code", order_by=Code.id, \
     back_populates="ticket",cascade="all, delete, delete-orphan")
+
+User.code = relationship("Code", order_by=Code.id, \
+    back_populates="user",cascade="all, delete, delete-orphan")
+
 
 Provider.event = relationship("Event", order_by=Event.id, \
     back_populates="provider",cascade="all, delete, delete-orphan")
