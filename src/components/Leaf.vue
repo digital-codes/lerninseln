@@ -50,6 +50,15 @@ import { defineComponent } from 'vue';
 
 import { useStore, Todo, MUTATIONS, ACTIONS } from '../store';
 
+// storage 
+//https://github.com/ionic-team/ionic-storage#sqlite-installation
+import { Storage } from '@ionic/storage';
+import { Drivers } from '@ionic/storage';
+import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+
+
+// ----------------------- 
+
 //let startPnt = [49.004,  8.403]
 
 export default defineComponent ({
@@ -104,10 +113,14 @@ export default defineComponent ({
       this.geokey += 1
       //console.log(this.markers)
     },
-    initialize(serverMode) {
+    async initialize(serverMode) {
       console.log("Providers",this.providers)
       if (serverMode){
-        this.providers.forEach(p => {
+        await this.dataStore.set('providers', JSON.stringify(this.providers))
+        const storedProviders = await this.dataStore.get("providers")
+        const pp = JSON.parse(storedProviders)
+        //this.providers.forEach(p => {
+        pp.forEach(p => {
           const ll = JSON.parse(p.latlon)
           const pnt =  [ll.lat,ll.lon]
           console.log(ll)
@@ -117,6 +130,7 @@ export default defineComponent ({
 
         })
       } else {
+        await this.dataStore.set('providers', JSON.stringify([]))
         for (let i=0;i<5;i++) {
           const pnt =  [this.startPnt[0] += .0005 * i, this.startPnt[1] += .0005]
           const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
@@ -154,6 +168,18 @@ export default defineComponent ({
     this.startPnt = [49.004,  8.403]
     this.mapIsReady = true;
 
+    // data store
+    const dataStore = new Storage({
+      driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
+    });
+    await dataStore.defineDriver(CordovaSQLiteDriver)
+    console.log("Datastore set up")
+    await dataStore.create();
+    await dataStore.clear()
+    console.log("Datastore cleared")
+    this.dataStore = dataStore
+
+    // data
     // cors: https://web.dev/cross-origin-resource-sharing/
     const axios = await import ('axios');
     const url = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=provider";
