@@ -3,7 +3,8 @@
 # https://docs.sqlalchemy.org/en/14/orm/
 
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Date, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String
+from sqlalchemy import Date, DateTime, TIMESTAMP
 
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.schema import DropTable, DropConstraint
@@ -14,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 
 from sqlalchemy.exc import IntegrityError
 
-import datetime
+from datetime import datetime
 import sys
 
 import pandas as pd
@@ -446,6 +447,23 @@ for t in TICKETS:
     session.add(ticket)
     session.commit()
     print("New ticket: ",t)
+
+
+######### generate some pendings ########
+
+now = str(datetime.now()) #.strftime('%Y-%m-%d %H:%M:%S'))
+PENDING = [
+    (1,now,1,1),
+    (2,now,2,3),
+    (1,now,3,2)
+    ]
+
+for p in PENDING:
+    pending = Pending(*p)
+    session.add(pending)
+    session.commit()
+    print("New pending: ",p)
+
 
 
 ######### Part 3 ############
