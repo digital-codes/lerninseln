@@ -7,6 +7,81 @@
   </li>
 </ul>
 
+<ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      <ion-card-title>Card Title</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      Keep close to Nature's heart... and break clear away, once in awhile,
+      and climb a mountain or spend a week in the woods. Wash your spirit clean.
+    </ion-card-content>
+
+    <ion-item href="#" class="ion-activated">
+      <ion-icon :icon="wifi" slot="start"></ion-icon>
+      <ion-label>Card Link Item 1 activated</ion-label>
+    </ion-item>
+
+    <ion-item href="#">
+      <ion-icon :icon="wine" slot="start"></ion-icon>
+      <ion-label>Card Link Item 2</ion-label>
+    </ion-item>
+
+    <ion-item class="ion-activated">
+      <ion-icon :icon="warning" slot="start"></ion-icon>
+      <ion-label>Card Button Item 1 activated</ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon :icon="walk" slot="end"></ion-icon>
+      <ion-label>Card Button Item 2</ion-label>
+      <ion-content>dmqdmmdf</ion-content>
+    </ion-item>
+    <ion-item>
+      <ion-icon :icon="walk" slot="start"></ion-icon>
+      <ion-button slot="end">dmqdmmdf</ion-button>
+      <ion-label>Card Button Item 2</ion-label>
+      <ion-label>Card Button Item 2</ion-label>
+      <ion-label>Card Button Item 2</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon :icon="wifi" slot="start"></ion-icon>
+      <ion-label>Card Button Item 2</ion-label>
+      <ion-label>Card Button Item 2</ion-label>
+      <ion-label>Card Button Item 2</ion-label>
+      <ion-button slot="start">dmqdmmdf</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-icon :icon="walk" slot="start"></ion-icon>
+      <ion-label>Card Button Item 2</ion-label>
+    </ion-item>
+  </ion-card>
+
+<ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      <ion-card-title>Card Title</ion-card-title>
+    </ion-card-header>
+
+<ion-item>
+    <ion-label>DD.MM.YYYY H:mm</ion-label>
+    <ion-datetime display-format="DD.MM.YYYY H:mm" min="1997" max="2030" value="2021-06-23T11:06Z"></ion-datetime>
+      <ion-icon :icon="walk" slot="start"></ion-icon>
+      <ion-label>Card Button Item 2</ion-label>
+      bla bla bla
+  </ion-item>
+<ion-item>
+      <ion-icon :icon="walk" slot="end"></ion-icon>
+    <ion-label>DD.MM.YYYY H:mm</ion-label>
+    <ion-datetime display-format="DD.MM.YYYY H:mm" min="1997" max="2030" value="2021-06-23T11:06Z"></ion-datetime>
+  </ion-item>
+<ion-item>
+    <ion-label>DD.MM.YYYY H:mm</ion-label>
+    <ion-datetime display-format="DD.MM.YYYY H:mm" min="1997" max="2030" value="2021-06-23T11:06Z"></ion-datetime>
+  </ion-item>
+
+  </ion-card>
 
 </template>
 
@@ -14,7 +89,16 @@
 
 import { defineComponent } from 'vue'; 
 
+import {IonDatetime, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonIcon, IonItem, IonLabel } from '@ionic/vue';
+import { walk, warning, wifi, wine } from 'ionicons/icons';
+
 export default defineComponent({
+  // ----------------------
+  components: { IonDatetime, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonIcon, IonItem, IonLabel},
+  setup() {
+    return { warning, walk, wine, wifi };
+  },
+  // ---------------------
   data: function() {
     return {
       items: [{
