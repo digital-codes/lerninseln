@@ -4,7 +4,7 @@
 
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Integer, String
-from sqlalchemy import Date, DateTime, TIMESTAMP
+from sqlalchemy import Date, Time, DateTime, TIMESTAMP
 
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.schema import DropTable, DropConstraint
@@ -24,7 +24,8 @@ import json
 # see https://nitratine.net/blog/post/how-to-hash-passwords-in-python/
 import hashlib
 import os
-
+import random
+import hashlib
 
 ######### Notes #############
 ##Users familiar with the syntax of CREATE TABLE may notice
@@ -198,6 +199,9 @@ class Code(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False)
     count = Column(Integer, nullable=False)
+    mailhash = Column(String(255), nullable=False)
+    # like hashlib.sha256(email.encode("utf-8")).hexdigest()
+
     
     ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
     ticket = relationship("Ticket", back_populates="code")
@@ -207,11 +211,12 @@ class Code(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, name, email, count, ticket, user):
+    def __init__(self, name, email, count, ticket, user, mailhash):
         """"""
         self.name = name
         self.email = email
         self.count = count
+        self.mailhash = mailhash
         self.ticket_id = ticket
         self.user_id = user
 
@@ -432,6 +437,20 @@ EVENTS = [
 
 for e in EVENTS:
     event = Event(*e)
+    session.add(event)
+    session.commit()
+    print("New event: ",e)
+
+EVENT_TITLES = ["Schach","Musik","Sport","Robots"]
+for e in range(20):
+    event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
+                  "2021-" + f'{random.randint(6,12):02}' + "-" + f'{random.randint(1,28):02}',
+                  f'{random.randint(1,24):02}' + ":00",
+                  0,"Kostenlos",
+                  random.randint(1,50),
+                  random.randint(1,3),
+                  random.randint(1,3)
+                  )
     session.add(event)
     session.commit()
     print("New event: ",e)
