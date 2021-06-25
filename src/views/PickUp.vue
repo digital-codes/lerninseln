@@ -18,7 +18,7 @@
         </ion-tab-button>
         
         <ion-tab-button tab="dates" href="/dates">
-          <ion-icon :icon="calendarNumberOutline" />
+          <ion-icon :icon="qrCodeOutline" />
           <ion-label>Dates</ion-label>
         </ion-tab-button>
         
@@ -39,6 +39,7 @@ import {
   mapOutline,
   calendarNumberOutline,
   cartOutline,
+  qrCodeOutline,
  } from 'ionicons/icons';
 
 export default {
@@ -51,6 +52,7 @@ export default {
       mapOutline,
       calendarNumberOutline,
       cartOutline,
+      qrCodeOutline,
     }
   }
 }
