@@ -31,7 +31,7 @@
     <ion-item color="light">
       <ion-icon :icon="warning" slot="start"></ion-icon>
       <ion-button  color="tertiary" slot="end">dmqdmmdf1</ion-button>
-      <ion-label position="fixed" class="eventDate">2021-06-23 10:00</ion-label>
+      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
       <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
       dqwlöd,lwdlwöqdlqwdwdwdwqdw
       qwdwdwqdqwdwd
@@ -41,7 +41,7 @@
     <ion-item color="medium">
       <ion-icon :icon="wine" slot="start"></ion-icon>
       <ion-button  color="tertiary" slot="end">dmqdmmdf1</ion-button>
-      <ion-label position="fixed" class="eventDate">2021-06-23 10:00</ion-label>
+      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
       <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
       dqwlöd,lwdlwöqdlqwdwdwdwqdw
       qwdwdwqdqwdwd
@@ -50,7 +50,7 @@
 
     <ion-item button href="#">
       <ion-icon :icon="walk" slot="start"></ion-icon>
-      <ion-label position="fixed" class="eventDate">2021-06-23 10:00</ion-label>
+      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
       <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
       dqwlöd,lwdlwöqdlqwdwdwdwqdw
       qwdwdwqdqwdwd
@@ -59,7 +59,7 @@
 
     <ion-item button href="#">
       <ion-icon :icon="wifi" slot="start"></ion-icon>
-      <ion-label position="fixed" class="eventDate">2021-06-23 10:00</ion-label>
+      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
       <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
       dqwlöd,lwdlwöqdlqwdwdwdwqdw
       qwdwdwqdqwdwd

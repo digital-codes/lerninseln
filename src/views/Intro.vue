@@ -67,7 +67,7 @@ export default  {
         .catch(error => {
             console.log("Axios error:", error);
         });
-        console.log("Table ",t,": ",result)
+        //console.log("Table ",t,": ",result)
         await setDataStore(t, JSON.stringify(result))
 
       }

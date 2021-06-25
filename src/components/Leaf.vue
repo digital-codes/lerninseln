@@ -129,7 +129,7 @@ export default defineComponent ({
         pp.forEach(p => {
           const ll = JSON.parse(p.latlon)
           const pnt =  [ll.lat,ll.lon]
-          console.log(ll)
+          //console.log(ll)
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
           this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
           this.geokey += 1
