@@ -1,11 +1,21 @@
 <template>
 
-<ul class="list">
-  <li v-for="item in items"  :key="item.id" class="listItem">
-        <h2>{{item.hdr}}</h2>
-        <p>{{item.text}}</p>
-  </li>
-</ul>
+  <ion-card ion-fixed>
+    <ion-card-header>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      <ion-card-title>Card Title</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+    <ul class="list">
+      <li v-for="item in items"  :key="item.id" class="listItem">
+            <h2>{{item.hdr}}</h2>
+            <p>{{item.text}}</p>
+      </li>
+    </ul>
+    </ion-card-content>
+
+  </ion-card>
 
 <ion-card>
     <ion-card-header>
@@ -18,7 +28,7 @@
       and climb a mountain or spend a week in the woods. Wash your spirit clean.
     </ion-card-content>
 
-    <ion-item color="secondary">
+    <ion-item color="light">
       <ion-icon :icon="warning" slot="start"></ion-icon>
       <ion-button  color="tertiary" slot="end">dmqdmmdf1</ion-button>
       <ion-label position="fixed" class="eventDate">2021-06-23 10:00</ion-label>
@@ -28,7 +38,7 @@
       dwqdwddwwqd,</p></div></ion-label>
     </ion-item>
 
-    <ion-item color="primary">
+    <ion-item color="medium">
       <ion-icon :icon="wine" slot="start"></ion-icon>
       <ion-button  color="tertiary" slot="end">dmqdmmdf1</ion-button>
       <ion-label position="fixed" class="eventDate">2021-06-23 10:00</ion-label>
@@ -60,6 +70,9 @@
 
 
 </template>
+
+
+<!-- check https://forum.ionicframework.com/t/css-position-fixed/2969/4 -->
 
 <script> 
 
