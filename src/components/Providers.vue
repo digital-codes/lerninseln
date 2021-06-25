@@ -2,8 +2,8 @@
 
   <ion-card ion-fixed>
     <ion-card-header>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      <ion-card-title>Card Title</ion-card-title>
+      <ion-card-title>Anbieter</ion-card-title>
+      <ion-card-subtitle>Kategorie </ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
@@ -17,101 +17,6 @@
 
   </ion-card>
 
-<ion-card>
-    <ion-card-header>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      <ion-card-title>Card Title</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      Keep close to Nature's heart... and break clear away, once in awhile,
-      and climb a mountain or spend a week in the woods. Wash your spirit clean.
-    </ion-card-content>
-
- <ion-item-group>
-
-    <ion-item-divider>
-      <ion-label class="event"><h2>Card</h2></ion-label>
-    </ion-item-divider>
-    <ion-item color="light">
-      <ion-icon :icon="wifi" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">X</ion-button>
-      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-    </ion-item>
-    <ion-item-divider>
-      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
-      dqwlö d,lwdlwöqdlqwdw dwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></ion-label>
-    </ion-item-divider>
-    <ion-item-divider>
-      <ion-label class="footer"></ion-label>
-    </ion-item-divider>
- </ion-item-group>
-
- <ion-item-group>
-    <ion-item-divider>
-      <ion-label class="event"><h2>Card</h2></ion-label>
-    </ion-item-divider>
-    <ion-item color="light">
-      <ion-icon :icon="warning" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">X</ion-button>
-      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-    </ion-item>
-    <ion-item-divider>
-      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
-      dqwlö d,lwdlwöqdlqwdw dwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></ion-label>
-    </ion-item-divider>
-    <ion-item-divider class="footer">
-      <ion-label class="footer">&nbsp;</ion-label>
-    </ion-item-divider>
- </ion-item-group>
-
- <ion-item-group>
-    <ion-item-divider>
-      <ion-label class="event"><h2>Card</h2></ion-label>
-    </ion-item-divider>
-    <ion-item color="light">
-      <ion-icon :icon="walk" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">X</ion-button>
-      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-    </ion-item>
-    <ion-item-divider>
-      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
-      dqwlö d,lwdlwöqdlqwdw dwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></ion-label>
-    </ion-item-divider>
-    <ion-item-divider>
-      <ion-label class="footer"  color="primary"></ion-label>
-    </ion-item-divider>
- </ion-item-group>
-
- <ion-item-group>
-    <ion-item-divider>
-      <ion-label class="event"><h2>Card</h2></ion-label>
-    </ion-item-divider>
-    <ion-item color="light">
-      <ion-icon :icon="wine" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">X</ion-button>
-      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-    </ion-item>
-    <ion-item-divider>
-      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
-      dqwlö d,lwdlwöqdlqwdw dwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></ion-label>
-    </ion-item-divider>
-    <ion-item-divider>
-      <ion-label class="footer"></ion-label>
-    </ion-item-divider>
- </ion-item-group>
-
-
-  </ion-card>
-
 
 </template>
 
@@ -122,12 +27,12 @@
 
 import { defineComponent } from 'vue'; 
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonItemGroup, IonIcon, IonItem, IonLabel } from '@ionic/vue';
+import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, } from '@ionic/vue';
 import { walk, warning, wifi, wine } from 'ionicons/icons';
 
 export default defineComponent({
   // ----------------------
-  components: {  IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonItemGroup, IonIcon, IonItem, IonLabel},
+  components: {  IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, },
   setup() {
     return { warning, walk, wine, wifi };
   },

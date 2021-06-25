@@ -10,8 +10,12 @@
     <ion-content :fullscreen="true" >
     
     <IntroText></IntroText>
-    
+    <!--    
     <LoginForm></LoginForm>
+    -->
+
+    <Providers></Providers>
+
 
     </ion-content>
   </ion-page>
@@ -20,15 +24,17 @@
 <script lang="js">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,  } from '@ionic/vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
-import LoginForm from '@/components/LoginForm.vue';
+//import LoginForm from '@/components/LoginForm.vue';
 import IntroText from '@/components/IntroText.vue';
+import Providers from '@/components/Providers.vue';
 
 // load all data from server and write to database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
 export default  {
   name: 'Intro',
-  components: { LoginForm, IntroText, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
+  components: { //LoginForm, 
+    IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
   },
   data: function() {
     return {

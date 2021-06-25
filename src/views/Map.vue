@@ -18,11 +18,6 @@
 
     <!--ion-content :fullscreen="true"-->
     <ion-content >
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Map</ion-title>
-        </ion-toolbar>
-      </ion-header>
 
       <ion-card >
       <ion-card-content>
