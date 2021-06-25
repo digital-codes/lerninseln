@@ -7,14 +7,31 @@
         </ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
+
+      <ion-card slot="fixed" >
+      <ion-card-content>
+
+      <Leaf></Leaf>
+
+      </ion-card-content>
+      </ion-card>
+
+    <!--ion-content :fullscreen="true"-->
+    <ion-content >
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Map</ion-title>
         </ion-toolbar>
       </ion-header>
-      
-      <Leaf></Leaf>
+
+      <ion-card >
+      <ion-card-content>
+
+        <Providers></Providers>
+
+      </ion-card-content>
+      </ion-card>
+
 
     </ion-content>
   </ion-page>
@@ -23,9 +40,10 @@
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import Leaf from "@/components/Leaf.vue";
+import Providers from '@/components/Providers.vue';
 
 export default  {
   name: 'Map',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage,Leaf }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage,Leaf, Providers }
 }
 </script>

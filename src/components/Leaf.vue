@@ -1,7 +1,7 @@
 <template>
   <div id="mapId">
 
-  <l-map style="height:70vh"
+  <l-map style="height:40vh"
     :zoom="zoom"
     :center="center"
     :max-zoom="maxZoom"
@@ -29,12 +29,13 @@
   
   </div>
 
+<!--
       <ion-list>
         <ion-item  v-for="todo in store.state.todos" :key="todo.id">
             <ion-label>{{ todo.title }}</ion-label>
         </ion-item>
       </ion-list>
-
+-->
 
 </template>
 
