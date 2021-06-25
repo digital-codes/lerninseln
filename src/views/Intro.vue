@@ -51,21 +51,26 @@ export default  {
       // cors: https://web.dev/cross-origin-resource-sharing/
       const axios = await import ('axios');
       const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=";
-      const table = "provider";
       const config = { headers: {'Access-Control-Allow-Origin': '*'}}
-      const url = baseUrl + table
-      console.log("Axios from ",url);
-      let providers = []
-      await axios.get(url,config)
-      .then(response => {
-        //console.log("Response:",response.data);
-        providers = response.data
-      })
-      .catch(error => {
-          console.log("Axios error:", error);
-      });
-      console.log("Prov:",providers)
-      await setDataStore('providers', JSON.stringify(providers))
+
+      const tables = ["provider","event","ticket","category","audience"]
+      for (const ti in tables) {
+        const t = tables[ti]
+        const url = baseUrl + t
+        console.log("Axios from ",url);
+        let result = []
+        await axios.get(url,config)
+        .then(response => {
+          //console.log("Response:",response.data);
+          result = response.data
+        })
+        .catch(error => {
+            console.log("Axios error:", error);
+        });
+        console.log("Table ",t,": ",result)
+        await setDataStore(t, JSON.stringify(result))
+
+      }
 
     }
 
