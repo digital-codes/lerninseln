@@ -2,17 +2,12 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Intro
+        <ion-title :dbMagic="dbMagic" >Intro  {{ dbMagic }}
         <img alt="logo" height="40" style="vertical-align:middle"  src="/assets/img/logo.png" > 
         </ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Intro</ion-title>
-        </ion-toolbar>
-      </ion-header>
+    <ion-content :fullscreen="true" >
     
     <IntroText></IntroText>
     
@@ -22,20 +17,58 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,  } from '@ionic/vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 import LoginForm from '@/components/LoginForm.vue';
 import IntroText from '@/components/IntroText.vue';
 
+// load all data from server and write to database
+import {initDataStore, setDataStore, getDataStore } from "../datastore";
+
 export default  {
   name: 'Intro',
-  components: { LoginForm, IntroText, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: { LoginForm, IntroText, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
+  },
   data: function() {
     return {
       email: "",
       pwd: "",
+      dbMagic:0,
     } 
   },
+  async beforeMount() {
+    await initDataStore()
+    const dbMagic = await getDataStore("magic")
+    if ((dbMagic || 0) == 0) {
+      console.log("Problem with DataStore")
+      console.log("Magic set")
+    } else {
+      console.log("Datastore verified")
+      this.dbMagic = dbMagic
+
+      // load data
+      // cors: https://web.dev/cross-origin-resource-sharing/
+      const axios = await import ('axios');
+      const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=";
+      const table = "provider";
+      const config = { headers: {'Access-Control-Allow-Origin': '*'}}
+      const url = baseUrl + table
+      console.log("Axios from ",url);
+      let providers = []
+      await axios.get(url,config)
+      .then(response => {
+        //console.log("Response:",response.data);
+        providers = response.data
+      })
+      .catch(error => {
+          console.log("Axios error:", error);
+      });
+      console.log("Prov:",providers)
+      await setDataStore('providers', JSON.stringify(providers))
+
+    }
+
+  }
 }
 </script>

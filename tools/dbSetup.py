@@ -49,7 +49,7 @@ import os
 #   id, title,date,time,cost (normally 0), category, provider id, category id, audiency id
 
 # tickets
-#   id, avail, reserved, event id
+#   id, avail, reserved, limit,  event id
 
 # pending (unfinished reservations)
 #   id, count, date, user_id, event_id
@@ -260,15 +260,17 @@ class Ticket(Base):
     id = Column(Integer, primary_key=True)
     avail = Column(Integer, nullable=False)  # cannot use not nullable on ints from 0
     reserved = Column(Integer, nullable=False)
+    limit = Column(Integer, default=1)
     event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
     # next one only for sqlalch orm to get access to addr.user.<key>
     event = relationship("Event", back_populates="ticket")
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, avail, reserved, event):
+    def __init__(self, avail, reserved, event, limit=1):
         """"""
         self.avail = avail
+        self.limit = limit
         self.reserved = reserved
         self.event_id = event
 
