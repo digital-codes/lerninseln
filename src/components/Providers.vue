@@ -28,43 +28,87 @@
       and climb a mountain or spend a week in the woods. Wash your spirit clean.
     </ion-card-content>
 
+ <ion-item-group>
+
+    <ion-item-divider>
+      <ion-label class="event"><h2>Card</h2></ion-label>
+    </ion-item-divider>
+    <ion-item color="light">
+      <ion-icon :icon="wifi" slot="start"></ion-icon>
+      <ion-button  color="tertiary" slot="end">X</ion-button>
+      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
+    </ion-item>
+    <ion-item-divider>
+      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
+      dqwlö d,lwdlwöqdlqwdw dwdwqdw
+      qwdwdwqdqwdwd
+      dwqdwddwwqd,</p></ion-label>
+    </ion-item-divider>
+    <ion-item-divider>
+      <ion-label class="footer"></ion-label>
+    </ion-item-divider>
+ </ion-item-group>
+
+ <ion-item-group>
+    <ion-item-divider>
+      <ion-label class="event"><h2>Card</h2></ion-label>
+    </ion-item-divider>
     <ion-item color="light">
       <ion-icon :icon="warning" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">dmqdmmdf1</ion-button>
+      <ion-button  color="tertiary" slot="end">X</ion-button>
       <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-      <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
-      dqwlöd,lwdlwöqdlqwdwdwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></div></ion-label>
     </ion-item>
-
-    <ion-item color="medium">
-      <ion-icon :icon="wine" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">dmqdmmdf1</ion-button>
-      <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-      <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
-      dqwlöd,lwdlwöqdlqwdwdwdwqdw
+    <ion-item-divider>
+      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
+      dqwlö d,lwdlwöqdlqwdw dwdwqdw
       qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></div></ion-label>
-    </ion-item>
+      dwqdwddwwqd,</p></ion-label>
+    </ion-item-divider>
+    <ion-item-divider class="footer">
+      <ion-label class="footer">&nbsp;</ion-label>
+    </ion-item-divider>
+ </ion-item-group>
 
-    <ion-item button href="#">
+ <ion-item-group>
+    <ion-item-divider>
+      <ion-label class="event"><h2>Card</h2></ion-label>
+    </ion-item-divider>
+    <ion-item color="light">
       <ion-icon :icon="walk" slot="start"></ion-icon>
+      <ion-button  color="tertiary" slot="end">X</ion-button>
       <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-      <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
-      dqwlöd,lwdlwöqdlqwdwdwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></div></ion-label>
     </ion-item>
+    <ion-item-divider>
+      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
+      dqwlö d,lwdlwöqdlqwdw dwdwqdw
+      qwdwdwqdqwdwd
+      dwqdwddwwqd,</p></ion-label>
+    </ion-item-divider>
+    <ion-item-divider>
+      <ion-label class="footer"  color="primary"></ion-label>
+    </ion-item-divider>
+ </ion-item-group>
 
-    <ion-item button href="#">
-      <ion-icon :icon="wifi" slot="start"></ion-icon>
+ <ion-item-group>
+    <ion-item-divider>
+      <ion-label class="event"><h2>Card</h2></ion-label>
+    </ion-item-divider>
+    <ion-item color="light">
+      <ion-icon :icon="wine" slot="start"></ion-icon>
+      <ion-button  color="tertiary" slot="end">X</ion-button>
       <ion-label position="fixed" class="eventDate"><div>2021-06-23</div><div>10:00</div></ion-label>
-      <ion-label ><div class="event"><h2>Card Button Item 3b</h2><p>bla bla bla öllmdqwlödwöqldwqöldwqöldwqöldqwöldwöldm
-      dqwlöd,lwdlwöqdlqwdwdwdwqdw
-      qwdwdwqdqwdwd
-      dwqdwddwwqd,</p></div></ion-label>
     </ion-item>
+    <ion-item-divider>
+      <ion-label  class="event"><p>bla bla bla öllmdqwlödwöq ldwqöldwqöldwqöld qwöldwöldm
+      dqwlö d,lwdlwöqdlqwdw dwdwqdw
+      qwdwdwqdqwdwd
+      dwqdwddwwqd,</p></ion-label>
+    </ion-item-divider>
+    <ion-item-divider>
+      <ion-label class="footer"></ion-label>
+    </ion-item-divider>
+ </ion-item-group>
+
 
   </ion-card>
 
@@ -78,12 +122,12 @@
 
 import { defineComponent } from 'vue'; 
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonIcon, IonItem, IonLabel } from '@ionic/vue';
+import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonItemGroup, IonIcon, IonItem, IonLabel } from '@ionic/vue';
 import { walk, warning, wifi, wine } from 'ionicons/icons';
 
 export default defineComponent({
   // ----------------------
-  components: {  IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonIcon, IonItem, IonLabel},
+  components: {  IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonItemGroup, IonIcon, IonItem, IonLabel},
   setup() {
     return { warning, walk, wine, wifi };
   },
@@ -160,6 +204,12 @@ h2 {
   text-align: left;
   /* with position: fixed adjust size */
   flex-basis: 150px;
+}
+
+.footer {
+  height: 1rem;
+  background-color: primary;
+
 }
 </style>
 
