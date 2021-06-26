@@ -108,17 +108,23 @@ class User(Base):
     username = Column(String(255), nullable=False, unique=True)
     firstname = Column(String(255), nullable=False)
     lastname = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False, unique=True)
-    pwd = Column(String(255), nullable=False)
+    emailOrHash = Column(String(255), nullable=False, unique=True)
+    # if hash, we use something like
+    # like hashlib.sha256(email.encode("utf-8")).hexdigest()
+    pwdOrTotp = Column(String(255), nullable=False)
+    access = Column(TIMESTAMP,default=0)
+    mode = Column(Integer, default = 0) # 0: mail/pwd 1: hash/totp
 
     #----------------------------------------------------------------------
-    def __init__(self, username, firstname, lastname, email, pwd):
+    def __init__(self, username, firstname, lastname, email, pwd, access, mode=0):
         """"""
         self.username = username
         self.firstname = firstname
         self.lastname = lastname
-        self.email = email
-        self.pwd = pwd
+        self.emailOrHash = email
+        self.pwdOrTotp = pwd
+        self.access = access
+        self.mode = mode
 
 ########################################################################
 class Provider(Base):
@@ -199,8 +205,6 @@ class Code(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False)
     count = Column(Integer, nullable=False)
-    mailhash = Column(String(255), nullable=False)
-    # like hashlib.sha256(email.encode("utf-8")).hexdigest()
 
     
     ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
@@ -211,12 +215,11 @@ class Code(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, name, email, count, ticket, user, mailhash):
+    def __init__(self, name, email, count, ticket, user):
         """"""
         self.name = name
         self.email = email
         self.count = count
-        self.mailhash = mailhash
         self.ticket_id = ticket
         self.user_id = user
 
@@ -404,7 +407,7 @@ for u in USERS:
     )
     pwd = salt + key
     hexPwd = pwd.hex()
-    user = User(*u[:-1],hexPwd)
+    user = User(*u[:-1],hexPwd,0)
     try:
         session.add(user)
         session.commit()
