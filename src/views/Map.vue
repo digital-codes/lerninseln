@@ -12,7 +12,6 @@
       <ion-card-content>
 
       <Leaf></Leaf>
-
       </ion-card-content>
       </ion-card>
 
@@ -33,12 +32,12 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent } from '@ionic/vue';
 import Leaf from "@/components/Leaf.vue";
 import Events from '@/components/Events.vue';
 
 export default  {
   name: 'Map',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Leaf ,Events }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events }
 }
 </script>

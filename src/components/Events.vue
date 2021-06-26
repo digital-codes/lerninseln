@@ -1,5 +1,18 @@
 <template>
 
+  <div v-for="item in items"  :key="item.id" class="listItem">
+        <Event 
+          :date=item.date 
+          :time=item.time 
+          :title=item.title 
+          :text="item.text" 
+          :id=item.id 
+          @click="open(item.id)"
+          ></Event>
+  </div>
+  <ion-button>button</ion-button>
+
+<!--
 <ul class="list">
   <li v-for="item in items"  :key="item.id" class="listItem">
         <Event 
@@ -13,12 +26,12 @@
   </li>
   <ion-button>button</ion-button>
 </ul>
-
+-->
 </template>
 
 <script> 
 
-import { IonButton, IonItem } from '@ionic/vue';
+import { IonButton } from '@ionic/vue';
 // database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
@@ -26,6 +39,7 @@ import { defineComponent } from 'vue';
 import Event from '@/components/Event.vue';
 
 export default defineComponent({
+  name: "Events",
   components: {Event, IonButton},
   props: { 
     ticketLimit: {
@@ -33,7 +47,7 @@ export default defineComponent({
       default: 3
     }
   },
-  data: function() {
+  data () {
     return {
     items : [],
     selection:0,
@@ -41,32 +55,54 @@ export default defineComponent({
     }
   },
   methods:{
+    async loadItems() {
+      await initDataStore()
+      const e = await getDataStore("event") || "[]"
+      const items = JSON.parse(e);
+      return this.items = items
+    },
     open(e) {
       console.log(e,this.items[e-1].text)
       this.selection = this.items[e-1]
-      this.modalOpen = true;
       this.tickets = 0
-    },
-    access(id,e) {
-      console.log(id,e)
-      const avail = this.items[id-1].avail
-      if (e) {
-        if (avail - this.tickets > 0) {
-          if (this.tickets < this.ticketLimit)
-            this.tickets++
-        }
-      } else {
-        if (this.tickets) this.tickets --
-      }
     },
     async beforeMount() {
       console.log("Eventlist")
-      await initDataStore()
-      const items = await getDataStore("event")
+      //await initDataStore()
+      //const items = await getDataStore("event") || []
+      // this.items = JSON.parse(items);
+      /*
+      const items = [
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1}
+      ]
+      this.items = items
       console.log(items)
-      this.items = JSON.parse(items);
+      */
     },
 
+  },
+  computed: {
+    items1: function() {
+      // see https://www.digitalocean.com/community/tutorials/vuejs-iterating-v-for
+      console.log("Eventlist")
+      //await initDataStore()
+      //const items = await getDataStore("event") || []
+      // this.items = JSON.parse(items);
+      const items = loadItems()
+      /*const items = [
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
+        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1}
+      ]*/
+      console.log(items)
+      return  items
+    }
   },
 }); 
 </script>
