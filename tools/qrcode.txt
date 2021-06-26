@@ -1,0 +1,1 @@
+qrencode -m 10 -s 10 -o qr1.png lerninseln.ok-lab-karlsruhe.de-20210621-12:00
