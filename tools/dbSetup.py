@@ -37,6 +37,8 @@ import hashlib
 ##Column(String(50))
 
 ## Tables ##
+# config. for company (single row!)
+# id, organisation, contact name, email, phone, www
 # providers
 #   id, name, info, city, plz, country, street, streetnum, geo, email, phone, www
 
@@ -56,13 +58,18 @@ import hashlib
 #   id, count, date, user_id, event_id
 
 # codes
-#   id, name, email, count, ticket id
+#   id, count, ticket id, user id
 #   all fields => hash => qrcode => base64
 
 # users
-#   name, email, pwd (encrypted)
+# 2 modes, normal and anonymous
+# anon: mode = 0, pwd is totp, email is email hash, access is current timestamp
+# named: mode = 1, pwd is encrypted pwd, email is plaintext email, access  is current timestamp
+#   username is mailhash or random hash for client on totp challenge to improve security
+# normally search user by email (hash or plaintext), only with totp search username
 
 TABLES = [
+    "config",
     "providers",
     "categories",
     "events",
@@ -75,6 +82,7 @@ TABLES = [
 DROP_ALL = True
 USE_SQLITE = False
 
+MODE = 0 # anonymous
 ######### Part 1 ############
 
 if USE_SQLITE:
@@ -100,20 +108,43 @@ metadata = MetaData()
 metadata.reflect(bind=engine)
 
 ########################################################################
+class Config(Base):
+    """"""
+    __tablename__ = "config"
+ 
+    id = Column(Integer, primary_key=True)
+    organisation = Column(String(255), nullable=False, unique=True)
+    contactName = Column(String(255))
+    www = Column(String(255))
+    phone = Column(String(255))
+    email = Column(String(255))
+    mode = Column(Integer)
+
+    #----------------------------------------------------------------------
+    def __init__(self, organisation, name, www, email, phone, mode=0):
+        """"""
+        self.organisation = organisation
+        self.contactName = name
+        self.www = www
+        self.email = email
+        self.phone = phone
+        self.mode = mode
+
+########################################################################
 class User(Base):
     """"""
     __tablename__ = "user"
  
     id = Column(Integer, primary_key=True)
     username = Column(String(255), nullable=False, unique=True)
-    firstname = Column(String(255), nullable=False)
-    lastname = Column(String(255), nullable=False)
+    firstname = Column(String(255))
+    lastname = Column(String(255))
     emailOrHash = Column(String(255), nullable=False, unique=True)
     # if hash, we use something like
     # like hashlib.sha256(email.encode("utf-8")).hexdigest()
     pwdOrTotp = Column(String(255), nullable=False)
     access = Column(TIMESTAMP,default=0)
-    mode = Column(Integer, default = 0) # 0: mail/pwd 1: hash/totp
+    mode = Column(Integer, default = 0) # 1: mail/pwd 0: hash/totp
 
     #----------------------------------------------------------------------
     def __init__(self, username, firstname, lastname, email, pwd, access, mode=0):
@@ -202,8 +233,6 @@ class Code(Base):
     __tablename__ = "code"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False)
     count = Column(Integer, nullable=False)
 
     
@@ -215,10 +244,8 @@ class Code(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, name, email, count, ticket, user):
+    def __init__(self, count, ticket, user):
         """"""
-        self.name = name
-        self.email = email
         self.count = count
         self.ticket_id = ticket
         self.user_id = user
@@ -387,64 +414,64 @@ if DROP_ALL:
             session.add(audiency)
             session.commit()
             
-        
+
+######### generate config ########
+config = Config("OK Lab Karlsruhe",
+          "Andreas Kugel",
+          "https://ok-lab-karlsruhe.de",
+          "info@ok-lab-karlsruhe.de",
+          "",
+          MODE
+          )
+session.add(config)
+session.commit()
+
 ######### generate some users ########
 
-USERS = [
-    ("user1","first1","last1","email1@nowhe.re","1234"),
-    ("user2","first2","last1","email2@nowhe.re","12345"),
-    ("user3","first","last2","email3@nowhe.re","123456")
-    ]
+if MODE != 0:
+    USERS = [
+        ("user1","first1","last1","email1@nowhe.re","1234"),
+        ("user2","first2","last1","email2@nowhe.re","12345"),
+        ("user3","first","last2","email3@nowhe.re","123456")
+        ]
 
-salt = os.urandom(32) # Remember this. 32 bytes
+    salt = os.urandom(32) # Remember this. 32 bytes
 
-for u in USERS:
-    key = hashlib.pbkdf2_hmac(
-        'sha256', # The hash digest algorithm for HMAC
+    for u in USERS:
+        key = hashlib.pbkdf2_hmac(
+            'sha256', # The hash digest algorithm for HMAC
+            u[4].encode('utf-8'), # Convert the password to bytes
+            salt, # Provide the salt
+            100000 # It is recommended to use at least 100,000 iterations of SHA-256 
+        )
+        pwd = salt + key
+        hexPwd = pwd.hex()
+        user = User(*u[:-1],hexPwd,0)
+        # creating timestamp like
+        # datetime.datetime.timestamp(datetime.datetime.now(datetime.timezone.utc))
+        try:
+            session.add(user)
+            session.commit()
+        except IntegrityError:
+            print("Duplication on user",u)
+            # important to rollback, else cannot complete
+            session.rollback()
+            continue # check audience and category still ##continue
+        print("New user: ",u[0])
+
+        # verify pwd
+        p = bytes.fromhex(hexPwd)
+        s = bytes(p[:32])
+        k = bytes(p[32:])
+        new_key = hashlib.pbkdf2_hmac(
+        'sha256',
         u[4].encode('utf-8'), # Convert the password to bytes
-        salt, # Provide the salt
-        100000 # It is recommended to use at least 100,000 iterations of SHA-256 
-    )
-    pwd = salt + key
-    hexPwd = pwd.hex()
-    user = User(*u[:-1],hexPwd,0)
-    # creating timestamp like
-    # datetime.datetime.timestamp(datetime.datetime.now(datetime.timezone.utc))
-    try:
-        session.add(user)
-        session.commit()
-    except IntegrityError:
-        print("Duplication on user",u)
-        # important to rollback, else cannot complete
-        session.rollback()
-        continue # check audience and category still ##continue
-    print("New user: ",u[0])
-
-    # verify pwd
-    p = bytes.fromhex(hexPwd)
-    s = bytes(p[:32])
-    k = bytes(p[32:])
-    new_key = hashlib.pbkdf2_hmac(
-    'sha256',
-    u[4].encode('utf-8'), # Convert the password to bytes
-    s, 100000 )
-    print("Pwd verified: ", new_key == k)
+        s, 100000 )
+        print("Pwd verified: ", new_key == k)
 
     
 
 ######### generate some event ########
-
-EVENTS = [
-    ("Schach","2021-06-30","10:00",0,"Kostenlos",1,1,3),
-    ("Sport","2021-07-13","19:00",0,"Kostenlos",10,2,2),
-    ("Robots","2021-07-20","15:00",0,"Kostenlos",20,3,1)
-    ]
-
-for e in EVENTS:
-    event = Event(*e)
-    session.add(event)
-    session.commit()
-    print("New event: ",e)
 
 EVENT_TITLES = ["Schach","Musik","Sport","Robots"]
 for e in range(20):
@@ -462,14 +489,9 @@ for e in range(20):
 
 ######### generate some tickets ########
 
-TICKETS = [
-    (10,0,1),
-    (20,0,2),
-    (10,0,3)
-    ]
 
-for t in TICKETS:
-    ticket = Ticket(*t)
+for t in range(1,20):  
+    ticket = Ticket(random.randint(1,30),0,random.randint(1,20))
     session.add(ticket)
     session.commit()
     print("New ticket: ",t)
@@ -478,17 +500,19 @@ for t in TICKETS:
 ######### generate some pendings ########
 
 now = str(datetime.now()) #.strftime('%Y-%m-%d %H:%M:%S'))
-PENDING = [
-    (1,now,1,1),
-    (2,now,2,3),
-    (1,now,3,2)
-    ]
+# need users for pending items
+if MODE != 0:
+    PENDING = [
+        (1,now,1,1),
+        (2,now,2,3),
+        (1,now,3,2)
+        ]
 
-for p in PENDING:
-    pending = Pending(*p)
-    session.add(pending)
-    session.commit()
-    print("New pending: ",p)
+    for p in PENDING:
+        pending = Pending(*p)
+        session.add(pending)
+        session.commit()
+        print("New pending: ",p)
 
 
 
