@@ -4,43 +4,23 @@
   <li v-for="item in items"  :key="item.id" class="listItem">
         <Event 
           :date=item.date 
-          :text=item.text 
+          :time=item.time 
+          :title=item.title 
+          :text="item.text" 
           :id=item.id 
           @click="open(item.id)"
           ></Event>
   </li>
+  <ion-button>button</ion-button>
 </ul>
-
-<div v-if="modalOpen" class="modal" :selection=selection >
-  <div>
-    <h2>Ausgewählt</h2>
-    <p>
-    {{ selection.date }} 
-    <br>
-    {{ selection.text }} 
-    </p> 
-    <p>Freie Plätze: {{ selection.avail }} </p>
-
-    <div class="eventAccess"  >
-    <Ion-item>
-      <Ion-button @click="access(selection.id, false)" v-model=tickets>-</Ion-button>
-        Tickets: {{ tickets }}
-      <Ion-button @click="access(selection.id, true)" v-model=tickets>+</Ion-button>
-    </Ion-item>
-    </div>
-
-    <Ion-button  @click="presentActionSheet(selection)">
-      Fertig
-    </Ion-button>
-  </div>
-</div>
 
 </template>
 
 <script> 
 
-import { IonButton, IonItem, actionSheetController } from '@ionic/vue';
-import { rocket, trash,  } from 'ionicons/icons';
+import { IonButton, IonItem } from '@ionic/vue';
+// database
+import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
 import { defineComponent } from 'vue'; 
 import Event from '@/components/Event.vue';
@@ -55,23 +35,7 @@ export default defineComponent({
   },
   data: function() {
     return {
-      items: [{
-      'date': '2021-06-21 12:00',
-      'text': 'Fischertechnik',
-      'avail': 1,
-      "id":1,
-    }, {
-      'date': '2021-06-25 10:00',
-      'text': 'Schach',
-      'avail': 10,
-      "id":2,
-    }, {
-      'date': '2021-07-05 09:30',
-      'text': 'Band-Projekt',
-      'avail': 0,
-      "id":3,
-    }],
-    modalOpen:false,
+    items : [],
     selection:0,
     tickets: 0
     }
@@ -95,40 +59,14 @@ export default defineComponent({
         if (this.tickets) this.tickets --
       }
     },
-    purchase(id,ticks) {
-      console.log("Buy: ",id, ticks)
+    async beforeMount() {
+      console.log("Eventlist")
+      await initDataStore()
+      const items = await getDataStore("event")
+      console.log(items)
+      this.items = JSON.parse(items);
     },
-    async presentActionSheet(sel) {
-      this.modalOpen = false;
-      if (this.tickets == 0) {
-        console.log("No tickets ordered",sel.id)
-        return
-      }
-      const actionSheet = await actionSheetController
-        .create({
-          header: 'Buchung',
-          buttons: [
-            {
-              text: 'Bestätigen',
-              icon: rocket,
-              handler: () => {
-                this.purchase(sel.id,this.tickets)
-              }
-            },
-            {
-              text: 'Abbrechen',
-              icon: trash,
-              role: 'cancel',
-              handler: () => {
-                console.log('Cancel clicked')
-              },
-            },
-          ],
-        });
-      await actionSheet.present();
-      const { role } = await actionSheet.onDidDismiss();
-      console.log('onDidDismiss resolved with role', role);
-    },
+
   },
 }); 
 </script>

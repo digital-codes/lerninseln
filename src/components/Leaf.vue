@@ -1,7 +1,7 @@
 <template>
   <div id="mapId">
 
-  <l-map style="height:40vh"
+  <l-map style="height:30vh"
     :zoom="zoom"
     :center="center"
     :max-zoom="maxZoom"
