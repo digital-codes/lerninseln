@@ -408,6 +408,8 @@ for u in USERS:
     pwd = salt + key
     hexPwd = pwd.hex()
     user = User(*u[:-1],hexPwd,0)
+    # creating timestamp like
+    # datetime.datetime.timestamp(datetime.datetime.now(datetime.timezone.utc))
     try:
         session.add(user)
         session.commit()
