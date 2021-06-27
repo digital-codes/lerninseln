@@ -22,7 +22,8 @@
       <l-popup :content="item.content"></l-popup>
       <!--l-icon v-if="item.iconUrl !== ''"   :icon-url="item.iconUrl" :icon-size="item.iconSize"></l-icon-->
       <l-icon 
-        :options="item.iconOptions"
+        :iconUrl="item.iconOptions.iconUrl"
+        :iconSize="item.iconOptions.iconSize"
         >
       </l-icon>
 
@@ -129,7 +130,9 @@ export default defineComponent ({
       this.startPnt[1] += .0003
       console.log("Start:", this.startPnt)
       const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
-      this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":content})
+      this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":content,
+                "iconOptions":{"iconUrl":"https://placekitten.com/50/100","iconSize":[30,30]},
+      })
       this.geokey += 1
       this.highLight(3)
       //console.log(this.markers)
@@ -145,7 +148,7 @@ export default defineComponent ({
           //console.log(ll)
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
           const iconUrl = "https://placekitten.com/50/100"
-          const iconSize = [0,0]
+          const iconSize = [10,10]
           const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}
           this.markers.push({"id":p.id,"latlng":pnt,
           "content":content  + "<p>"+ p.id + "</p>",
@@ -158,7 +161,7 @@ export default defineComponent ({
           const pnt =  [this.startPnt[0] += .0005 * i, this.startPnt[1] += .0005]
           const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
           this.markers.push({"id":this.geokey,"latlng":pnt,"content":content,
-          "iconUrl":"","iconSize":[0,0]
+          "iconOptions":{"iconUrl":"","iconSize":[0,0]},
           })
           this.geokey += 1
         }
