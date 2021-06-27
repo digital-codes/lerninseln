@@ -131,9 +131,7 @@ export default defineComponent ({
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
-          this.markers.push({"id":this.geokey,"latlng":pnt,"content":content})
-          this.geokey += 1
-
+          this.markers.push({"id":p.id,"latlng":pnt,"content":content})
         })
       } else {
         for (let i=0;i<5;i++) {
