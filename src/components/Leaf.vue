@@ -18,6 +18,7 @@
 
   <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
       @l-add="$event.target.openPopup()"
+      :icon="item.icon"
   >
       <l-popup :content="item.content">
       </l-popup>
@@ -131,7 +132,7 @@ export default defineComponent ({
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
-          this.markers.push({"id":p.id,"latlng":pnt,"content":content})
+          this.markers.push({"id":p.id,"latlng":pnt,"content":content  + "<p>"+ p.id + "</p>"})
         })
       } else {
         for (let i=0;i<5;i++) {
@@ -141,6 +142,11 @@ export default defineComponent ({
           this.geokey += 1
         }
       }
+      /*
+      this.markers[98].icon = "123"
+      this.markers[97].icon = "123"
+      this.markers[96].icon = "124"
+      */
     }
   },
   async beforeMount() {
