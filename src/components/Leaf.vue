@@ -7,8 +7,8 @@
     :max-zoom="maxZoom"
     @update:center="centerUpdate"
     @update:zoom="zoomUpdate"
+    @click="addPoint" 
   >
-    <!-- @click="addPoint" -->
 
  <l-tile-layer 
         :url="url" 
@@ -20,7 +20,12 @@
       @l-add="$event.target.openPopup()"
   >
       <l-popup :content="item.content"></l-popup>
-      <!--l-icon :icon-url="item.iconUrl" :icon-size="item.iconSize" /-->
+      <!--l-icon v-if="item.iconUrl !== ''"   :icon-url="item.iconUrl" :icon-size="item.iconSize"></l-icon-->
+      <l-icon 
+        :options="item.iconOptions"
+        >
+      </l-icon>
+
   </l-marker>
 
 
@@ -49,7 +54,7 @@
 // DON'T load Leaflet components here!
 // Its CSS is needed though, if not imported elsewhere in your application.
 import "leaflet/dist/leaflet.css"
-import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, } from "@vue-leaflet/vue-leaflet";
+import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon } from "@vue-leaflet/vue-leaflet";
 import { defineComponent } from 'vue';
 
 import { useStore, Todo, MUTATIONS, ACTIONS } from '../store';
@@ -75,6 +80,7 @@ export default defineComponent ({
     LTileLayer,
     LPopup,
     LMarker,
+    LIcon,
     
   },
   data() {
@@ -106,8 +112,9 @@ export default defineComponent ({
   },
   methods : {
     highLight(id) {
-      this.marker[id].iconUrl = "//https://placekitten.com/50/100"
-      this.marker[id].iconSize = [50,50]
+      this.markers[id].iconOptions.iconUrl = "https://placekitten.com/50/100"
+      this.markers[id].iconOptions.iconSize = [50,50]
+      // see https://vdcrea.gitlab.io/vue-leaflet/#licon
     },
     zoomUpdate(zoom) {
       this.currentZoom = zoom;
@@ -137,14 +144,15 @@ export default defineComponent ({
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
-          const iconUrl = "" //https://placekitten.com/50/100"
+          const iconUrl = "https://placekitten.com/50/100"
           const iconSize = [0,0]
+          const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}
           this.markers.push({"id":p.id,"latlng":pnt,
           "content":content  + "<p>"+ p.id + "</p>",
-          "iconUrl":iconUrl,"iconSize":iconSize
+          "iconOptions":iconOptions
           })
         })
-        this.markers[98].iconUrl = "https://placekitten.com/50/100"
+        //this.markers[98].iconUrl = "https://placekitten.com/50/100"
       } else {
         for (let i=0;i<5;i++) {
           const pnt =  [this.startPnt[0] += .0005 * i, this.startPnt[1] += .0005]
@@ -202,6 +210,26 @@ export default defineComponent ({
   },
 
 });
+
+/*
+https://leafletjs.com/reference-1.7.1.html#icon
+iconurl not set in options
+
+var CustomIcon = L.Icon.extend({
+   options: {
+        iconUrl: './images/hotel.png',
+        shadowUrl: './images/shadow.png',
+        iconSize: new L.Point(32, 32),
+        opacity: 0.5,
+        //shadowSize: new L.Point(68, 95),
+        iconAnchor: new L.Point(16, 16),
+        popupAnchor: new L.Point(0, -18)
+      }
+    });
+
+*/
+
+
 </script>
 
 <style scoped>
