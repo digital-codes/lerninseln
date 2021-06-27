@@ -12,6 +12,7 @@
       <ion-card-content>
 
       <Leaf></Leaf>
+
       </ion-card-content>
       </ion-card>
 
@@ -21,8 +22,20 @@
       <ion-card >
       <ion-card-content>
 
-        <Events></Events>
-
+      <Events></Events>
+      <!--
+      <div v-for="item in items"  :key="item.id" class="listItem">
+            {{item.title}}
+            <Event 
+              :date=item.date 
+              :time=item.time 
+              :title=item.title 
+              :text="item.text" 
+              :id=item.id 
+              @click="open(item.id)"
+              ></Event>
+      </div>
+      -->
       </ion-card-content>
       </ion-card>
 
@@ -34,7 +47,11 @@
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent } from '@ionic/vue';
 import Leaf from "@/components/Leaf.vue";
+//import Events from '@/components/Events.vue';
 import Events from '@/components/Events.vue';
+
+// database
+import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
 export default  {
   name: 'Map',

@@ -122,9 +122,9 @@ export default defineComponent ({
       //console.log(this.markers)
     },
     async initialize() {
-      const storedProviders = await getDataStore("provider") || []
-      if (storedProviders == undefined && storedProviders.length > 0) {
-        const pp = JSON.parse(storedProviders)
+      const storedProviders = await getDataStore("provider") || "[]"
+      const pp = JSON.parse(storedProviders)
+      if (pp.length > 0) {
         //this.providers.forEach(p => {
         pp.forEach(p => {
           const ll = JSON.parse(p.latlon)

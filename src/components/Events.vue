@@ -1,32 +1,17 @@
 <template>
 
-  <div v-for="item in items"  :key="item.id" class="listItem">
+  <ion-button @click="toggle()">Toggle</ion-button>
+  <div v-for="item in selIitems"  :key="item.id" class="listItem">
         <Event 
           :date=item.date 
           :time=item.time 
           :title=item.title 
-          :text="item.text" 
+          :text=item.provider_id 
           :id=item.id 
           @click="open(item.id)"
           ></Event>
   </div>
-  <ion-button>button</ion-button>
 
-<!--
-<ul class="list">
-  <li v-for="item in items"  :key="item.id" class="listItem">
-        <Event 
-          :date=item.date 
-          :time=item.time 
-          :title=item.title 
-          :text="item.text" 
-          :id=item.id 
-          @click="open(item.id)"
-          ></Event>
-  </li>
-  <ion-button>button</ion-button>
-</ul>
--->
 </template>
 
 <script> 
@@ -50,61 +35,42 @@ export default defineComponent({
   data () {
     return {
     items : [],
+    filter : 0,
     selection:0,
     tickets: 0
     }
   },
   methods:{
-    async loadItems() {
-      await initDataStore()
-      const e = await getDataStore("event") || "[]"
-      const items = JSON.parse(e);
-      return this.items = items
-    },
     open(e) {
       console.log(e,this.items[e-1].text)
       this.selection = this.items[e-1]
       this.tickets = 0
     },
-    async beforeMount() {
-      console.log("Eventlist")
-      //await initDataStore()
-      //const items = await getDataStore("event") || []
-      // this.items = JSON.parse(items);
-      /*
-      const items = [
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1}
-      ]
-      this.items = items
-      console.log(items)
-      */
-    },
-
-  },
-  computed: {
-    items1: function() {
-      // see https://www.digitalocean.com/community/tutorials/vuejs-iterating-v-for
-      console.log("Eventlist")
-      //await initDataStore()
-      //const items = await getDataStore("event") || []
-      // this.items = JSON.parse(items);
-      const items = loadItems()
-      /*const items = [
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1},
-        {"title":"123","text":"wee32","date":"e2ee21","time":"d323e","id":1}
-      ]*/
-      console.log(items)
-      return  items
+    toggle(){
+      this.filter = this.filter == 0?1:0;
     }
   },
-}); 
+  async beforeMount() {
+    await initDataStore()
+    const items = await getDataStore("event") || "[]"
+    this.items = JSON.parse(items)
+    //console.log("befMount: ",items)
+  },
+  computed: {
+    selIitems() {
+      // https://v3.vuejs.org/guide/computed.html#computed-properties
+      console.log("Filter on:", this.filter,"length: ",this.items.length)
+      const i = []
+      this.items.forEach(item => { 
+        console.log(item)
+        if ((this.filter == 0) || (item.category_id == this.filter)) 
+          i.push(item)
+        })
+      return i
+    },
+  },
+}
+); 
 </script>
 
 <style scoped>
