@@ -26,7 +26,14 @@
   </ion-checkbox>
 -->
   <!--ion-button @click="toggle()">Toggle</ion-button-->
-  <ion-button @click="showAll()">Alle anzeigen</ion-button>
+
+  <ion-button 
+    v-if="hasEvent"
+    @click="showAll()"
+    >
+      Alle anzeigen
+  </ion-button>
+
 
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
         <Event 
@@ -38,6 +45,13 @@
           @click="select(item.id)"
           ></Event>
   </div>
+
+  <ion-button 
+    v-if="hasEvent" 
+    @click="buy()"
+    >Buchen
+  </ion-button>
+
 
 </template>
 
@@ -51,6 +65,8 @@ import { useStore, Selection, MUTATIONS } from '../store';
 
 import { defineComponent } from 'vue'; 
 import Event from '@/components/Event.vue';
+
+import router from "../router";
 
 export default defineComponent({
   name: "Events",
@@ -66,9 +82,13 @@ export default defineComponent({
     }
   },
   methods:{
+    buy() {
+      router.push("/tickets")
+    },
     select(e) {
       const item = this.items[e-1]
       console.log("Selected: ",item.id) 
+      this.filter = item.id
       this.store.commit(MUTATIONS.SET_EVENT, item.id);
     },
     toggle(){
@@ -103,10 +123,14 @@ export default defineComponent({
       const i = []
       this.items.forEach(item => { 
         //console.log(item)
-        if ((this.filter == 0) || (item.category_id == this.filter)) 
+        //if ((this.filter == 0) || (item.category_id == this.filter)) 
+        if ((this.filter == 0) || (item.id == this.filter)) 
           i.push(item)
         })
       return i
+    },
+    hasEvent() {
+      return (this.store.state.selection.eventId != 0)
     },
   },
     // store

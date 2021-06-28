@@ -44,7 +44,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent } from '@ionic/vue';
 import Leaf from "@/components/Leaf.vue";
 //import Events from '@/components/Events.vue';
