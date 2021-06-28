@@ -22,6 +22,8 @@ import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/v
 import { defineComponent } from 'vue';
 import Events from '@/components/Events.vue';
 
+import { useStore, Selection, MUTATIONS } from '../store';
+
 export default defineComponent({
   components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, Events },
 }); 

@@ -58,7 +58,7 @@ import "leaflet/dist/leaflet.css"
 import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon } from "@vue-leaflet/vue-leaflet";
 import { defineComponent } from 'vue';
 
-import { useStore, Todo, MUTATIONS, ACTIONS } from '../store';
+import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../store';
 
 // storage 
 /*

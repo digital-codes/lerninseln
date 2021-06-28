@@ -50,6 +50,8 @@ import Leaf from "@/components/Leaf.vue";
 //import Events from '@/components/Events.vue';
 import Events from '@/components/Events.vue';
 
+import { useStore, Todo, MUTATIONS, ACTIONS } from '../store';
+
 // database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
 

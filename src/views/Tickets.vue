@@ -10,6 +10,15 @@
 
     <ion-content >
       <ion-card>
+
+      <p 
+        :evnt="store.state.selection.eventId" 
+        :sel="store.state.selection" 
+        :todo="store.state.todos[0]" 
+        >
+        ID: {{ evnt }} SEL: {{ sel }} T: {{ todo }}
+      </p>
+
       <ion-card-content>
 
         <BookNew></BookNew>
@@ -26,8 +35,16 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardContent  } from '@ionic/vue';
 import BookNew from '@/components/BookNew.vue';
 
+import { useStore, Todo, Selection, MUTATIONS } from '../store';
+
 export default  {
   name: 'Tickets',
-  components: { BookNew, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  }
+  components: { BookNew, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
+    // store
+  setup() {
+    const store = useStore();
+    return { store };
+  },
+
 }
 </script>
