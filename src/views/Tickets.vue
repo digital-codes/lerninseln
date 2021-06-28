@@ -11,13 +11,15 @@
     <ion-content >
       <ion-card>
 
-      <p 
-        :evnt="store.state.selection.eventId" 
-        :sel="store.state.selection" 
-        :todo="store.state.todos[0]" 
-        >
-        ID: {{ evnt }} SEL: {{ sel }} T: {{ todo }}
-      </p>
+      <div>
+      <ion-button @click="addEvent">Add</ion-button>
+      <ion-button @click="clrEvent">Clr</ion-button>
+      </div>
+
+      <div v-if="getEvent" >
+        Event ID: {{ store.state.selection.eventId }}
+      </div>
+
 
       <ion-card-content>
 
@@ -31,15 +33,33 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardContent  } from '@ionic/vue';
+<script lang="js">
+import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardContent  } from '@ionic/vue';
 import BookNew from '@/components/BookNew.vue';
+
+// https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
 import { useStore, Todo, Selection, MUTATIONS } from '../store';
 
 export default  {
   name: 'Tickets',
-  components: { BookNew, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
+  components: { BookNew, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
+  methods: {
+    addEvent() {
+      this.store.commit(MUTATIONS.SET_EVENT, 2);
+    },
+    clrEvent() {
+      this.store.commit(MUTATIONS.RESET_EVENT);
+    },
+  },
+  computed: {
+    //getEvent(): number {
+    getEvent() {
+      const ev = this.store //.selection.eventId;
+      console.log("Ev:",ev)
+      return (ev.state.selection.eventId != 0)
+    }
+  },
     // store
   setup() {
     const store = useStore();
