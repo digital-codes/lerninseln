@@ -24,12 +24,12 @@
           :date=getEvent.date 
           :time=getEvent.time 
           :title=getEvent.title 
-          :text=getEvent.provider_id 
-          :id=getEvent.id 
+          :text=getEvent.provider 
+          :id=getEvent.id
           >
         </Event>
       </div>
-      <div v-else>
+      <div v-else> 
         No event selected
       </div>
 
@@ -86,8 +86,17 @@ export default  defineComponent ({
   },
   async beforeMount() {
     await initDataStore()
-    const items = await getDataStore("event") || "[]"
-    this.items = JSON.parse(items)
+    const providerString = await getDataStore("provider") || "[]"
+    const providers = JSON.parse(providerString)
+    const itemString = await getDataStore("event") || "[]"
+    const items = JSON.parse(itemString)
+    for (let i=0; i < items.length; i++){
+      const id = items[i].provider_id - 1
+      const name = providers[id].name
+      console.log("i: ",i,", id: ",id, ", name: ",name)
+      items[i].provider = name
+    }
+    this.items = items
   },
     // store
   setup() {

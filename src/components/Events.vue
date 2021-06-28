@@ -32,8 +32,8 @@
           :date=item.date 
           :time=item.time 
           :title=item.title 
-          :text=item.provider_id 
-          :id=item.id 
+          :text=item.provider 
+          :id=item.id  
           @click="open(item.id)"
           ></Event>
   </div>
@@ -57,6 +57,7 @@ export default defineComponent({
   data () {
     return {
     items : [],
+    providers: [],
     filter : 0,
     chk1: 1, 
     chk2: 0, 
@@ -75,8 +76,18 @@ export default defineComponent({
   },
   async beforeMount() {
     await initDataStore ()
-    const items = await getDataStore("event") || "[]"
-    this.items = JSON.parse(items)
+    const providerString = await getDataStore("provider") || "[]"
+    const providers = JSON.parse(providerString)
+    const itemString = await getDataStore("event") || "[]"
+    const items = JSON.parse(itemString)
+    for (let i=0; i < items.length; i++){
+      const id = items[i].provider_id - 1
+      const name = providers[id].name
+      console.log("i: ",i,", id: ",id, ", name: ",name)
+      items[i].provider = name
+    }
+    this.items = items
+    
     this.store.commit(MUTATIONS.RESET_EVENT)
     //console.log("befMount: ",items)
   },

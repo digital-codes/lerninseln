@@ -2,7 +2,7 @@
 
  <ion-item-group>
     <ion-item-divider>
-      <ion-label class="event"><h2>{{title}}</h2></ion-label>
+      <ion-label class="event"><h2>{{title}}</h2>ID {{id}}</ion-label>
     </ion-item-divider>
     <ion-item color="light">
       <ion-icon :icon="icon" slot="start"></ion-icon>
