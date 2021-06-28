@@ -49,7 +49,7 @@
   <ion-button 
     v-if="hasEvent" 
     @click="buy()"
-    >Buchen
+    >Zu den Tickets
   </ion-button>
 
 
