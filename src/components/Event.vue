@@ -6,7 +6,6 @@
     </ion-item-divider>
     <ion-item color="light">
       <ion-icon :icon="icon" slot="start"></ion-icon>
-      <ion-button  color="tertiary" slot="end">X</ion-button>
       <ion-label position="fixed" class="eventDate">
       <div>{{date}}</div>
       <div>{{time}}</div>

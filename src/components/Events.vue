@@ -1,6 +1,32 @@
 <template>
 
+  <!--
+  <ion-item>
+  <div>
+  <ion-label >dweewf</ion-label>
+  <ion-checkbox v-model="chk1"></ion-checkbox>
+  </div>
+  <div>
+  <ion-label >123</ion-label>
+  <ion-checkbox v-model="chk2"></ion-checkbox>
+  </div>
+  <div>
+  <ion-label >123</ion-label>
+  <ion-checkbox v-model="chk3"></ion-checkbox>
+  </div>
+  </ion-item>
+
+  <ion-checkbox
+        @update:modelValue="check1.isChecked = $event"
+        :modelValue="check1.isChecked">
+  </ion-checkbox>
+  <ion-checkbox
+        @update:modelValue="entry.isChecked = $event"
+        :modelValue="entry.isChecked">
+  </ion-checkbox>
+-->
   <ion-button @click="toggle()">Toggle</ion-button>
+
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
         <Event 
           :date=item.date 
@@ -16,44 +42,42 @@
 
 <script> 
 
-import { IonButton } from '@ionic/vue';
+import { IonButton,  } from '@ionic/vue';
 // database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
+
+import { useStore, Selection, MUTATIONS } from '../store';
 
 import { defineComponent } from 'vue'; 
 import Event from '@/components/Event.vue';
 
 export default defineComponent({
   name: "Events",
-  components: {Event, IonButton},
-  props: { 
-    ticketLimit: {
-      type: Number,
-      default: 3
-    }
-  },
+  components: {Event, IonButton, },
   data () {
     return {
     items : [],
     filter : 0,
-    selection:0,
-    tickets: 0
+    chk1: 1, 
+    chk2: 0, 
+    chk3: 1, 
     }
   },
   methods:{
     open(e) {
-      console.log(e,this.items[e-1].text)
-      this.selection = this.items[e-1]
-      this.tickets = 0
+      const item = this.items[e-1]
+      //console.log(e,item.id) // normally same ..
+      this.store.commit(MUTATIONS.SET_EVENT, item.id);
     },
     toggle(){
       this.filter = this.filter == 0?1:0;
     }
   },
   async beforeMount() {
-    await initDataStore()
+    await initDataStore ()
     const items = await getDataStore("event") || "[]"
     this.items = JSON.parse(items)
+    this.store.commit(MUTATIONS.RESET_EVENT)
     //console.log("befMount: ",items)
   },
   computed: {
@@ -62,12 +86,17 @@ export default defineComponent({
       console.log("Filter on:", this.filter,"length: ",this.items.length)
       const i = []
       this.items.forEach(item => { 
-        console.log(item)
+        //console.log(item)
         if ((this.filter == 0) || (item.category_id == this.filter)) 
           i.push(item)
         })
       return i
     },
+  },
+    // store
+  setup() {
+    const store = useStore();
+    return { store };
   },
 }
 ); 

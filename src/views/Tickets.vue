@@ -16,17 +16,27 @@
       <ion-button @click="clrEvent">Clr</ion-button>
       </div>
 
-      <div v-if="getEvent" >
-        Event ID: {{ store.state.selection.eventId }}
-      </div>
-
-
       <ion-card-content>
 
-        <BookNew></BookNew>
+      <div v-if="hasEvent">
+        Event ID: {{ store.state.selection.eventId }}
+        <Event v-model="getEvent" 
+          :date=getEvent.date 
+          :time=getEvent.time 
+          :title=getEvent.title 
+          :text=getEvent.provider_id 
+          :id=getEvent.id 
+          >
+        </Event>
+      </div>
+      <div v-else>
+        No event selected
+      </div>
 
       </ion-card-content>
+
       </ion-card>
+
 
     </ion-content>
 
@@ -35,15 +45,24 @@
 
 <script lang="js">
 import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardContent  } from '@ionic/vue';
-import BookNew from '@/components/BookNew.vue';
+import Event from '@/components/Event.vue';
+import { defineComponent } from 'vue'; 
+// database
+import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
 // https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
-import { useStore, Todo, Selection, MUTATIONS } from '../store';
+import { useStore, Selection, MUTATIONS } from '../store';
 
-export default  {
+export default  defineComponent ({
   name: 'Tickets',
-  components: { BookNew, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
+  data () {
+    return {
+      evnt: {},
+      items : [],
+    }
+  },
+  components: { Event, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
   methods: {
     addEvent() {
       this.store.commit(MUTATIONS.SET_EVENT, 2);
@@ -53,18 +72,28 @@ export default  {
     },
   },
   computed: {
-    //getEvent(): number {
+    hasEvent() {
+      return (this.store.state.selection.eventId != 0)
+    },
     getEvent() {
-      const ev = this.store //.selection.eventId;
-      console.log("Ev:",ev)
-      return (ev.state.selection.eventId != 0)
+      if (this.store.state.selection.eventId != 0) {
+        const evnt = this.items[this.store.state.selection.eventId - 1] 
+        //console.log("event item: ",evnt)
+        return evnt
+      } else 
+      return {}
     }
+  },
+  async beforeMount() {
+    await initDataStore()
+    const items = await getDataStore("event") || "[]"
+    this.items = JSON.parse(items)
   },
     // store
   setup() {
     const store = useStore();
     return { store };
   },
+})
 
-}
 </script>

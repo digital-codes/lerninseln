@@ -37,15 +37,6 @@
 
   <p  :dbMagic="dbMagic" >DB  {{ dbMagic }}</p>
 
-
-<!-- -->
-      <ion-list>
-        <ion-item  v-for="todo in store.state.todos" :key="todo.id">
-            <ion-label>{{ todo.title }}</ion-label>
-        </ion-item>
-      </ion-list>
-<!-- -->
-
 </template>
 
 <script>
@@ -58,7 +49,7 @@ import "leaflet/dist/leaflet.css"
 import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon } from "@vue-leaflet/vue-leaflet";
 import { defineComponent } from 'vue';
 
-import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../store';
+import { useStore, Selection, MUTATIONS, ACTIONS } from '../store';
 
 // storage 
 /*

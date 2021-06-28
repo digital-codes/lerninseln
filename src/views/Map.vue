@@ -57,6 +57,6 @@ import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
 export default  {
   name: 'Map',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events }
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, }
 }
 </script>

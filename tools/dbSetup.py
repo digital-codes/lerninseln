@@ -385,20 +385,31 @@ if DROP_ALL:
 
     for r in p.itertuples():
         #print(r)
-        try:
+        # try catch works, but creates an id on every attempt, so
+        # sequence is no longer monotoneous
+##        try:
+##            provider = Provider(r.Name,r.description,"Deutschland",r.Ort,r.PLZ,
+##                                " ".join(r.Strasse.split(" ")[:-1]),r.Strasse.split(" ")[-1],
+##                                r.geo,"","","","")
+##            session.add(provider)
+##            session.commit()
+##            print("Provider inserted ",r.Name)
+##            
+##        # check for integrity error due to dupications
+##        except IntegrityError:
+##            print("Duplicate provider",r.Name)
+##            # important to rollback, else cannot complete
+##            session.rollback()
+##            pass # check audience and category still ##continue
+##
+
+        if None == session.query(Provider).filter(Provider.name == r.Name).first():
             provider = Provider(r.Name,r.description,"Deutschland",r.Ort,r.PLZ,
                                 " ".join(r.Strasse.split(" ")[:-1]),r.Strasse.split(" ")[-1],
                                 r.geo,"","","","")
             session.add(provider)
             session.commit()
             print("Provider inserted ",r.Name)
-            
-        # check for integrity error due to dupications
-        except IntegrityError:
-            print("Duplicate provider",r.Name)
-            # important to rollback, else cannot complete
-            session.rollback()
-            pass # check audience and category still ##continue
 
         # alternative was to check existence
         # if OK, check category and audience
