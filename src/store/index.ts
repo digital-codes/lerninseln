@@ -7,7 +7,7 @@ import { createStore, useStore as baseUseStore, Store, MutationTree, ActionTree,
 
 // interfaces for our State and todos
 export type Todo = { id: number; title: string; note?: string };
-export type Selection = { eventId: number };
+export type Selection = { eventId: number; providerId: number };
 export type State = { todos: Todo[]; selection: Selection };
 
 export const key: InjectionKey<Store<State>> = Symbol();
@@ -25,7 +25,7 @@ const state: State = {
     },
     { title: 'Learn Vuex', note: 'https://next.vuex.vuejs.org', id: 2 },
   ],
-  selection: {eventId: 0},
+  selection: {eventId: 0, providerId: 0},
 };
 
 /*
@@ -52,11 +52,14 @@ const mutations: MutationTree<State> = {
     const ogIndex = state.todos.findIndex(t => t.id === todo.id)
     state.todos[ogIndex] = todo;
   },
-  [MUTATIONS.SET_EVENT](state, event: number) {
-    state.selection.eventId = event;
+  //[MUTATIONS.SET_EVENT](state, event: number, provider: number) {
+  [MUTATIONS.SET_EVENT](state, selection: Selection ) {
+    state.selection.eventId = selection.eventId;
+    state.selection.providerId = selection.providerId;
   },
   [MUTATIONS.RESET_EVENT](state) {
     state.selection.eventId = 0;
+    state.selection.providerId = 0;
   },
 };
 

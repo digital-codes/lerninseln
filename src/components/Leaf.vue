@@ -16,7 +16,10 @@
   >
   </l-tile-layer>
 
+  <!--
   <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
+  -->
+  <l-marker v-for="item in selIitems" :key="item.id" :lat-lng="item.latlng"
       @l-add="$event.target.openPopup()"
   >
       <l-popup :content="item.content"></l-popup>
@@ -100,6 +103,20 @@ export default defineComponent ({
         */
       },
     };
+  },
+  computed: {
+    selIitems() {
+      // https://v3.vuejs.org/guide/computed.html#computed-properties
+      const provId = this.store.state.selection.providerId
+      const m = []
+      this.markers.forEach(marker => { 
+        console.log(marker)
+        //if ((this.filter == 0) || (item.category_id == this.filter)) 
+        if ((provId == 0) || (marker.id == provId)) 
+          m.push(marker)
+        })
+      return m
+    },
   },
   methods : {
     highLight(id) {

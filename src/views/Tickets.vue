@@ -10,12 +10,6 @@
 
     <ion-content >
       <ion-card>
-      <!--
-      <div>
-      <ion-button @click="addEvent">Add</ion-button>
-      <ion-button @click="clrEvent">Clr</ion-button>
-      </div>
-      -->
       <ion-card-content>
 
       <div v-if="hasEvent">
@@ -75,12 +69,6 @@ export default  defineComponent ({
   },
   components: { Event, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
   methods: {
-    addEvent() {
-      this.store.commit(MUTATIONS.SET_EVENT, 2);
-    },
-    clrEvent() {
-      this.store.commit(MUTATIONS.RESET_EVENT);
-    },
     purchase() {
       console.log("Buy ticket: ")
     },

@@ -89,7 +89,7 @@ export default defineComponent({
       const item = this.items[e-1]
       console.log("Selected: ",item.id) 
       this.filter = item.id
-      this.store.commit(MUTATIONS.SET_EVENT, item.id);
+      this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
     },
     toggle(){
       this.filter = this.filter == 0?1:0;
