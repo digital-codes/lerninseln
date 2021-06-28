@@ -20,8 +20,7 @@
       @l-add="$event.target.openPopup()"
   >
       <l-popup :content="item.content"></l-popup>
-      <!--l-icon v-if="item.iconUrl !== ''"   :icon-url="item.iconUrl" :icon-size="item.iconSize"></l-icon-->
-      <l-icon 
+      <l-icon v-if="item.iconOptions.iconSize[0] != 0"
         :iconUrl="item.iconOptions.iconUrl"
         :iconSize="item.iconOptions.iconSize"
         >
@@ -139,7 +138,7 @@ export default defineComponent ({
           //console.log(ll)
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
           const iconUrl = "https://placekitten.com/50/100"
-          const iconSize = [10,10]
+          const iconSize = [0,0]
           const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}
           this.markers.push({"id":p.id,"latlng":pnt,
           "content":content  + "<p>"+ p.id + "</p>",

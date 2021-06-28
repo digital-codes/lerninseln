@@ -10,17 +10,16 @@
 
     <ion-content >
       <ion-card>
-
+      <!--
       <div>
       <ion-button @click="addEvent">Add</ion-button>
       <ion-button @click="clrEvent">Clr</ion-button>
       </div>
-
+      -->
       <ion-card-content>
 
       <div v-if="hasEvent">
-        Event ID: {{ store.state.selection.eventId }}
-        <Event v-model="getEvent" 
+        <Event 
           :date=getEvent.date 
           :time=getEvent.time 
           :title=getEvent.title 
@@ -28,9 +27,15 @@
           :id=getEvent.id
           >
         </Event>
+
+        <Ion-button class="center" @click="presentActionSheet()">
+          Buchen
+        </Ion-button>
+
       </div>
       <div v-else> 
-        No event selected
+        <h2>Nichts ausgewählt!</h2>
+        Bitte wähle zuerst eine Veranstaltung aus.
       </div>
 
       </ion-card-content>
@@ -44,9 +49,15 @@
 </template>
 
 <script lang="js">
-import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardContent  } from '@ionic/vue';
+import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, 
+  IonContent,IonCard, IonCardContent,
+  actionSheetController,
+  } from '@ionic/vue';
 import Event from '@/components/Event.vue';
 import { defineComponent } from 'vue'; 
+
+import { rocket, trash,  } from 'ionicons/icons';
+
 // database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
@@ -58,7 +69,7 @@ export default  defineComponent ({
   name: 'Tickets',
   data () {
     return {
-      evnt: {},
+      //evnt: {},
       items : [],
     }
   },
@@ -69,6 +80,37 @@ export default  defineComponent ({
     },
     clrEvent() {
       this.store.commit(MUTATIONS.RESET_EVENT);
+    },
+    purchase() {
+      console.log("Buy ticket: ")
+    },
+
+    async presentActionSheet() {
+      const actionSheet = await actionSheetController
+        .create({
+          header: 'Buchung',
+          buttons: [
+            {
+              text: 'Bestätigen',
+              icon: rocket,
+              role: 'OK',
+              handler: () => {
+                this.purchase()
+              }
+            },
+            {
+              text: 'Abbrechen',
+              icon: trash,
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked')
+              },
+            },
+          ],
+        });
+      await actionSheet.present();
+      const { role } = await actionSheet.onDidDismiss();
+      console.log('onDidDismiss resolved with role', role);
     },
   },
   computed: {
@@ -81,7 +123,7 @@ export default  defineComponent ({
         //console.log("event item: ",evnt)
         return evnt
       } else 
-      return {}
+      return {x:1}
     }
   },
   async beforeMount() {
@@ -93,12 +135,12 @@ export default  defineComponent ({
     for (let i=0; i < items.length; i++){
       const id = items[i].provider_id - 1
       const name = providers[id].name
-      console.log("i: ",i,", id: ",id, ", name: ",name)
+      //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
     }
     this.items = items
   },
-    // store
+  // store
   setup() {
     const store = useStore();
     return { store };
@@ -106,3 +148,11 @@ export default  defineComponent ({
 })
 
 </script>
+
+<style scoped>
+
+.center {
+  display: block;
+}
+
+</style>

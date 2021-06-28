@@ -25,14 +25,14 @@
 </template>
 
 <script> 
-import { IonItemGroup, IonIcon, IonItem, IonLabel } from '@ionic/vue';
+import { IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel } from '@ionic/vue';
 import { walk, warning, wifi, wine } from 'ionicons/icons';
 
 import { defineComponent } from 'vue'; 
 
 export default defineComponent({
   props: ['title','text',"date",'time','id','icon'],
-  components: {IonItemGroup, IonIcon, IonItem, IonLabel},
+  components: {IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel},
 });
 
 </script>

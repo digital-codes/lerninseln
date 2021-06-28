@@ -25,7 +25,8 @@
         :modelValue="entry.isChecked">
   </ion-checkbox>
 -->
-  <ion-button @click="toggle()">Toggle</ion-button>
+  <!--ion-button @click="toggle()">Toggle</ion-button-->
+  <ion-button @click="showAll()">Alle anzeigen</ion-button>
 
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
         <Event 
@@ -34,7 +35,7 @@
           :title=item.title 
           :text=item.provider 
           :id=item.id  
-          @click="open(item.id)"
+          @click="select(item.id)"
           ></Event>
   </div>
 
@@ -65,14 +66,18 @@ export default defineComponent({
     }
   },
   methods:{
-    open(e) {
+    select(e) {
       const item = this.items[e-1]
-      //console.log(e,item.id) // normally same ..
+      console.log("Selected: ",item.id) 
       this.store.commit(MUTATIONS.SET_EVENT, item.id);
     },
     toggle(){
       this.filter = this.filter == 0?1:0;
-    }
+    },
+    showAll(){
+      this.filter = 0;
+      this.store.commit(MUTATIONS.RESET_EVENT);
+    },
   },
   async beforeMount() {
     await initDataStore ()
@@ -83,7 +88,7 @@ export default defineComponent({
     for (let i=0; i < items.length; i++){
       const id = items[i].provider_id - 1
       const name = providers[id].name
-      console.log("i: ",i,", id: ",id, ", name: ",name)
+      //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
     }
     this.items = items
@@ -136,30 +141,6 @@ button {
   margin-top: .5rem;
 }
 
-.modal {
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  background-color: rgba(0,0,0,.5);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  /*
-  width: 300px;
-  height: 300px;
-  */
-  width: 100%;
-  height: 100%;
-  padding: 5px;
-}
 
 .eventAccess button {
   display: inline-block;
