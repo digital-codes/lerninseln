@@ -35,7 +35,7 @@ export default defineComponent({
   components: {IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel},
   methods: {
     getIcon(){
-      console.log("Icon id:",parseInt(this.icon))
+      //console.log("Icon id:",parseInt(this.icon))
       switch (parseInt(this.icon)) {
         case 1:
           return wifi;

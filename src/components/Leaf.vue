@@ -37,8 +37,6 @@
   
   </div>
 
-  <p  :dbMagic="dbMagic" >DB  {{ dbMagic }}</p>
-
 </template>
 
 <script>
@@ -80,7 +78,6 @@ export default defineComponent ({
   },
   data() {
     return {
-      dbMagic:0,
       geokey:0,
       zoom:13,
       maxZoom:17,
@@ -211,7 +208,6 @@ export default defineComponent ({
     this.mapIsReady = true;
 
     this.ds = await DataStorage.getInstance()
-    this.dbMagic = await this.ds.getItem("magic")
  
     this.initialize();
   },

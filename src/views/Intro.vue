@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title :dbMagic="dbMagic" >Intro  {{ dbMagic }}
+        <ion-title >Intro
         <img alt="logo" height="40" style="vertical-align:middle"  src="/assets/img/logo.png" > 
         </ion-title>
       </ion-toolbar>
@@ -10,7 +10,6 @@
 
    
     <ion-content :fullscreen="true" >
-    <button @click="dstest()">test</button>
     
     <IntroText></IntroText>
     <!--    
@@ -51,22 +50,8 @@ export default  {
     return {
       email: "",
       pwd: "",
-      dbMagic:0,
       ds: "",
     } 
-  },
-  methods:{
-    async dstest() {
-    /* test */
-    console.log("DS:",this.ds)
-    this.ds.setItem("test","123");
-    this.ds.setItem("magic","deadbeef")
-    const a = await this.ds.getItem("magic")
-    console.log("Magic:",a) 
-    const b = await this.ds.getItem("test")
-    console.log("Test:",b) 
-    /* */
-    },
   },
   async beforeMount() {
     this.ds = await DataStorage.getInstance()
@@ -76,7 +61,6 @@ export default  {
       console.log("Magic set")
     } else {
       console.log("Datastore verified")
-      this.dbMagic = dbMagic
 
       // load data
       // cors: https://web.dev/cross-origin-resource-sharing/
