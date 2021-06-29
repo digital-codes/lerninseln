@@ -110,7 +110,7 @@ export default defineComponent ({
       const provId = this.store.state.selection.providerId
       const m = []
       this.markers.forEach(marker => { 
-        console.log(marker)
+        //console.log(marker)
         //if ((this.filter == 0) || (item.category_id == this.filter)) 
         if ((provId == 0) || (marker.id == provId)) 
           m.push(marker)

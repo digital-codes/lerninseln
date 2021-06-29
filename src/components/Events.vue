@@ -42,6 +42,7 @@
           :title=item.title 
           :text=item.provider 
           :id=item.id  
+          :icon=item.category_id
           @click="select(item.id)"
           ></Event>
   </div>
@@ -67,6 +68,8 @@ import { defineComponent } from 'vue';
 import Event from '@/components/Event.vue';
 
 import router from "../router";
+
+
 
 export default defineComponent({
   name: "Events",

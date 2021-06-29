@@ -5,7 +5,7 @@
       <ion-label class="event"><h2>{{title}}</h2>ID {{id}}</ion-label>
     </ion-item-divider>
     <ion-item color="light">
-      <ion-icon :icon="icon" slot="start"></ion-icon>
+      <ion-icon :icon="getIcon()" slot="start"/>
       <ion-label position="fixed" class="eventDate">
       <div>{{date}}</div>
       <div>{{time}}</div>
@@ -33,6 +33,29 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: ['title','text',"date",'time','id','icon'],
   components: {IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel},
+  methods: {
+    getIcon(){
+      console.log("Icon id:",parseInt(this.icon))
+      switch (parseInt(this.icon)) {
+        case 1:
+          return wifi;
+        case 2:
+          return wine;
+        case 3:
+          return walk;
+        default:
+          return warning;
+      } 
+    }
+  },
+  setup() {
+    return {
+      walk, 
+      wifi,
+      warning,
+      wine,
+    }
+  }
 });
 
 </script>

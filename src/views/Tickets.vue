@@ -19,6 +19,7 @@
           :title=getEvent.title 
           :text=getEvent.provider 
           :id=getEvent.id
+          :icon=getEvent.category_id
           >
         </Event>
 
