@@ -27,7 +27,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardCo
 import BookShow from '@/components/BookShow.vue';
 
 export default  {
-  name: 'Tickets',
+  name: 'Codes',
   components: { BookShow, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  }
 }
 </script>

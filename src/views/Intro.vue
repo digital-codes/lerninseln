@@ -7,7 +7,9 @@
         </ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content :fullscreen="true" >
+
     
     <IntroText></IntroText>
     <!--    
