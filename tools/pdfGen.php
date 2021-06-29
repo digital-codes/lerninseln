@@ -43,7 +43,7 @@ $img_data = 'data:image/png;base64,' . $img_base_64;
 
 $template = "pdfTemplate.php";
 $event = array();
-$event["name"] = "Exta Veranstaltung";
+$event["name"] = "Extra Veranstaltung";
 $event["date"] = "2021-07-20";
 $event["time"] = "19:00";
 $event["qrdata"] = $img_data;
