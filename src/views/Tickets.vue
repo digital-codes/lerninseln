@@ -23,9 +23,12 @@
           >
         </Event>
 
+        <OrderForm></OrderForm>
+        123
         <Ion-button class="center" @click="presentActionSheet()">
           Buchen
         </Ion-button>
+
 
       </div>
       <div v-else> 
@@ -60,6 +63,10 @@ import DataStorage from "../services/dstore";
 
 import { useStore, Selection, MUTATIONS } from '../store';
 
+// test
+import OrderForm from '@/components/OrderForm.vue';
+
+
 export default  defineComponent ({
   name: 'Tickets',
   data () {
@@ -69,7 +76,7 @@ export default  defineComponent ({
       ds: "",
     }
   },
-  components: { Event, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
+  components: { Event, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
   methods: {
     purchase() {
       console.log("Buy ticket: ")
