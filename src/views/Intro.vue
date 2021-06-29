@@ -8,8 +8,9 @@
       </ion-toolbar>
     </ion-header>
 
+   
     <ion-content :fullscreen="true" >
-
+    <button @click="dstest()">test</button>
     
     <IntroText></IntroText>
     <!--    
@@ -33,6 +34,8 @@ import Providers from '@/components/Providers.vue';
 // load all data from server and write to database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
+import DataStorage from "../services/dstore";
+
 
 // app exit
 // https://ionicframework.com/docs/developing/hardware-back-button
@@ -51,9 +54,24 @@ export default  {
       email: "",
       pwd: "",
       dbMagic:0,
+      ds: "",
     } 
   },
+  methods:{
+    async dstest() {
+    /* test */
+    console.log("DS:",this.ds)
+    this.ds.setItem("test","123");
+    this.ds.setItem("magic","deadbeef")
+    const a = await this.ds.getItem("magic")
+    console.log("Magic:",a) 
+    const b = await this.ds.getItem("test")
+    console.log("Test:",b) 
+    /* */
+    },
+  },
   async beforeMount() {
+    this.ds = await DataStorage.getInstance()
     await initDataStore()
     const dbMagic = await getDataStore("magic")
     if ((dbMagic || 0) == 0) {

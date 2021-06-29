@@ -1,7 +1,7 @@
 // from https://www.javascripttuts.com/using-vue-as-an-angular-alternative-for-ionic-the-services/
 
 export default class CounterSingleton {
-    counter = 0;
+    counter: number = 0;
   
     private static instance : CounterSingleton;
   
