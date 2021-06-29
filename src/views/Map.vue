@@ -52,8 +52,6 @@ import Events from '@/components/Events.vue';
 
 import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../store';
 
-// database
-import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
 export default  {
   name: 'Map',

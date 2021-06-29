@@ -32,8 +32,6 @@ import IntroText from '@/components/IntroText.vue';
 import Providers from '@/components/Providers.vue';
 
 // load all data from server and write to database
-import {initDataStore, setDataStore, getDataStore } from "../datastore";
-
 import DataStorage from "../services/dstore";
 
 
@@ -72,8 +70,7 @@ export default  {
   },
   async beforeMount() {
     this.ds = await DataStorage.getInstance()
-    await initDataStore()
-    const dbMagic = await getDataStore("magic")
+    const dbMagic = await this.ds.getItem("magic")
     if ((dbMagic || 0) == 0) {
       console.log("Problem with DataStore")
       console.log("Magic set")
@@ -102,7 +99,7 @@ export default  {
             console.log("Axios error:", error);
         });
         //console.log("Table ",t,": ",result)
-        await setDataStore(t, JSON.stringify(result))
+        await this.ds.setItem(t, JSON.stringify(result))
 
       }
 

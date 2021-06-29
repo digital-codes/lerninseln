@@ -61,7 +61,8 @@ import { Drivers } from '@ionic/storage';
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 */
 // database
-import {initDataStore, setDataStore, getDataStore } from "../datastore";
+import DataStorage from "../services/dstore";
+
 
 // ----------------------- 
 
@@ -102,6 +103,7 @@ export default defineComponent ({
         },
         */
       },
+      ds: "",
     };
   },
   computed: {
@@ -145,7 +147,7 @@ export default defineComponent ({
       //console.log(this.markers)
     },
     async initialize() {
-      const storedProviders = await getDataStore("provider") || "[]"
+      const storedProviders = await this.ds.getItem("provider") || "[]"
       const pp = JSON.parse(storedProviders)
       if (pp.length > 0) {
         //this.providers.forEach(p => {
@@ -208,8 +210,8 @@ export default defineComponent ({
     this.startPnt = [49.004,  8.403]
     this.mapIsReady = true;
 
-    await initDataStore()
-    this.dbMagic = await getDataStore("magic")
+    this.ds = await DataStorage.getInstance()
+    this.dbMagic = await this.ds.getItem("magic")
  
     this.initialize();
   },

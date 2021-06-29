@@ -53,8 +53,8 @@ import { defineComponent } from 'vue';
 
 import { rocket, trash,  } from 'ionicons/icons';
 
-// database
-import {initDataStore, setDataStore, getDataStore } from "../datastore";
+// load all data from server and write to database
+import DataStorage from "../services/dstore";
 
 // https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
@@ -66,6 +66,7 @@ export default  defineComponent ({
     return {
       //evnt: {},
       items : [],
+      ds: "",
     }
   },
   components: { Event, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  },
@@ -116,10 +117,10 @@ export default  defineComponent ({
     }
   },
   async beforeMount() {
-    await initDataStore()
-    const providerString = await getDataStore("provider") || "[]"
+    this.ds = await DataStorage.getInstance()
+    const providerString = await this.ds.getItem("provider") || "[]"
     const providers = JSON.parse(providerString)
-    const itemString = await getDataStore("event") || "[]"
+    const itemString = await this.ds.getItem("event") || "[]"
     const items = JSON.parse(itemString)
     for (let i=0; i < items.length; i++){
       const id = items[i].provider_id - 1

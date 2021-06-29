@@ -59,8 +59,9 @@
 <script> 
 
 import { IonButton,  } from '@ionic/vue';
-// database
-import {initDataStore, setDataStore, getDataStore } from "../datastore";
+
+// load all data from server and write to database
+import DataStorage from "../services/dstore";
 
 import { useStore, Selection, MUTATIONS } from '../store';
 
@@ -82,6 +83,7 @@ export default defineComponent({
     chk1: 1, 
     chk2: 0, 
     chk3: 1, 
+    ds: "",
     }
   },
   methods:{
@@ -103,10 +105,10 @@ export default defineComponent({
     },
   },
   async beforeMount() {
-    await initDataStore ()
-    const providerString = await getDataStore("provider") || "[]"
+    this.ds = await DataStorage.getInstance()
+    const providerString = await this.ds.getItem("provider") || "[]"
     const providers = JSON.parse(providerString)
-    const itemString = await getDataStore("event") || "[]"
+    const itemString = await this.ds.getItem("event") || "[]"
     const items = JSON.parse(itemString)
     for (let i=0; i < items.length; i++){
       const id = items[i].provider_id - 1
