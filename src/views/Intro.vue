@@ -32,6 +32,7 @@ import Providers from '@/components/Providers.vue';
 
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
+import DataFetch from "../services/fetch";
 
 
 // app exit
@@ -51,10 +52,16 @@ export default  {
       email: "",
       pwd: "",
       ds: "",
+      df: "",
     } 
   },
   async beforeMount() {
     this.ds = await DataStorage.getInstance()
+    this.df = await DataFetch.getInstance()
+    /* test 
+    const x = await this.df.getTable("ticket");
+    console.log("X:",x)
+     test */
     const dbMagic = await this.ds.getItem("magic")
     if ((dbMagic || 0) == 0) {
       console.log("Problem with DataStore")
@@ -63,28 +70,13 @@ export default  {
       console.log("Datastore verified")
 
       // load data
-      // cors: https://web.dev/cross-origin-resource-sharing/
-      const axios = await import ('axios');
-      const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=";
-      const config = { headers: {'Access-Control-Allow-Origin': '*'}}
-
       const tables = ["provider","event","ticket","category","audience"]
       for (const ti in tables) {
         const t = tables[ti]
-        const url = baseUrl + t
-        console.log("Axios from ",url);
-        let result = []
-        await axios.get(url,config)
-        .then(response => {
-          //console.log("Response:",response.data);
-          result = response.data
-        })
-        .catch(error => {
-            console.log("Axios error:", error);
-        });
+        console.log("Get data for table ",t);
+        const result = await this.df.getTable(t);
         //console.log("Table ",t,": ",result)
         await this.ds.setItem(t, JSON.stringify(result))
-
       }
 
     }
