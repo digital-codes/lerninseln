@@ -4,9 +4,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: access-control-allow-origin, headers, origin, callback");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
-
 //header("Content-Type: */*;encoding=gzip, deflate, br");
-
+//https://ionicframework.com/docs/troubleshooting/cors
   // --------------------------------------------------
   // log function
   // --------------------------------------------------
@@ -83,8 +82,7 @@ switch ($meth) {
 					mlog("DB error",9);
 					die("DB Error");
 			}
-
-
+            
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             /* $query = "SELECT * from sensors order by `index` asc"; */
             /*$query = "SELECT id,count,co2,bat,pres,hum,temp,light,rssi,rfu,date,pkt,rep from sensors order by `index` asc"; */
