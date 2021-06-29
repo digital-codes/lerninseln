@@ -2,7 +2,7 @@
 
  <ion-item-group>
     <ion-item-divider>
-      <ion-label class="event"><h2>{{title}}</h2>ID {{id}}</ion-label>
+      <ion-label class="event"><h2>{{title}}, ID {{id}}</h2></ion-label>
     </ion-item-divider>
     <ion-item color="light">
       <ion-icon :icon="getIcon()" slot="start"/>
@@ -69,11 +69,15 @@ h2 {
 .event {
   text-align: left;
   white-space: normal;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .eventDate {
   text-align: left;
   /* with position: fixed adjust size */
   flex-basis: 150px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .footer {

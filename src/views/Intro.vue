@@ -31,6 +31,14 @@ import Providers from '@/components/Providers.vue';
 // load all data from server and write to database
 import {initDataStore, setDataStore, getDataStore } from "../datastore";
 
+
+// app exit
+// https://ionicframework.com/docs/developing/hardware-back-button
+import { useBackButton, useIonRouter } from '@ionic/vue';
+import { Plugins } from '@capacitor/core';
+const { App } = Plugins;
+
+
 export default  {
   name: 'Intro',
   components: { //LoginForm, 
@@ -80,6 +88,14 @@ export default  {
 
     }
 
+  },
+  setup() {
+    const ionRouter = useIonRouter();
+    useBackButton(-1, () => {
+      if (!ionRouter.canGoBack()) {
+        App.exitApp();
+      }
+    });
   }
 }
 </script>

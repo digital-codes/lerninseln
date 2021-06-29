@@ -8,6 +8,16 @@ require 'vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+function render_php($path,$event)
+{
+    ob_start();
+    include($path);
+    $var=ob_get_contents(); 
+    ob_end_clean();
+    return $var;
+}
+
+
 // options first
 $options = new Options();
 $options->set('isRemoteEnabled', TRUE);
@@ -27,33 +37,14 @@ $img_base_64 = base64_encode($img);
 $img_data = 'data:image/png;base64,' . $img_base_64;
 
 
-$txt = "
-<html>
-<head>
-<style>
-h1 {
-    line-height: 2em;
-    font-size: 1.5em;
-    color: \"#f00\";
-    margin-bottom: 1em;
-}
-p {
-    font-size:1em;
-}
+$template = "pdfTemplate.php";
+$event = array();
+$event["name"] = "Exta Veranstaltung";
+$event["date"] = "2021-07-20";
+$event["time"] = "19:00";
+$event["qrdata"] = $img_data;
+$txt = render_php($template,$event);
 
-.im {
-    width: 400px;
-    margin: 2em;
-}
-</style>
-</head>
-<body>
-<h1>hello world</h1>
-<img class=\"im\" src=\"". $img_data . "\">
-<p>Footer</p>
-</body>
-</html>
-";
 
 $dompdf->loadHtml($txt);
 
