@@ -67,6 +67,7 @@ export default defineComponent ({
   components: {
     IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle ,IonCheckbox
   },
+  emits: ["purchaseComplete"],  // vue3 requires to define events here!
   data () {
     return {
       formValues: {},
@@ -83,6 +84,8 @@ export default defineComponent ({
       const result = await this.df.post(posting)
       console.log("Post result: ",result)
       this.payload = result.payload
+      this.payload.status = 1 // after validation
+      this.$emit("purchaseComplete",this.payload)
       // form processing here
     }
   },

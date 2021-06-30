@@ -23,8 +23,7 @@
           >
         </Event>
 
-        <OrderForm></OrderForm>
-        123
+        <OrderForm @purchaseComplete="purchaseCompleted($event)"></OrderForm>
         <Ion-button class="center" @click="presentActionSheet()">
           Buchen
         </Ion-button>
@@ -66,6 +65,11 @@ import { useStore, Selection, MUTATIONS } from '../store';
 // test
 import OrderForm from '@/components/OrderForm.vue';
 
+/* passing data from child to parent 
+https://forum.vuejs.org/t/passing-data-back-to-parent/1201
+https://dev.to/freakflames29/how-to-pass-data-from-child-to-parent-in-vue-js-2d9m
+https://v3.vuejs.org/guide/migration/emits-option.html#_3-x-behavior
+*/
 
 export default  defineComponent ({
   name: 'Tickets',
@@ -80,6 +84,9 @@ export default  defineComponent ({
   methods: {
     purchase() {
       console.log("Buy ticket: ")
+    },
+    purchaseCompleted(result) {
+        console.log("Completed: ",result,"status: ",result.status,", ticket: ",result.ticket)
     },
 
     async presentActionSheet() {
