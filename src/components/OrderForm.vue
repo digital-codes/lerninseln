@@ -65,11 +65,11 @@
   </ion-item>
 
     <ion-item>
-    <ion-button  class="submit-button"
+    <ion-button  class="submit-button" ref="confirmButton"
       type="submit"
       label="Register"
       value="Register"
-    >Bestätigen</ion-button>
+    >Senden</ion-button>
   </ion-item>
   </form>
 
@@ -129,11 +129,14 @@ export default defineComponent ({
       }
       console.log("OK")
       // open confirmation form
+      this.formValues.code = ""
       this.showSubscription = false
     },
     async processConfirmationForm(e) {
       e.preventDefault();
       const code = this.formValues.code
+      if (String(code).length != 6)
+        return
       const posting = {request:2,payload:{
         ticket: 1, 
         email: this.store.state.purchase.email,
