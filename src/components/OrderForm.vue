@@ -57,6 +57,8 @@
     <ion-input v-model="formValues.code" class="input-item"
       email="code"
       type="string"
+      minlength=6
+      maxlength=6
       placeholder="Code"
       validation="required"
     />
