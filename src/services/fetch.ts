@@ -6,7 +6,7 @@
 //import axios from 'axios';
 const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php"
 const baseGetUrl = baseUrl + "?table=";
-const config = { headers: {'Access-Control-Allow-Origin': '*'}}
+//const config = { headers: {'Access-Control-Allow-Origin': '*'}}
 const getConfig = { headers: {'Access-Control-Allow-Origin': '*'}}
 const postConfig = { headers: {'Access-Control-Allow-Origin': '*',
   'content-type': 'application/json'
@@ -47,15 +47,21 @@ export default class DataFetch {
         console.log("Axios post")
         const url = baseUrl
         //const url ="http://localhost:9000/simpleSrv.php"
-        let result: any
+        const result: {status: number; code: number; payload: any} = 
+          {status:0,code:0,payload:{}}
         await DataFetch.fetch.post(url,data, postConfig)
         .then((response: { data: any }) => {
           //console.log("Response:",response.data);
-          result = response.data
+          result.payload = response.data
+          result.status = 1
+          result.code = 0
         })
         .catch((error: any) => {
             console.log("Axios error:", error);
-            result = []
+            result.payload = error.status_text
+            result.status = 0
+            result.code = error.status
+
           });
           return result
         }

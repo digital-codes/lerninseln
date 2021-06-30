@@ -24,10 +24,11 @@
         </Event>
 
         <OrderForm @purchaseComplete="purchaseCompleted($event)"></OrderForm>
-        <Ion-button class="center" @click="presentActionSheet()">
+        <ion-item>
+        <Ion-button class="center-button" @click="presentActionSheet()">
           Buchen
         </Ion-button>
-
+        </ion-item>
 
       </div>
       <div v-else> 
@@ -86,7 +87,11 @@ export default  defineComponent ({
       console.log("Buy ticket: ")
     },
     purchaseCompleted(result) {
-        console.log("Completed: ",result,"status: ",result.status,", ticket: ",result.ticket)
+        console.log("Completed: ",result,"status: ",
+        result.status,", ticket: ",result.payload.ticket)
+        if (result.status) {
+          this.presentActionSheet()
+        }
     },
 
     async presentActionSheet() {
@@ -155,8 +160,13 @@ export default  defineComponent ({
 
 <style scoped>
 
-.center {
+.center-button {
   display: block;
+  margin: auto;
+}
+
+.center-button>button {
+  padding: 1em;
 }
 
 </style>

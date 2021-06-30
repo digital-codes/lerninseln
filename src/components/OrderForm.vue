@@ -2,43 +2,40 @@
 <template>
 
   <ion-card>
-  <ion-card-header>
-    <ion-card-title>Login Form</ion-card-title>
-    <ion-card-subtitle>Anmeldung nur für Buchung nötig, Stöbern geht auch ohne ...</ion-card-subtitle>
-  </ion-card-header>
   <ion-card-content>
   <form ref="orderForm"
     class="login-form"
   >
-    <h2 class="form-title">Register</h2>
-    <p>
-      You can place any elements you want inside a form. The inputs themselves
-      can even be deeply nested.
-    </p>
+    Zur Buchung benötigen wir Deine Email-Adresse. Wir senden Dir dann einen Code,
+    den Du hier eingibst. Du bekommst danach den QR-Code und ein
+    Ticket zum Ausdrucken.
+    <p class="footnote">Bitte markiere mit "OK", dass Du der Verarbeitung
+    Deiner Daten zustimmst.
+    </p> 
     <ion-item>
-    <ion-label position="stacked">Stacked Label</ion-label>
-    <ion-input v-model="formValues.name" class="formulate-input formulate-input-element"
-      name="name"
-      type="text"
-      label="Your name"
-      placeholder="Your name"
+    <ion-label class="input-label" position="stacked">Email</ion-label>
+    <ion-input v-model="formValues.name" class="input-item"
+      email="email"
+      type="email"
+      placeholder="Email"
       validation="required"
     />
   </ion-item>
 
     <ion-item>
-    <ion-label position="fixed">OK</ion-label>
-    <ion-checkbox 
+    <ion-label class="check-label" position="fixed">OK</ion-label>
+    <ion-checkbox class="check-box"
         slot="start"
         @update:modelValue="formValues.checked = $event"
         :modelValue="formValues.checked">
       </ion-checkbox>    
-    <ion-input  class="formulate-input formulate-input-element"
+    <ion-button  class="submit-button"
       type="submit"
       label="Register"
       value="Register"
-    />
+    >Senden</ion-button>
   </ion-item>
+    <!--
     <pre
       class="code"
       v-text="formValues"
@@ -47,7 +44,7 @@
       class="code"
       v-text="payload"
     />
-
+    -->
   </form>
   </ion-card-content>
   </ion-card>
@@ -57,7 +54,7 @@
 <script lang="js">
 // inspired by https://vueformulate.com/guide/forms/
 
-import { IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCheckbox } from '@ionic/vue';
+import { IonItem, IonLabel, IonInput, IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCheckbox } from '@ionic/vue';
 import { defineComponent } from 'vue'; 
 
 import DataFetch from "../services/fetch";
@@ -65,13 +62,14 @@ import DataFetch from "../services/fetch";
 export default defineComponent ({
   name: "OrderForm",
   components: {
-    IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle ,IonCheckbox
+    IonItem, IonLabel, IonInput, IonCard, IonCardContent, 
+    //IonCardSubtitle, IonCardTitle ,
+    IonCheckbox, IonButton
   },
   emits: ["purchaseComplete"],  // vue3 requires to define events here!
   data () {
     return {
-      formValues: {},
-      checked:0,
+      formValues: {checked:0},
       df:"",
       payload: {}
     }
@@ -84,6 +82,11 @@ export default defineComponent ({
       const result = await this.df.post(posting)
       console.log("Post result: ",result)
       this.payload = result.payload
+      if (result.status) {
+        console.log("OK")
+      } else {
+        console.log("Error:", result.code," ",result.payload)
+      }
       this.payload.status = 1 // after validation
       this.$emit("purchaseComplete",this.payload)
       // form processing here
@@ -104,36 +107,40 @@ export default defineComponent ({
 
 <style scoped>
 .login-form {
-  padding: 2em;
+  padding: 1em;
   border: 1px solid #a8a8a8;
   border-radius: .5em;
-  max-width: 500px;
   box-sizing: border-box;
 }
 .form-title {
   margin-top: 0;
 }
 
-/*.login-form::v-deep .formulate-input .formulate-input-element {*/
-:deep(<.login-form>) .formulate-input .formulate-input-element {
-  max-width: none;
+.check-box {
+  margin-inline-end: 10px;
 }
 
-@media (min-width: 420px) {
-  .double-wide {
-    display: flex;
-  }
-  .double-wide .formulate-input {
-    flex-grow: 1;
-    width: calc(50% - .5em);
-  }
-  .double-wide .formulate-input:first-child {
-    margin-right: .5em;
-  }
-  .double-wide .formulate-input:last-child {
-    margin-left: .5em;
-  }
+.check-label {
+  max-width: 50px;
+  min-width: 30px;
+  flex: 0 0 20px;
 }
+
+.footnote {
+  font-size: 80%;
+}
+.input-item {
+  
+}
+
+.input-label {
+  
+}
+
+.submit-button {
+
+}
+
 </style>
 
 
