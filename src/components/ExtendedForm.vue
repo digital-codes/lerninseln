@@ -1,13 +1,63 @@
 
 <template>
 
+  <form id="signup-form"
+    class="login-form"
+  >
+    <h2 class="form-title">Register</h2>
+    <p>
+      You can place any elements you want inside a form. The inputs themselves
+      can even be deeply nested.
+    </p>
+    <input v-model="formValues.name" class="formulate-input formulate-input-element"
+      name="name"
+      type="text"
+      label="Your name"
+      placeholder="Your name"
+      validation="required"
+    />
+    <input  v-model="formValues.email" class="formulate-input formulate-input-element"
+      name="email"
+      type="email"
+      label="Email address"
+      placeholder="Email address"
+      validation="required|email"
+    />
+    <div class="double-wide">
+      <input  v-model="formValues.pwd" class="formulate-input formulate-input-element"
+        name="password"
+        type="password"
+        label="Password"
+        placeholder="Your password"
+        validation="required"
+      />
+      <input  v-model="formValues.pwd2" class="formulate-input formulate-input-element"
+        name="password_confirm"
+        type="password"
+        label="Confirm your password"
+        placeholder="Confirm password"
+        validation="required|confirm"
+        validation-name="Confirmation"
+      />
+    </div>
+    <input  class="formulate-input formulate-input-element"
+      type="submit"
+      label="Register"
+      value="Register"
+    />
+    <pre
+      class="code"
+      v-text="formValues"
+    />
+  </form>
+
   <ion-card>
   <ion-card-header>
     <ion-card-title>Login Form</ion-card-title>
     <ion-card-subtitle>Anmeldung nur für Buchung nötig, Stöbern geht auch ohne ...</ion-card-subtitle>
   </ion-card-header>
   <ion-card-content>
-  <form id="signup-form"
+  <form id="signup-form2"
     class="login-form"
   >
     <h2 class="form-title">Register</h2>
@@ -28,10 +78,10 @@
 
     <ion-item>
     <ion-label position="fixed">OK</ion-label>
-    <ion-checkbox 
+    <ion-checkbox
         slot="start"
-        @update:modelValue="formValues.checked = $event"
-        :modelValue="formValues.checked">
+        @update:modelValue="formValues.isChecked = $event"
+        :modelValue="formValues.isChecked">
       </ion-checkbox>    
     <ion-input  class="formulate-input formulate-input-element"
       type="submit"
@@ -43,6 +93,9 @@
       class="code"
       v-text="formValues"
     />
+    <div v-if="formValues.isChecked">
+      isChecked
+    </div>
 
   </form>
   </ion-card-content>
@@ -53,24 +106,23 @@
 <script>
 // inspired by https://vueformulate.com/guide/forms/
 
-import { IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCheckbox } from '@ionic/vue';
+import { IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue'; 
 
 export default defineComponent ({
   name: "OrderForm",
   components: {
-    IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle ,IonCheckbox
+    IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle 
   },
   data () {
     return {
-      formValues: {},
-      checked:0,
+      formValues: {}
     }
   },
   methods:{
     processSignupForm(e) {
       e.preventDefault();
-      console.log("Signup. Checked is ",this.formValues.checked)
+      console.log("Signup")
       // form processing here
     }
   },
