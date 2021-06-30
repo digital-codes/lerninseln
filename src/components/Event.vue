@@ -28,6 +28,17 @@
 import { IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel } from '@ionic/vue';
 import { walk, warning, wifi, wine } from 'ionicons/icons';
 
+// could use thumbnails or avatars in place of icons.
+/*
+https://ionicframework.com/docs/api/thumbnail
+<ion-thumbnail>
+    <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+  </ion-thumbnail>
+
+https://ionicframework.com/docs/api/avatar
+
+*/
+
 import { defineComponent } from 'vue'; 
 
 export default defineComponent({

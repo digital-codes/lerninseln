@@ -73,7 +73,7 @@ export default  defineComponent ({
       console.log("Datastore verified")
 
       // load data
-      const tables = ["provider","event","ticket","category","audience"]
+      const tables = ["config","provider","event","ticket","category","audience"]
       for (const ti in tables) {
         const t = tables[ti]
         console.log("Get data for table ",t);

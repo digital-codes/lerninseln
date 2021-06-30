@@ -7,7 +7,7 @@
     <ion-card-subtitle>Anmeldung nur für Buchung nötig, Stöbern geht auch ohne ...</ion-card-subtitle>
   </ion-card-header>
   <ion-card-content>
-  <form id="signup-form"
+  <form ref="orderForm"
     class="login-form"
   >
     <h2 class="form-title">Register</h2>
@@ -43,6 +43,10 @@
       class="code"
       v-text="formValues"
     />
+    <pre
+      class="code"
+      v-text="payload"
+    />
 
   </form>
   </ion-card-content>
@@ -68,6 +72,7 @@ export default defineComponent ({
       formValues: {},
       checked:0,
       df:"",
+      payload: {}
     }
   },
   methods:{
@@ -77,6 +82,7 @@ export default defineComponent ({
       const posting = {request:1,payload:this.formValues}
       const result = await this.df.post(posting)
       console.log("Post result: ",result)
+      this.payload = result.payload
       // form processing here
     }
   },
@@ -84,7 +90,9 @@ export default defineComponent ({
     this.df = await DataFetch.getInstance()
   },
   mounted() {
-    const signupForm = document.getElementById('signup-form');
+    //const signupForm = document.getElementById('signup-form');
+    // use vue refs method to access the form instance
+    const signupForm = this.$refs.orderForm
     signupForm.addEventListener('submit', this.processSignupForm);
   },
 })
