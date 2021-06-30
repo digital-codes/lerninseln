@@ -24,12 +24,13 @@
         </Event>
 
         <OrderForm @purchaseComplete="purchaseCompleted($event)"></OrderForm>
+        <!--
         <ion-item>
         <Ion-button class="center-button" @click="presentActionSheet()">
           Buchen
         </Ion-button>
         </ion-item>
-
+        -->
       </div>
       <div v-else> 
         <h2>Nichts ausgewählt!</h2>
@@ -81,7 +82,7 @@ export default  defineComponent ({
       ds: "",
     }
   },
-  components: { Event, IonButton, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
+  components: { Event, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
   methods: {
     purchase() {
       console.log("Buy ticket: ")

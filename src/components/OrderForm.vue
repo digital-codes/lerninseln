@@ -3,7 +3,8 @@
 
   <ion-card>
   <ion-card-content>
-  <form ref="orderForm"
+
+  <form ref="orderForm" v-show="showSubscription == true"
     class="login-form"
   >
     Zur Buchung benötigen wir Deine Email-Adresse. Wir senden Dir dann einen Code,
@@ -14,7 +15,7 @@
     </p> 
     <ion-item>
     <ion-label class="input-label" position="stacked">Email</ion-label>
-    <ion-input v-model="formValues.name" class="input-item"
+    <ion-input v-model="formValues.email" class="input-item"
       email="email"
       type="email"
       placeholder="Email"
@@ -46,6 +47,30 @@
     />
     -->
   </form>
+
+  <form ref="confirmationForm" v-show="showSubscription == false"
+    class="login-form"
+  >
+    Bitte gib den Code ein, den wir Dir an Deine Email Adressen gesendet haben.
+    <ion-item>
+    <ion-label class="input-label" position="stacked">Code</ion-label>
+    <ion-input v-model="formValues.code" class="input-item"
+      email="code"
+      type="string"
+      placeholder="Code"
+      validation="required"
+    />
+  </ion-item>
+
+    <ion-item>
+    <ion-button  class="submit-button"
+      type="submit"
+      label="Register"
+      value="Register"
+    >Bestätigen</ion-button>
+  </ion-item>
+  </form>
+
   </ion-card-content>
   </ion-card>
 
@@ -59,6 +84,9 @@ import { defineComponent } from 'vue';
 
 import DataFetch from "../services/fetch";
 
+import { useStore, Selection, MUTATIONS, ACTIONS } from '../store';
+
+
 export default defineComponent ({
   name: "OrderForm",
   components: {
@@ -71,22 +99,53 @@ export default defineComponent ({
     return {
       formValues: {checked:0},
       df:"",
-      payload: {}
+      payload: {},
+      showSubscription: true,
     }
   },
   methods:{
     async processSignupForm(e) {
       e.preventDefault();
-      console.log("Signup. Checked is ",this.formValues.checked)
-      const posting = {request:1,payload:this.formValues}
-      const result = await this.df.post(posting)
-      console.log("Post result: ",result)
-      this.payload = result.payload
-      if (result.status) {
-        console.log("OK")
-      } else {
-        console.log("Error:", result.code," ",result.payload)
+      if (!this.formValues.checked) {
+        console.log("Not checked")
+        return
       }
+      const email = this.formValues.email
+      this.store.state.purchase.email = email
+      console.log("Signup. Checked is ",this.formValues.checked)
+      const posting = {request:1,payload:{
+        ticket: 1, 
+        email: this.store.state.purchase.email,
+        }
+      }
+      const result = await this.df.post(posting)
+      console.log("Post1 result: ",result)
+      this.payload = result.payload
+      if (!result.status) {
+        console.log("Error1:", result.code," ",result.payload)
+        return
+      }
+      console.log("OK")
+      // open confirmation form
+      this.showSubscription = false
+    },
+    async processConfirmationForm(e) {
+      e.preventDefault();
+      const code = this.formValues.code
+      const posting = {request:2,payload:{
+        ticket: 1, 
+        email: this.store.state.purchase.email,
+        code: code
+        }
+      }
+      const result = await this.df.post(posting)
+      console.log("Post2 result: ",result)
+      this.payload = result.payload
+      if (!result.status) {
+        console.log("Error2:", result.code," ",result.payload)
+        return
+      }
+      console.log("OK")
       this.payload.status = 1 // after validation
       this.$emit("purchaseComplete",this.payload)
       // form processing here
@@ -100,6 +159,13 @@ export default defineComponent ({
     // use vue refs method to access the form instance
     const signupForm = this.$refs.orderForm
     signupForm.addEventListener('submit', this.processSignupForm);
+    const confirmationForm = this.$refs.confirmationForm
+    confirmationForm.addEventListener('submit', this.processConfirmationForm);
+  },
+  // store
+  setup() {
+    const store = useStore();
+    return { store};
   },
 })
 
