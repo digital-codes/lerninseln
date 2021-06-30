@@ -4,8 +4,14 @@
 // cors: https://web.dev/cross-origin-resource-sharing/
 //const axios = await import ('axios');
 //import axios from 'axios';
-const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php?table=";
+const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php"
+const baseGetUrl = baseUrl + "?table=";
 const config = { headers: {'Access-Control-Allow-Origin': '*'}}
+const getConfig = { headers: {'Access-Control-Allow-Origin': '*'}}
+const postConfig = { headers: {'Access-Control-Allow-Origin': '*',
+  'content-type': 'application/json'
+  }
+}
 
 
 export default class DataFetch {
@@ -24,9 +30,9 @@ export default class DataFetch {
     
     async getTable(table: string) {
       console.log("Axios get")
-      const url = baseUrl + table
+      const url = baseGetUrl + table
       let result: any
-      await DataFetch.fetch.get(url,config)
+      await DataFetch.fetch.get(url,getConfig)
       .then((response: { data: any }) => {
         result = response.data
       })
@@ -41,7 +47,7 @@ export default class DataFetch {
         console.log("Axios post")
         const url = baseUrl
         let result: any
-        await DataFetch.fetch.post(url,data, config)
+        await DataFetch.fetch.post(url,data, postConfig)
         .then((response: { data: any }) => {
           //console.log("Response:",response.data);
           result = response.data

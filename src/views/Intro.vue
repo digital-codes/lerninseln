@@ -25,6 +25,9 @@
 
 <script lang="js">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,  } from '@ionic/vue';
+
+import { defineComponent } from 'vue'; 
+
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 //import LoginForm from '@/components/LoginForm.vue';
 import IntroText from '@/components/IntroText.vue';
@@ -42,7 +45,7 @@ import { Plugins } from '@capacitor/core';
 const { App } = Plugins;
 
 
-export default  {
+export default  defineComponent ({
   name: 'Intro',
   components: { //LoginForm, 
     IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
@@ -90,5 +93,6 @@ export default  {
       }
     });
   }
-}
+})
+
 </script>

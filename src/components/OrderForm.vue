@@ -50,11 +50,13 @@
 
 </template>
 
-<script>
+<script lang="js">
 // inspired by https://vueformulate.com/guide/forms/
 
 import { IonItem, IonLabel, IonInput, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCheckbox } from '@ionic/vue';
 import { defineComponent } from 'vue'; 
+
+import DataFetch from "../services/fetch";
 
 export default defineComponent ({
   name: "OrderForm",
@@ -65,19 +67,25 @@ export default defineComponent ({
     return {
       formValues: {},
       checked:0,
+      df:"",
     }
   },
   methods:{
-    processSignupForm(e) {
+    async processSignupForm(e) {
       e.preventDefault();
       console.log("Signup. Checked is ",this.formValues.checked)
+      const posting = {request:1,payload:this.formValues}
+      const result = await this.df.post(posting)
+      console.log("Post result: ",result)
       // form processing here
     }
+  },
+  async beforeMount(){
+    this.df = await DataFetch.getInstance()
   },
   mounted() {
     const signupForm = document.getElementById('signup-form');
     signupForm.addEventListener('submit', this.processSignupForm);
-
   },
 })
 
