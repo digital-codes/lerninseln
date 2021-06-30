@@ -45,7 +45,8 @@ export default class DataFetch {
 
       async post(data: Record<string,any>) {
         console.log("Axios post")
-        const url = baseUrl
+        //const url = baseUrl
+        const url ="http://localhost:9000/simpleSrv.php"
         let result: any
         await DataFetch.fetch.post(url,data, postConfig)
         .then((response: { data: any }) => {

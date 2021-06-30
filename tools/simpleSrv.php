@@ -64,7 +64,7 @@ switch ($meth) {
             $table = $args["table"];
         }
         
-        define("TABLES", array("provider","category","audience","event","ticket","code"));
+        define("TABLES", array("config","provider","category","audience","event","ticket","code"));
         
         if (array_search($table, TABLES) === false) {
 			mlog("Invalid table");
@@ -98,8 +98,18 @@ switch ($meth) {
             }
         }
 		break;
-        
-        // no break
+
+    case "POST":
+        mlog("POST");
+        $input = json_decode(file_get_contents('php://input'), true);
+        mlog("Input: " . json_encode($input));
+        //$parms = array("table" => FILTER_SANITIZE_STRING);
+        //$args = filter_input_array(INPUT_GET, $parms, true);
+        //$result = json_encode(array("payload" => "123","status" => 1));
+        $payload = array("ticket" => 1, "code" => 2);
+        $result = array("payload" => $payload,"status" => 1);
+        break;
+
     default:
         mlog("Other");
         break;
