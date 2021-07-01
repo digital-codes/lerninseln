@@ -4,7 +4,6 @@
 // see: http://getcomposer.org/doc/00-intro.md
 require 'vendor/autoload.php';
 
-require_once "sendMail.php" ;
 require_once "makeQr.php" ;
 
 // reference the Dompdf namespace
@@ -43,7 +42,7 @@ function pdfGen($event) {
     $img_data = 'data:image/png;base64,' . $img_base_64;
     */
 
-    $template = "pdfTemplate.php";
+    $template = "pdfTemplateSmall.php";
     $txt = render_php($template,$event);
 
     // don't echo before render!
@@ -65,23 +64,23 @@ function pdfGen($event) {
 
 
 // test
-/*
-$event = array();
-$event["name"] = "Extra Veranstaltung";
-$event["date"] = "2021-07-20";
-$event["time"] = "19:00";
-$event["count"] = "1";
-$qr = makeQr( hash("sha256","test123"));
-$event["qrdata"] = $qr;
+function testPdf() {
 
-$to = "ak@akugel.de";
+    $event = array();
+    $event["name"] = "Extra Veranstaltung";
+    $event["date"] = "2021-07-20";
+    $event["time"] = "19:00";
+    $event["count"] = "1";
+    $qr = makeQr( hash("sha256","test123"));
+    $event["qrdata"] = $qr;
 
-makeMail($to);
+    $logo = file_get_contents("logo.jpg", false); //, stream_context_create($opciones_ssl));
+    $logo_base_64 = base64_encode($logo);
+    $event["logo"] = 'data:image/jpeg;base64,' . $logo_base_64;
 
-$pdf = pdfGen($event);
-makeMail($to,$pdf);
-
-*/
+    $pdf = pdfGen($event);
+    file_put_contents("ticket.pdf",$pdf);
+}
 
 
 

@@ -10,6 +10,7 @@ header("Content-Type: application/json; charset=UTF-8");
 require_once "mlog.php";
 require "makeQr.php";
 require "pdfGen.php";
+require "sendMail.php";
 
 // --------------------------------------------------
 // error reasons
@@ -157,6 +158,10 @@ switch ($meth) {
                 $event["count"] = "1";
                 $qr = makeQr( hash("sha256","test123"));
                 $event["qrdata"] = $qr;
+                $logo = file_get_contents("logo.jpg", false); //, stream_context_create($opciones_ssl));
+                $logo_base_64 = base64_encode($logo);
+                $event["logo"] = 'data:image/jpeg;base64,' . $logo_base_64;
+
                 $pdf = pdfGen($event);
                 $subj = "Dein Lerninsel Ticket";
                 $msg = "Vielen Dank, dass Du an unserer Veranstaltung teil nimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
