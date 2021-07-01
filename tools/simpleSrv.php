@@ -172,10 +172,12 @@ if ($mailing["request"] > 0) {
         ftruncate($fp, 0); // kürze Datei
         //$handle = popen('./a.php 2>&1', 'w');
         // strangely, this does not work with exec ...
-        popen('./bgpipe.php & >/dev/null', 'w');
         $w = json_encode(array("data" => "aslslfqölwfmqö"));
         fputs($fp, $w);
         fflush($fp);
+        $h = popen('./bgpipe.php & >/dev/null', 'w');
+        fwrite($h,"test");
+        fclose($h);
         flock($fp, LOCK_UN); // Gib Sperre frei
     } else {
         mlog("Lock failed",9);
