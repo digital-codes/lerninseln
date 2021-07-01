@@ -8,9 +8,9 @@ header("Content-Type: application/json; charset=UTF-8");
 //https://ionicframework.com/docs/troubleshooting/cors
 
 // --------------------------------------------------
-// error reasons 
+// error reasons
 // --------------------------------------------------
-define("REASON",["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
+define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
 
 // --------------------------------------------------
   // log function
@@ -37,19 +37,18 @@ $cfg = array();
 //$cfg = parse_ini_file("/home/akugel/files/kdg/kdg.ini",false);
 // $cfg = parse_ini_file("kdg.ini",false);
 try {
-//	mlog("SRV " . print_r($_SERVER,true));
+    //	mlog("SRV " . print_r($_SERVER,true));
     if (!isset($_SERVER['HTTP_HOST']) or !isset($_SERVER['HTTPS'])) {
         $cfg = parse_ini_file("config.ini", false);
         $cfg["local"] = true;
-	mlog("Local config");
+        mlog("Local config");
     } else {
-		// uberspace
+        // uberspace
         $cfg = parse_ini_file("/home/akugel/files/lerninseln/config.ini", false);
         //$cfg = parse_ini_file("news.ini", false);
         $cfg["local"] = false;
-	mlog("Host config");
+        mlog("Host config");
     }
-
 } catch (Exception $e) {
     die("Config Error");
 }
@@ -64,7 +63,7 @@ $mailing = array("request" => 0);
 switch ($meth) {
     case "GET":
         mlog("GET");
-		$parms = array("table" => FILTER_SANITIZE_STRING);
+        $parms = array("table" => FILTER_SANITIZE_STRING);
         $args = filter_input_array(INPUT_GET, $parms, true);
 
         if ($args & ($args["table"] !== null)) {
@@ -74,21 +73,21 @@ switch ($meth) {
         define("TABLES", array("config","provider","category","audience","event","ticket","code"));
         
         if (array_search($table, TABLES) === false) {
-			mlog("Invalid table");
+            mlog("Invalid table");
             header("HTTP/1.1 400 Bad request");
         } else {
-			try {
+            try {
                 // setting utf-8 here is IMPORTANT !!!!
                 $pdo = new PDO(
-                    'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"] ,
+                    'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
                     $cfg["dbuser"],
                     $cfg["dbpass"],
                     array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
                 );
-            } catch  (Exception $e) {
-					mlog("DB error",9);
-					die("DB Error");
-			}
+            } catch (Exception $e) {
+                mlog("DB error", 9);
+                die("DB Error");
+            }
             
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             /* $query = "SELECT * from sensors order by `index` asc"; */
@@ -104,7 +103,7 @@ switch ($meth) {
                 array_push($result, $row);
             }
         }
-		break;
+        break;
 
     case "POST":
         mlog("POST");
@@ -132,7 +131,7 @@ switch ($meth) {
                 $result = array("payload" => array("data" => "OK1"),"status" => 1);
                 break;
             case 2:
-                if (!(array_key_exists("ticket", $payload)) 
+                if (!(array_key_exists("ticket", $payload))
                     || !(array_key_exists("email", $payload))
                     || !(array_key_exists("code", $payload))
                 ) {
@@ -163,14 +162,63 @@ echo json_encode($result);
 ob_end_flush();
 
 if ($mailing["request"] > 0) {
+    $option = 4;
+    switch ($option) {
+        case 1:
+            mlog("Sleep start");
+            sleep(15);
+            mlog("Sleep end");
+            break;
+        case 2:
+            $cmd = "php background.php 1 2  & >/dev/null";
+            system($cmd);
+            break;
+        case 3:
+	    mlog("Option 3");
+	    $child = pcntl_fork();
+            if ($child == 0) {
+                //ob_end_clean(); // important
+                mlog("Sleep start");
+                sleep(15);
+                mlog("Sleep end");
+            } else {
+		mlog("Child: " . $child);
+                ob_end_flush();
+                //exit(0);
+                pcntl_wait($status);
+            }
+            break;
+        case 4:
+            // acquire lock
+            //$lock = "/var/www/virtual/akugel/html/lerninseln/lock.txt";
+            // don't echo anything here!
+            // might need to create lockfile beforehand
+            $lock = "lock.txt";
+            $fp = fopen($lock, "r+");
+            if (flock($fp, LOCK_EX)) { // exklusive Sperre
+                ftruncate($fp, 0); // kürze Datei
+
+                /* Add redirection so we can get stderr. */
+                //$handle = popen('./a.php 2>&1', 'w');
+                popen('./bgpipe.php & >/dev/null', 'w');
+                $w = "aslslfqölwfmqö";
+                fputs($fp, $w);
+                fflush($fp);
+                flock($fp, LOCK_UN); // Gib Sperre frei
+            } else {
+                mlog("Lock failed",9);
+            }
+
+            fclose($fp);
+
+            break;
+        default:
+            break;
+    }
+    //ob_end_clean(); // important
+    /*
     ob_end_clean(); // important
-    mlog("Sleep start");
-    sleep(15);
-    mlog("Sleep end");
-/*
-    ob_end_clean(); // important
-    $cmd = "php background.php 1 2 3 & 2>/dev/null";
-    system($cmd);
+    /*
     */
     /*
     if (($child = pcntl_fork()) == 0) {
@@ -198,5 +246,3 @@ if ($forked) {
     mlog("wait end");
 }
 */
-
-?>
