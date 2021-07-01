@@ -46,6 +46,7 @@ $event = array();
 $event["name"] = "Extra Veranstaltung";
 $event["date"] = "2021-07-20";
 $event["time"] = "19:00";
+$event["count"] = "1";
 $event["qrdata"] = $img_data;
 $txt = render_php($template,$event);
 

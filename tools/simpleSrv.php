@@ -7,6 +7,9 @@ header("Content-Type: application/json; charset=UTF-8");
 //header("Content-Type: */*;encoding=gzip, deflate, br");
 //https://ionicframework.com/docs/troubleshooting/cors
 
+require_once "mlog.php";
+require "makeQr.php";
+
 // --------------------------------------------------
 // error reasons
 // --------------------------------------------------
@@ -15,9 +18,10 @@ define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
 // --------------------------------------------------
   // log function
   // --------------------------------------------------
+
+  /*
   define("LOG", "srv.log");
   define("LPRIO", 0); // minimal log priority
-
   // log function to file
   function mlog($msg, $prio = 0)
   {
@@ -26,6 +30,7 @@ define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
           file_put_contents(LOG, $ts . " : " . $msg . PHP_EOL, FILE_APPEND);
       }
   }
+  */
 
 /* fill database paramteres in config.ini */
 /*$cfg = parse_ini_file("../../files/iot/config.ini", false);*/
@@ -143,7 +148,8 @@ switch ($meth) {
                 mlog("processing req 2");
                 $mailing["request"] = $task;
                 $mailing["payload"] = $payload;
-                $result = array("payload" => array("data" => "OK2"),"status" => 1);
+                $qr = makeQr(hash("sha256","test123"));
+                $result = array("payload" => array("data" => "OK2","qr" => $qr),"status" => 1);
                 break;
             default:
                 mlog("Invalid request");

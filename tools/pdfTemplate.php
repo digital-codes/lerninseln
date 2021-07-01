@@ -50,7 +50,10 @@ p {
 <h1>Lerninseln Karlsruhe</h1>
 <div class="bg">
 <h2>Ticket für die Veranstaltung: <span class="bold"><?php echo $event["name"];?></span></h2>
-<p class="date">Datum <?php echo $event["date"];?>, <?php echo $event["time"];?> Uhr</p>
+<p class="date">Datum <?php echo $event["date"];?>, 
+    <?php echo $event["time"];?> Uhr, 
+    <?php echo $event["count"];?> Persone(n)
+    </p>
 <hr>
 </div>
 <img class="im" src="<?php echo $event["qrdata"];?>">
