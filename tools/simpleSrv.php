@@ -9,6 +9,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 require_once "mlog.php";
 require "makeQr.php";
+require "pdfGen.php";
 
 // --------------------------------------------------
 // error reasons
@@ -31,6 +32,7 @@ define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
       }
   }
   */
+
 
 /* fill database paramteres in config.ini */
 /*$cfg = parse_ini_file("../../files/iot/config.ini", false);*/
@@ -146,9 +148,22 @@ switch ($meth) {
                     break;
                 }
                 mlog("processing req 2");
-                $mailing["request"] = $task;
-                $mailing["payload"] = $payload;
-                $qr = makeQr(hash("sha256","test123"));
+                
+                $to = "ak@akugel.de";
+                $event = array();
+                $event["name"] = "Extra Veranstaltung";
+                $event["date"] = "2021-07-20";
+                $event["time"] = "19:00";
+                $event["count"] = "1";
+                $qr = makeQr( hash("sha256","test123"));
+                $event["qrdata"] = $qr;
+                $pdf = pdfGen($event);
+                $subj = "Dein Lerninsel Ticket";
+                $msg = "Vielen Dank, dass Du an unserer Veranstaltung teil nimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
+                $msg .= "Du kannst es ausdrucken und mitbringen. Oder das Ticket auf Deinem Smartphone anzeigen."  . PHP_EOL;
+                $msg .=  PHP_EOL . "--" . PHP_EOL . "Das Lerninsel Team"  . PHP_EOL;
+                $r = sendSmtp($cfg,$to, $subj, $msg, $pdf);
+                mlog("Send ticket returned " . $r);
                 $result = array("payload" => array("data" => "OK2","qr" => $qr),"status" => 1);
                 break;
             default:
