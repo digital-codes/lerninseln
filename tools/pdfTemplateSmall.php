@@ -14,11 +14,12 @@ h2 {
 }
 p {
     font-size:16px;
-    line-height: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    line-height: 16px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     padding-left:10px;
 }
+
 
 .bold {
     font-weight: 700;
@@ -74,6 +75,7 @@ p {
     top: 300px;
     left: 0;
     width:100%;
+    padding-bottom:10px;
 }
 
 h1 {
@@ -96,6 +98,9 @@ h1 {
     <h2><span class="bold"><?php echo $event["name"];?></span></h2>
     <p class="date">Datum <?php echo $event["date"];?>, 
         <?php echo $event["time"];?> Uhr
+        </p>
+        <p> 
+        <?php echo $event["location"];?>
         </p>
         <p> 
         <?php echo $event["count"];?> Persone(n)
