@@ -156,6 +156,7 @@ switch ($meth) {
                 $event["date"] = "2021-07-20";
                 $event["time"] = "19:00";
                 $event["count"] = "1";
+			    $event["location"] = "Digitallabor Rathaus Karlsruhe";
                 $qr = makeQr( hash("sha256","test123"));
                 $event["qrdata"] = $qr;
                 $logo = file_get_contents("logo.jpg", false); //, stream_context_create($opciones_ssl));
