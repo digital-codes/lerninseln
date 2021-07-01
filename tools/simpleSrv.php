@@ -6,7 +6,13 @@ header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json; charset=UTF-8");
 //header("Content-Type: */*;encoding=gzip, deflate, br");
 //https://ionicframework.com/docs/troubleshooting/cors
-  // --------------------------------------------------
+
+// --------------------------------------------------
+// error reasons 
+// --------------------------------------------------
+define("REASON",["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
+
+// --------------------------------------------------
   // log function
   // --------------------------------------------------
   define("LOG", "srv.log");
@@ -53,6 +59,7 @@ $meth = $_SERVER["REQUEST_METHOD"];
 mlog("Method: " . $meth);
 
 $result = array();
+$mailing = array("request" => 0);
 
 switch ($meth) {
     case "GET":
@@ -103,11 +110,48 @@ switch ($meth) {
         mlog("POST");
         $input = json_decode(file_get_contents('php://input'), true);
         mlog("Input: " . json_encode($input));
-        //$parms = array("table" => FILTER_SANITIZE_STRING);
-        //$args = filter_input_array(INPUT_GET, $parms, true);
-        //$result = json_encode(array("payload" => "123","status" => 1));
-        $payload = array("ticket" => 1, "code" => 2);
-        $result = array("payload" => $payload,"status" => 1);
+        // we expect a request type and a payload
+        if (!(array_key_exists("request", $input)) || !(array_key_exists("payload", $input))) {
+            mlog("Keys missing");
+            $result = array("payload" => array("reason" => REASON[1]),"status" => 0);
+            break;
+        }
+        $task = $input["request"];
+        $payload = $input["payload"];
+        switch ($task) {
+            case 1:
+                if (!(array_key_exists("ticket", $payload)) || !(array_key_exists("email", $payload))) {
+                    mlog("Req 1 keys missing");
+                    $result = array("payload" => array("reason" => REASON[1]),"status" => 0);
+                    $task = 0; // clear request to indicate error
+                    break;
+                }
+                mlog("processing req 1");
+                $mailing["request"] = $task;
+                $mailing["payload"] = $payload;
+                $result = array("payload" => array("data" => "OK1"),"status" => 1);
+                break;
+            case 2:
+                if (!(array_key_exists("ticket", $payload)) 
+                    || !(array_key_exists("email", $payload))
+                    || !(array_key_exists("code", $payload))
+                ) {
+                    mlog("Req 2 keys missing");
+                    $result = array("payload" => array("reason" => REASON[1]),"status" => 0);
+                    $task = 0; // clear request to indicate error
+                    break;
+                }
+                mlog("processing req 2");
+                $mailing["request"] = $task;
+                $mailing["payload"] = $payload;
+                $result = array("payload" => array("data" => "OK2"),"status" => 1);
+                break;
+            default:
+                mlog("Invalid request");
+                $result = array("payload" => array("reason" => REASON[4]),"status" => 0);
+                $task = 0; // clear request to indicate error
+                break;
+        }
         break;
 
     default:
@@ -116,5 +160,43 @@ switch ($meth) {
 }
 
 echo json_encode($result);
+ob_end_flush();
+
+if ($mailing["request"] > 0) {
+    ob_end_clean(); // important
+    mlog("Sleep start");
+    sleep(15);
+    mlog("Sleep end");
+/*
+    ob_end_clean(); // important
+    $cmd = "php background.php 1 2 3 & 2>/dev/null";
+    system($cmd);
+    */
+    /*
+    if (($child = pcntl_fork()) == 0) {
+        ob_end_clean(); // important
+        mlog("Sleep start");
+        sleep(15);
+        mlog("Sleep end");
+    } else {
+        ob_end_flush();
+        pcntl_wait($status);
+    }
+    */
+}
+
+
+/*
+ob_end_flush();
+
+if ($forked) {
+    mlog("wait for " . $child);
+    //ob_clean(); //end_flush();
+    //ob_end_clean(); //end_flush();
+    pcntl_waitpid($child,$status); //option NOHANG: non blocking
+    //pcntl_wait($status); //option NOHANG: non blocking
+    mlog("wait end");
+}
+*/
 
 ?>
