@@ -162,75 +162,26 @@ echo json_encode($result);
 ob_end_flush();
 
 if ($mailing["request"] > 0) {
-    $option = 4;
-    switch ($option) {
-        case 1:
-            mlog("Sleep start");
-            sleep(15);
-            mlog("Sleep end");
-            break;
-        case 2:
-            $cmd = "php background.php 1 2  & >/dev/null";
-            system($cmd);
-            break;
-        case 3:
-	    mlog("Option 3");
-	    $child = pcntl_fork();
-            if ($child == 0) {
-                //ob_end_clean(); // important
-                mlog("Sleep start");
-                sleep(15);
-                mlog("Sleep end");
-            } else {
-		mlog("Child: " . $child);
-                ob_end_flush();
-                //exit(0);
-                pcntl_wait($status);
-            }
-            break;
-        case 4:
-            // acquire lock
-            //$lock = "/var/www/virtual/akugel/html/lerninseln/lock.txt";
-            // don't echo anything here!
-            // might need to create lockfile beforehand
-            $lock = "lock.txt";
-            $fp = fopen($lock, "r+");
-            if (flock($fp, LOCK_EX)) { // exklusive Sperre
-                ftruncate($fp, 0); // kürze Datei
-
-                /* Add redirection so we can get stderr. */
-                //$handle = popen('./a.php 2>&1', 'w');
-                popen('./bgpipe.php & >/dev/null', 'w');
-                $w = "aslslfqölwfmqö";
-                fputs($fp, $w);
-                fflush($fp);
-                flock($fp, LOCK_UN); // Gib Sperre frei
-            } else {
-                mlog("Lock failed",9);
-            }
-
-            fclose($fp);
-
-            break;
-        default:
-            break;
-    }
-    //ob_end_clean(); // important
-    /*
-    ob_end_clean(); // important
-    /*
-    */
-    /*
-    if (($child = pcntl_fork()) == 0) {
-        ob_end_clean(); // important
-        mlog("Sleep start");
-        sleep(15);
-        mlog("Sleep end");
+    // acquire lock
+    //$lock = "/var/www/virtual/akugel/html/lerninseln/lock.txt";
+    // don't echo anything here!
+    // might need to create lockfile beforehand
+    $lock = "lock.txt";
+    $fp = fopen($lock, "r+");
+    if (flock($fp, LOCK_EX)) { // exklusive Sperre
+        ftruncate($fp, 0); // kürze Datei
+        //$handle = popen('./a.php 2>&1', 'w');
+        // strangely, this does not work with exec ...
+        popen('./bgpipe.php & >/dev/null', 'w');
+        $w = json_encode(array("data" => "aslslfqölwfmqö"));
+        fputs($fp, $w);
+        fflush($fp);
+        flock($fp, LOCK_UN); // Gib Sperre frei
     } else {
-        ob_end_flush();
-        pcntl_wait($status);
+        mlog("Lock failed",9);
     }
-    */
+
+    fclose($fp);
 }
 
 
