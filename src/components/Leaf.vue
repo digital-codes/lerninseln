@@ -121,12 +121,12 @@ export default defineComponent ({
       const provId = this.store.state.selection.providerId
       const center = [49.004,  8.403]
       if (provId == 0) {
-        return [49.004,  8.403]
+        return center
       } else {
         console.log("Search provider: ",provId)
-        const marker = this.markers.find(m => m.id == provId)
+        const marker = this.markers.find(m => m.id == provId) || 0
         console.log("Found: ",marker)
-        return marker.latlng
+        return marker != 0 ? marker.latlng : center
       }
     },
   },

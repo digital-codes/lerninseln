@@ -36,7 +36,7 @@
 
 
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
-        <Event 
+          <Event class="eventItem" 
           :date=item.date 
           :time=item.time 
           :title=item.title 
@@ -45,6 +45,11 @@
           :icon=item.category_id
           @click="select(item.id)"
           ></Event>
+          <ion-checkbox class="eventCheck" 
+            @ionChange="select1(item.id)"
+            @update:modelValue="item.checked = $event"
+            :modelValue="item.checked"
+          ></ion-checkbox>
   </div>
 
   <ion-button 
@@ -58,7 +63,7 @@
 
 <script> 
 
-import { IonButton,  } from '@ionic/vue';
+import { IonButton, IonCheckbox } from '@ionic/vue';
 
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
@@ -74,10 +79,11 @@ import router from "../router";
 
 export default defineComponent({
   name: "Events",
-  components: {Event, IonButton, },
+  components: {Event, IonButton,IonCheckbox },
   data () {
     return {
     items : [],
+    checks : [],
     providers: [],
     filter : 0,
     chk1: 1, 
@@ -93,6 +99,12 @@ export default defineComponent({
     select(e) {
       const item = this.items[e-1]
       console.log("Selected: ",item.id) 
+      this.filter = item.id
+      this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
+    },
+    select1(e) {
+      const item = this.items[e-1]
+      console.log("Checked: ",item.id, item.checked) 
       this.filter = item.id
       this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
     },
@@ -115,6 +127,7 @@ export default defineComponent({
       const name = providers[id].name
       //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
+      items[i].checked = 0
     }
     this.items = items
     
@@ -171,8 +184,19 @@ button {
 }
 
 
-.eventAccess button {
+.eventItem {
   display: inline-block;
+  width:85%;
+}
+
+.eventCheck {
+  display: inline-block;
+  /* width:10%; */ 
+  margin-left:5%;
+  margin-bottom: 2em;
+}
+input.eventCheck  {
+  width:1em;
 }
 
 </style>
