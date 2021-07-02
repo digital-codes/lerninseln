@@ -92,6 +92,10 @@ function testPdf() {
     $logo_base_64 = base64_encode($logo);
     $event["logo"] = 'data:image/jpeg;base64,' . $logo_base_64;
 
+    $bg = file_get_contents("bg.jpg", false); //, stream_context_create($opciones_ssl));
+    $bg_base_64 = base64_encode($bg);
+    $event["bg"] = 'data:image/jpeg;base64,' . $bg_base_64;
+
     $pdf = pdfGen($event);
     file_put_contents("ticket.pdf",$pdf);
 }

@@ -16,6 +16,13 @@ fixed resolution of a PDF, which is 72 PT per inch.
 body {
     font-family: sans-serif;
     width:520pt;
+    background-image: url(<?php echo $event["bg"];?>);
+    background-repeat: no-repeat;
+    /*background-attachment: fixed; */ 
+    /* background-size: contain; */
+    background-size: 520pt 270pt;
+    /* <a href="https://www.freepik.com/photos/background">Background photo created by mrsiraphol - www.freepik.com</a> */
+
 }
 h2 {
     line-height: 20pt;
@@ -42,15 +49,18 @@ p {
 .date {
     margin-bottom: 4pt;
 }
-
+/*
 .bg {
-    background-color: rgb(220,220,220);
+    background-color: rgba(220,220,220,.5);
 }
-
+*/
 #back {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 300pt;
-    background: rgb(200,240,200);
+    height: 320pt;
+    background: rgba(240,240,240,.8);
 }
 #header {
     position: absolute;
@@ -88,12 +98,24 @@ p {
     left: 0;
     width:100%;
     height: 30pt;
-    padding-top:10pt;
-    padding-bottom:10pt;
+    padding-top:0pt;
+    padding-bottom:18pt;
+    background-color: rgba(200,240,200,.5);
+    border-top: solid 2pt rgb(0,0,0);
+}
+
+#attribution {
+    position: absolute;
+    top: 294pt;
+    left: 0;
+    padding-top:0;
+    padding-bottom:0;
+    font-size: 8pt;
+    color: rgb(100,100,100);
 }
 
 h1 {
-    line-height: 50pt;
+    line-height: 30pt;
     font-size: 24pt;
     color: rgb(0,0,255);
 }
@@ -121,12 +143,15 @@ h1 {
         <p> 
         <?php echo $event["count"];?> Persone(n)
         </p>
-    <hr>
 </div>
 
 <div id="footer" class="bg">
 <p >Wir freuen uns auf Dich</p>
 </div>
+<p id="attribution">
+Background photo created by mrsiraphol - www.freepik.com
+</p>
+
 <img id="qr" src="<?php echo $event["qrdata"];?>">
 
 </body>
