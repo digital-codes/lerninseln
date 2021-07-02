@@ -49,18 +49,14 @@ p {
 .date {
     margin-bottom: 4pt;
 }
-/*
-.bg {
-    background-color: rgba(220,220,220,.5);
-}
-*/
+
 #back {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 320pt;
-    background: rgba(240,240,240,.8);
+    background: rgba(240,240,240,.5);
 }
 #header {
     position: absolute;
@@ -78,7 +74,10 @@ p {
 #event {
     position: absolute;
     top:80pt;
-    left:0;
+    left:0pt;
+    width:280pt;
+    height: 300pt;
+    background-color: rgba(250,250,250,.6);
 }
 
 #qr {
@@ -111,6 +110,7 @@ p {
     padding-top:0;
     padding-bottom:0;
     font-size: 8pt;
+    font-style: italic;
     color: rgb(100,100,100);
 }
 
@@ -129,7 +129,7 @@ h1 {
 <h1 id="header" >Lerninseln Karlsruhe</h1>
 <img id="logo" src="<?php echo $event["logo"];?>" class="logo">
 
-<div id="event" class="bg">
+<div id="event">
     <h2>Ticket für die Veranstaltung:</h2>
     <h2><span class="bold"><?php echo $event["name"];?></span></h2>
     <p class="date">Datum <?php echo $event["date"];?>, 
