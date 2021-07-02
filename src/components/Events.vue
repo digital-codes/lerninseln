@@ -27,13 +27,6 @@
 -->
   <!--ion-button @click="toggle()">Toggle</ion-button-->
 
-  <ion-button 
-    v-if="hasEvent"
-    @click="showAll()"
-    >
-      Alle anzeigen
-  </ion-button>
-
 
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
           <Event class="eventItem" 
@@ -43,10 +36,9 @@
           :text=item.provider 
           :id=item.id  
           :icon=item.category_id
-          @click="select(item.id)"
           ></Event>
           <ion-checkbox class="eventCheck" 
-            @ionChange="select1(item.id)"
+            @ionChange="select(item.id)"
             @update:modelValue="item.checked = $event"
             :modelValue="item.checked"
           ></ion-checkbox>
@@ -98,22 +90,14 @@ export default defineComponent({
     },
     select(e) {
       const item = this.items[e-1]
-      console.log("Selected: ",item.id) 
-      this.filter = item.id
-      this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
-    },
-    select1(e) {
-      const item = this.items[e-1]
-      console.log("Checked: ",item.id, item.checked) 
-      this.filter = item.id
-      this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
-    },
-    toggle(){
-      this.filter = this.filter == 0?1:0;
-    },
-    showAll(){
-      this.filter = 0;
-      this.store.commit(MUTATIONS.RESET_EVENT);
+      console.log("Checked: ",item.id, item.checked)
+      if (item.checked) {
+        this.filter = item.id
+        this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
+      } else {
+        this.filter = 0;
+        this.store.commit(MUTATIONS.RESET_EVENT);
+      }
     },
   },
   async beforeMount() {
