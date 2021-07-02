@@ -6,6 +6,7 @@
 A$ size is 8.3 * 11.7 inch 
 = 600 * 840pt
 
+one-third ~ 260pt. tbc
 resolution can be changed by 
 $dompdf->set_option( 'dpi' , '200' );
 
@@ -24,7 +25,7 @@ body {
     background-repeat: no-repeat;
     /*background-attachment: fixed; */ 
     /* background-size: contain; */
-    background-size: 520pt 270pt;
+    background-size: 520pt 290pt;
     /* <a href="https://www.freepik.com/photos/background">Background photo created by mrsiraphol - www.freepik.com</a> */
 
 }
@@ -59,7 +60,7 @@ p {
     top: 0;
     left: 0;
     width: 100%;
-    height: 320pt;
+    height: 290pt;
     background: rgba(240,240,240,.5);
 }
 #header {
@@ -70,23 +71,23 @@ p {
 
 #logo {
     position: absolute;
-    top: 20pt;
-    left: 440pt;
-    width:80pt;
+    top: 10pt;
+    left: 460pt;
+    width:60pt;
 }
 
 #event {
     position: absolute;
-    top:80pt;
+    top:50pt;
     left:0pt;
     width:280pt;
-    height: 300pt;
+    height: 190pt;
     background-color: rgba(250,250,250,.6);
 }
 
 #qr {
     position: fixed;
-    top: 80pt;
+    top: 50pt;
     left: 280pt;
     width: 160pt;
     border: solid 2pt;
@@ -97,23 +98,24 @@ p {
 
 #footer {
     position: absolute;
-    top: 270pt;
+    top: 240pt;
     left: 0;
     width:100%;
-    height: 30pt;
     padding-top:0pt;
-    padding-bottom:18pt;
-    background-color: rgba(200,240,200,.5);
+    padding-bottom:10pt;
+    /*background-color: rgba(200,240,200,.8);*/
+    background-color: rgba(250,250,250,.6);
     border-top: solid 2pt rgb(0,0,0);
 }
 
 #attribution {
     position: absolute;
-    top: 294pt;
+    top: 270pt;
     left: 0;
     padding-top:0;
     padding-bottom:0;
     font-size: 8pt;
+    margin: 0;
     font-style: italic;
     color: rgb(100,100,100);
 }
