@@ -3,7 +3,7 @@
 
   <l-map style="height:30vh"
     :zoom="zoom"
-    :center="center"
+    :center=selCenter 
     :max-zoom="maxZoom"
     @update:center="centerUpdate"
     @update:zoom="zoomUpdate"
@@ -115,6 +115,19 @@ export default defineComponent ({
           m.push(marker)
         })
       return m
+    },
+    selCenter() {
+      // https://v3.vuejs.org/guide/computed.html#computed-properties
+      const provId = this.store.state.selection.providerId
+      const center = [49.004,  8.403]
+      if (provId == 0) {
+        return [49.004,  8.403]
+      } else {
+        console.log("Search provider: ",provId)
+        const marker = this.markers.find(m => m.id == provId)
+        console.log("Found: ",marker)
+        return marker.latlng
+      }
     },
   },
   methods : {

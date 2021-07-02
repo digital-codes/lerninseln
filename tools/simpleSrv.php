@@ -166,7 +166,7 @@ switch ($meth) {
 
                 $pdf = pdfGen($event);
                 $subj = "Dein Lerninsel Ticket";
-                $msg = "Vielen Dank, dass Du an unserer Veranstaltung teil nimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
+                $msg = "Vielen Dank, dass Du an unserer Veranstaltung teilnimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
                 $msg .= "Du kannst es ausdrucken und mitbringen. Oder das Ticket auf Deinem Smartphone anzeigen."  . PHP_EOL;
                 $msg .=  PHP_EOL . "--" . PHP_EOL . "Das Lerninsel Team"  . PHP_EOL;
                 $r = sendSmtp($cfg,$to, $subj, $msg, $pdf);
