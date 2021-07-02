@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 require 'vendor/autoload.php';
-require_once "pdfGen.php" ;
+require_once "sendMail.php" ;
 require_once "mlog.php";
 
 //$handle = fopen('php://stdin', 'r');
