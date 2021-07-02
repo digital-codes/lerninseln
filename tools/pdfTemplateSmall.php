@@ -72,15 +72,15 @@ p {
 #logo {
     position: absolute;
     top: 10pt;
-    left: 460pt;
-    width:60pt;
+    left: 469pt;
+    width:40pt;
 }
 
 #event {
     position: absolute;
     top:50pt;
     left:0pt;
-    width:280pt;
+    width:285pt;
     height: 190pt;
     background-color: rgba(250,250,250,.6);
 }
@@ -88,7 +88,7 @@ p {
 #qr {
     position: fixed;
     top: 50pt;
-    left: 280pt;
+    left: 285pt;
     width: 160pt;
     border: solid 2pt;
     background-color: rgb(255,255,255);
@@ -111,7 +111,7 @@ p {
 #attribution {
     position: absolute;
     top: 270pt;
-    left: 0;
+    left: 270pt;
     padding-top:0;
     padding-bottom:0;
     font-size: 8pt;
