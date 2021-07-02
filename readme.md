@@ -8,3 +8,6 @@ Database
 
 ## Extensions
 Event Feedback? 
+
+## Tools
+bgpip.php: remember to change init file location on server
