@@ -11,6 +11,10 @@ $dompdf->set_option( 'dpi' , '200' );
 
 dpi maybe only affects px settings, but not pt settings
 fixed resolution of a PDF, which is 72 PT per inch. 
+
+page border can be set like this:
+@page { margin: 0in; }
+body { padding: .5in; border: 2in solid orange; }
 */
 
 body {
@@ -84,7 +88,7 @@ p {
     position: fixed;
     top: 80pt;
     left: 280pt;
-    width: 196pt;
+    width: 160pt;
     border: solid 2pt;
     background-color: rgb(255,255,255);
     padding: 20pt;
@@ -141,7 +145,7 @@ h1 {
         <?php echo $event["location2"];?>
         </p>
         <p> 
-        <?php echo $event["count"];?> Persone(n)
+        <?php echo $event["count"];?> Person(en)
         </p>
 </div>
 
