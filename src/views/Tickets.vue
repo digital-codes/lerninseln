@@ -82,7 +82,6 @@ export default  defineComponent ({
       //evnt: {},
       items : [],
       ds: "",
-      qrModal: "",
     }
   },
   components: { Event, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
@@ -96,6 +95,9 @@ export default  defineComponent ({
         if (result.status) {
           await this.openQr(result.data)
           this.store.commit(MUTATIONS.RESET_PURCHASE)
+          this.store.commit(MUTATIONS.RESET_EVENT)
+          console.log('Purchase completed and reset');
+          console.log("Event now:",(this.store.state.selection.eventId != 0) ? "set" : "reset")
           //this.presentActionSheet()
         }
     },
@@ -107,21 +109,12 @@ export default  defineComponent ({
           cssClass: 'my-custom-class',
           componentProps: {
             title: data.text,
-            qr:data.qr
+            qr:data.qr,
           },
         })
-      modal.onDidDismiss(this.ionModalDidDismiss)
-      this.qrModal = modal
-      //       await modal.onDidDismiss();
-      //return modal.present();
-      await modal.present();
-      if modal.didDismiss() {
-        console.log("Dismissed1")
-
-      };
-    },
-    ionModalDidDismiss(){
-        console.log("Dismissed")
+      await modal.present()
+      await modal.onDidDismiss();
+      console.log('Modal dismissed');
     },
     async presentActionSheet() {
       const actionSheet = await actionSheetController
