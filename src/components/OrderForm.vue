@@ -130,13 +130,13 @@ export default defineComponent ({
         console.log("Error1:", result.code," ",this.payload)
         return
       }
-      console.log("OK",this.payload)
+      console.log("OK1",this.payload)
       // check response status
       if (!this.payload.status) {
         console.log("Response Error1:", this.payload.data.reason)
         return
       }
-      console.log("OK",this.payload)
+      console.log("OK2",this.payload)
       // set resnum
       purchase = this.store.state.purchase
       purchase.resnum = this.payload.data.resnum

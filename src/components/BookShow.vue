@@ -43,9 +43,6 @@ export default defineComponent({
     }
   },
   methods:{
-    hasCodes() {
-      return this.store.state.qrcode.length > 0
-    },
     zoom(e) {
       console.log(e)
       this.isZoomed = !this.isZoomed
@@ -63,7 +60,8 @@ export default defineComponent({
             date: data.date,
             time: data.time,
             count: data.count,
-            provider: data.provider
+            provider: data.provider,
+            info: ""
           },
         })
       await modal.present()
@@ -72,6 +70,9 @@ export default defineComponent({
     },
   },
   computed: {
+    hasCodes() {
+      return (this.store.state.qrcode.length > 0)
+    },
     getCodes() {
       return this.store.state.qrcode
     }

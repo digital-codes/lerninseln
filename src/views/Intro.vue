@@ -37,12 +37,14 @@ import Providers from '@/components/Providers.vue';
 import DataStorage from "../services/dstore";
 import DataFetch from "../services/fetch";
 
+import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 
 // app exit
 // https://ionicframework.com/docs/developing/hardware-back-button
 import { useBackButton, useIonRouter } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
 const { App } = Plugins;
+
 
 
 export default  defineComponent ({
@@ -59,6 +61,8 @@ export default  defineComponent ({
     } 
   },
   async beforeMount() {
+    console.log("QR length:", this.$store.state.qrcode.length)
+
     this.ds = await DataStorage.getInstance()
     this.df = await DataFetch.getInstance()
     /* test 

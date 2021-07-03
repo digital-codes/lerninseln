@@ -108,6 +108,7 @@ export default  defineComponent ({
     },
     async openQr(data) {
       // see also https://stackoverflow.com/questions/65740559/cant-close-the-modal-in-ionic-vue-5-5-2
+      const info = "Buchung erfolgreich. Code ist in der Code-Liste"
       const modal = await modalController
         .create({
           component: QrModal,
@@ -118,7 +119,8 @@ export default  defineComponent ({
           date: data.date,
           time: data.time,
           count: data.count,
-          provider: data.provider
+          provider: data.provider,
+          info: info
           },
         })
       await modal.present()
