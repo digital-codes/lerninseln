@@ -50,7 +50,7 @@
 <script lang="js">
 import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, 
   IonContent,IonCard, IonCardContent,
-  actionSheetController, modalController } from '@ionic/vue';
+  modalController } from '@ionic/vue';
 
 import QrModal from '@/components/QrModal.vue'
 
@@ -97,6 +97,11 @@ export default  defineComponent ({
           this.store.commit(MUTATIONS.RESET_PURCHASE)
           this.store.commit(MUTATIONS.RESET_EVENT)
           console.log('Purchase completed and reset');
+          const qrString = await this.ds.getItem("qrcode") || "[]"
+          const qrcodes = JSON.parse(qrString)
+          qrcodes.push({"event":"event1","date":"2021-07-20", "time":"10:00","count":1,"location":"Rathaus","qrsrc":result.data.qr})
+          await this.ds.setItem("qrcode", JSON.stringify(qrcodes))
+          console.log(qrcodes.length, " codes: ",qrcodes)
           console.log("Event now:",(this.store.state.selection.eventId != 0) ? "set" : "reset")
           //this.presentActionSheet()
         }
@@ -115,33 +120,6 @@ export default  defineComponent ({
       await modal.present()
       await modal.onDidDismiss();
       console.log('Modal dismissed');
-    },
-    async presentActionSheet() {
-      const actionSheet = await actionSheetController
-        .create({
-          header: 'Buchung',
-          buttons: [
-            {
-              text: 'Bestätigen',
-              icon: rocket,
-              role: 'OK',
-              handler: () => {
-                this.purchase()
-              }
-            },
-            {
-              text: 'Abbrechen',
-              icon: trash,
-              role: 'cancel',
-              handler: () => {
-                console.log('Cancel clicked')
-              },
-            },
-          ],
-        });
-      await actionSheet.present();
-      const { role } = await actionSheet.onDidDismiss();
-      console.log('onDidDismiss resolved with role', role);
     },
   },
   computed: {

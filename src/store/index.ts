@@ -8,12 +8,14 @@ import { createStore, useStore as baseUseStore, Store, MutationTree, } from 'vue
 // interfaces for our State and todos
 export type Selection = { eventId: number; providerId: number};
 export type Purchase = { ticketId: number; email: string; resnum: string };
-export type State = { selection: Selection; purchase: Purchase };
+export type Qrcode = {"event":string,"date":string, "time":string,"count":number,"location":string,"qrsrc":string};
+export type State = { selection: Selection; purchase: Purchase, qrcode: Qrcode[] };
 
 export const key: InjectionKey<Store<State>> = Symbol();
 const state: State = {
   selection: {eventId: 0, providerId: 0},
   purchase: {ticketId: 0, email: "", resnum: ""},
+  qrcode: []
 };
 
 /*
@@ -26,6 +28,8 @@ export const enum MUTATIONS {
   SET_EVENT = 'SET_EVENT',
   RESET_PURCHASE = 'RESET_PURCHASE',
   SET_PURCHASE = 'SET_PURCHASE',
+  RESET_QR = 'RESET_QR',
+  ADD_QR = 'ADD_QR',
 }
 
 const mutations: MutationTree<State> = {
@@ -50,6 +54,12 @@ const mutations: MutationTree<State> = {
       state.purchase.ticketId = 0;
       state.purchase.email = "";
       state.purchase.resnum = "";
+    },
+    [MUTATIONS.RESET_QR](state) {
+      state.qrcode = []
+    },
+    [MUTATIONS.ADD_QR](state, qr: Qrcode) {
+      state.qrcode.push(qr)
     },
   };
 
