@@ -4,9 +4,10 @@
   <form ref="orderForm" v-show="showSubscription == true"
     class="login-form"
   >
-    Zur Buchung benötigen wir Deine Email-Adresse. Wir senden Dir dann einen Code,
+    <p>Zur Buchung benötigen wir Deine Email-Adresse. Wir senden Dir dann einen Code,
     den Du hier eingibst. Du bekommst danach den QR-Code und ein
     Ticket zum Ausdrucken.
+    </p>
     <p class="footnote">Bitte markiere mit "OK", dass Du der Verarbeitung
     Deiner Daten zustimmst.
     </p> 
@@ -201,8 +202,8 @@ export default defineComponent ({
 
 <style scoped>
 .login-form {
-  padding: 1em;
-  border: 1px solid #a8a8a8;
+  padding: 0;
+  border: 0; /* 1px solid #a8a8a8; */
   border-radius: .5em;
   box-sizing: border-box;
   margin-top: 1em;
@@ -222,7 +223,8 @@ export default defineComponent ({
 }
 
 .footnote {
-  font-size: 80%;
+  /* font-size: 90%; */
+  font-style: italic;
 }
 .input-item {
   
