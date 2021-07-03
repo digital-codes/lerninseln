@@ -56,7 +56,7 @@ const store = createStore({
 // with store.ts ...
 // in a vue component
 
-import { store, key } from './store'
+import { store, key } from './services/quickStore'
 
 
 // --------------------

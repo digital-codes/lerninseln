@@ -11,7 +11,8 @@ export type Purchase = { ticketId: number; email: string; resnum: string };
 export type Qrcode = {"event": string;"date": string; "time": string; "count": number;"location": string;"qrsrc": string };
 export type State = { selection: Selection; purchase: Purchase; qrcode: Qrcode[] };
 
-export const key: InjectionKey<Store<State>> = Symbol();
+
+export const key: InjectionKey<Store <State> > = Symbol();
 const state: State = {
   selection: {eventId: 0, providerId: 0},
   purchase: {ticketId: 0, email: "", resnum: ""},
@@ -87,4 +88,3 @@ export const store = createStore<State>({ state, mutations });
 export function useStore() {
   return baseUseStore(key);
 }
-

@@ -60,7 +60,7 @@ import { IonButton, IonCheckbox } from '@ionic/vue';
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
 
-import { useStore, Selection, MUTATIONS } from '../store';
+import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 
 import { defineComponent } from 'vue'; 
 import Event from '@/components/Event.vue';

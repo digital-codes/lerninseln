@@ -1,7 +1,7 @@
 <template>
   <div id="mapId">
 
-  <l-map style="height:30vh"
+  <l-map style="height:40vh"
     :zoom="zoom"
     :center=selCenter 
     :max-zoom="maxZoom"
@@ -49,7 +49,7 @@ import "leaflet/dist/leaflet.css"
 import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon } from "@vue-leaflet/vue-leaflet";
 import { defineComponent } from 'vue';
 
-import { useStore, Selection, MUTATIONS, ACTIONS } from '../store';
+import { useStore, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
 
 // storage 
 /*

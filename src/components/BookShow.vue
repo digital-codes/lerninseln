@@ -1,80 +1,74 @@
 <template>
 
-    <ion-card class="w">
-    <ion-card-header>
-      <ion-card-title>Anzeigen</ion-card-title>
-      <ion-card-subtitle>Slide right to make reservation</ion-card-subtitle>
-      <ion-card-subtitle>Click Thumbnail to zoom</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-
-
+    <div v-if="hasCodes">
     <ul class="list">
-      <li v-for="item in getCodes"  :key="item.id" class="listItem">
-            <h2 class="qrlabel">{{item.text}}</h2>
+      <li v-for="item in getCodes"  :key="item.qrsrc" class="listItem">
+            <h2 class="qrlabel">{{item.title}}</h2>
+            <p> {{ item.date }}  {{ item.time }} </p>
+            <p> {{ item.provider }} {{ item.count }} Person(en)</p>
             <img 
               :src="item.qrsrc"  
               :class="{ 'qrcode': isZoomed }"
-              @click="zoom(item.id)" 
+              @click="zoomQr(item)" 
             >
       </li>
     </ul>
-
-
-    </ion-card-content>
-  </ion-card>
+    </div>
+    <div v-else>
+      <h1 class="headline">Du hast noch keine Codes</h1>
+      Buche eine Veranstaltung ...
+    </div>
 
 </template>
 
 <script> 
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle,    
-  } from '@ionic/vue';
+import { modalController } from '@ionic/vue';
 import { defineComponent,  } from 'vue'; // ref for modal
 
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
 // https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
-import { useStore, Selection, MUTATIONS } from '../store';
+import { useStore, Selection, MUTATIONS } from '../services/quickStore';
+
+import QrModal from '@/components/QrModal.vue'
+
 
 export default defineComponent({
-  components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, 
-  },
+  components: {  },
   data: function() {
     return {
       isZoomed: false,
-      items: [{
-      'text': '2021-06-21 12:00',
-      'src': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAHqAQMAAADxo595AAAABlBMVEUAAAD///+l2Z/dAAAAAnRS\
-TlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAH4SURBVHic7dtLbsQgDIBhSzkAR+LqORIH\
-GIkJYPNIK2Uy4+x+FlFL+OjGAmxSyT81gcPhcDgcDofD4XA4HA6Hw+FwOBwO/5on0RbTlo+HSN7D\
-0b/L8au2DQ735fpOYn61oSJBXxx98xA43I83VOK1ztHGTH1w+LO8DN1F10s4/HG+2bYcyqIJhz/J\
-W2csjyZH0C5D4HAvLtpi0sidHtrgcF++vtFl8Tgb7icEh/vxGrQh9yi1A2JdL/P1Bg2Hf8f7gHE2\
-rBnJhystHH6X9804WLmvFv7imC1kONyX16Aty2JDpdxns/2/S8Phv/Jl/AhffZGz3XTA4d68Vlpq\
-lIq+HYWXc+TC4Q5cpluNCUmLZjjcnSdLN1r2Ma2XZY7wWv8WHO7Ct6wZiYWv7tclaFsyfJHLwOF3\
-uZ3+/uzIoxizajj8Z56stNxTkLZyaiDD4Q/wtelXyCL23UD/CQ535FrVs/rKS5Phfl68LrzA4Xd5\
-b2kNVTsvXmTQcPh9bh8KzNdo5dGu1pL97w8c7slHztGLzCNU0xqvcLgX1wAtv+2jyNc36HiaAw73\
-43arNl3j7nWKqy9e4PDveX+UMXq1oUPgcGfeOjX70AsNu+T4/FgIh3/ORVtM87JYu/SACIc78/sN\
-DofD4XA4HA6Hw+FwOBwOh8PhcDj8VnsDg+O/lIZXxKIAAAAASUVORK5CYII=',
-      "id":1,
-    }, {
-      'text': '2021-06-25 10:00',
-      'src': '/assets/img/qr2.png',
-      "id":2,
-    }, {
-      'text': '2021-07-05 09:30',
-      'src': '/assets/img/qr3.png',
-      "id":3,
-    }],
     }
   },
   methods:{
+    hasCodes() {
+      return this.store.state.qrcode.length > 0
+    },
     zoom(e) {
       console.log(e)
       this.isZoomed = !this.isZoomed
       console.log("zoomed:",this.isZoomed)
+    },
+    async zoomQr(data) {
+      // see also https://stackoverflow.com/questions/65740559/cant-close-the-modal-in-ionic-vue-5-5-2
+      const modal = await modalController
+        .create({
+          component: QrModal,
+          cssClass: 'my-custom-class',
+          componentProps: {
+            title: data.title,
+            qrsrc:data.qrsrc,
+            date: data.date,
+            time: data.time,
+            count: data.count,
+            provider: data.provider
+          },
+        })
+      await modal.present()
+      await modal.onDidDismiss();
+      console.log('Modal dismissed');
     },
   },
   computed: {
@@ -91,6 +85,10 @@ DofD4XA4HA6Hw+FwOBwOh8PhcDj8VnsDg+O/lIZXxKIAAAAASUVORK5CYII=',
 </script>
 
 <style scoped>
+
+.headline {
+
+}
 
 img {
   width:64px;

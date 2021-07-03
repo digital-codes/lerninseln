@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <!--
     <ion-header>
       <ion-toolbar>
         <ion-title>Map
@@ -7,8 +8,8 @@
         </ion-title>
       </ion-toolbar>
     </ion-header>
-
-      <ion-card slot="fixed" >
+    -->
+      <ion-card slot="fixed" class="map">
       <ion-card-content>
 
       <Leaf></Leaf>
@@ -50,12 +51,12 @@ import Leaf from "@/components/Leaf.vue";
 //import Events from '@/components/Events.vue';
 import Events from '@/components/Events.vue';
 
-import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../store';
+import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
 
 
 export default  {
   name: 'Map',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, },
+  components: {  IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, },
   async beforeMount() {
     this.store.commit(MUTATIONS.RESET_EVENT);
   },
@@ -66,3 +67,9 @@ export default  {
   },
 }
 </script>
+
+<style scoped>
+.map {
+  margin-bottom:0;
+}
+</style>

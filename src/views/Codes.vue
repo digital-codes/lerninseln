@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <!--
     <ion-header>
       <ion-toolbar>
         <ion-title>Codes
@@ -7,9 +8,15 @@
         </ion-title>
       </ion-toolbar>
     </ion-header>
+      -->
 
     <ion-content >
       <ion-card>
+      <!--
+      <ion-card-header>
+        <ion-card-title>Deine QR Codes</ion-card-title>
+      </ion-card-header>
+      -->
       <ion-card-content>
 
         <BookShow></BookShow>
@@ -28,6 +35,6 @@ import BookShow from '@/components/BookShow.vue';
 
 export default  {
   name: 'Codes',
-  components: { BookShow, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent  }
+  components: { BookShow, IonContent, IonPage,IonCard, IonCardContent  }
 }
 </script>

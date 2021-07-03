@@ -11,6 +11,12 @@
         die unterschiedlichste Angebote machen und das Lernen in der „realen Welt“ ermöglichen.
         Vor allem im MINT-Bereich gibt es bereits zahlreiche Initiativen und Lernorte in Karlsruhe, die
         durch die interaktive Karte deutlich sichtbarer und besser gefunden werden können.
+        <div>
+          <a href="https://lerninseln.ok-lab-karlsruhe.de" target=_blank>Lerninseln Webseite</a>
+        </div>
+        <div>
+          <a href="mailto:lerninseln@ok-lab-karlsruhe.de">EMail</a>
+        </div>
     </ion-card-content>
   </ion-card>
 

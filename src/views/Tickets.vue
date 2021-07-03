@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <!--
     <ion-header>
       <ion-toolbar>
         <ion-title>Tickets
@@ -7,7 +8,7 @@
         </ion-title>
       </ion-toolbar>
     </ion-header>
-
+    -->
     <ion-content >
       <ion-card>
       <ion-card-content>
@@ -48,7 +49,8 @@
 </template>
 
 <script lang="js">
-import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, 
+import { IonPage, IonButton, IonHeader, 
+  IonToolbar, IonTitle, 
   IonContent,IonCard, IonCardContent,
   modalController } from '@ionic/vue';
 
@@ -64,7 +66,7 @@ import DataStorage from "../services/dstore";
 
 // https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
-import { useStore, Selection, MUTATIONS } from '../store';
+import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 
 // test
 import OrderForm from '@/components/OrderForm.vue';
@@ -84,7 +86,7 @@ export default  defineComponent ({
       ds: "",
     }
   },
-  components: { Event, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
+  components: { Event, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
   methods: {
     purchase() {
       console.log("Buy ticket: ")
@@ -93,12 +95,12 @@ export default  defineComponent ({
         console.log("Completed: ",result,"status: ",
         ", ticket: ",this.store.state.purchase.ticket)
         if (result.status) {
-          await this.openQr(result.data)
+          const qr = {"title":"event1","date":"2021-07-20", "time":"10:00","count":1,"provider":"Rathaus","qrsrc":result.data.qr}
+          await this.openQr(qr)
           this.store.commit(MUTATIONS.RESET_PURCHASE)
           this.store.commit(MUTATIONS.RESET_EVENT)
           console.log("Event now:",(this.store.state.selection.eventId != 0) ? "set" : "reset")
           console.log('Purchase completed and reset');
-          const qr = {"event":"event1","date":"2021-07-20", "time":"10:00","count":1,"location":"Rathaus","qrsrc":result.data.qr}
           await this.store.commit(MUTATIONS.ADD_QR,qr)
           console.log("total QRs: ",this.store.state.qrcode.length)
           //this.presentActionSheet()
@@ -111,8 +113,12 @@ export default  defineComponent ({
           component: QrModal,
           cssClass: 'my-custom-class',
           componentProps: {
-            title: data.text,
-            qr:data.qr,
+          title: data.title,
+          qrsrc:data.qrsrc,
+          date: data.date,
+          time: data.time,
+          count: data.count,
+          provider: data.provider
           },
         })
       await modal.present()

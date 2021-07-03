@@ -1,9 +1,6 @@
 
 <template>
 
-  <ion-card>
-  <ion-card-content>
-
   <form ref="orderForm" v-show="showSubscription == true"
     class="login-form"
   >
@@ -73,26 +70,23 @@
   </ion-item>
   </form>
 
-  </ion-card-content>
-  </ion-card>
-
 </template>
 
 <script lang="js">
 // inspired by https://vueformulate.com/guide/forms/
 
-import { IonItem, IonLabel, IonInput, IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonCheckbox } from '@ionic/vue';
+import { IonItem, IonLabel, IonInput, IonButton, IonCheckbox } from '@ionic/vue';
 import { defineComponent } from 'vue'; 
 
 import DataFetch from "../services/fetch";
 
-import { useStore, Selection, MUTATIONS, ACTIONS } from '../store';
+import { useStore, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
 
 
 export default defineComponent ({
   name: "OrderForm",
   components: {
-    IonItem, IonLabel, IonInput, IonCard, IonCardContent, 
+    IonItem, IonLabel, IonInput, 
     //IonCardSubtitle, IonCardTitle ,
     IonCheckbox, IonButton
   },
@@ -211,6 +205,7 @@ export default defineComponent ({
   border: 1px solid #a8a8a8;
   border-radius: .5em;
   box-sizing: border-box;
+  margin-top: 1em;
 }
 .form-title {
   margin-top: 0;
