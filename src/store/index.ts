@@ -7,13 +7,13 @@ import { createStore, useStore as baseUseStore, Store, MutationTree, } from 'vue
 
 // interfaces for our State and todos
 export type Selection = { eventId: number; providerId: number};
-export type Purchase = { ticketId: number; email: string };
+export type Purchase = { ticketId: number; email: string; resnum: string };
 export type State = { selection: Selection; purchase: Purchase };
 
 export const key: InjectionKey<Store<State>> = Symbol();
 const state: State = {
   selection: {eventId: 0, providerId: 0},
-  purchase: {ticketId: 0, email: ""},
+  purchase: {ticketId: 0, email: "", resnum: ""},
 };
 
 /*
@@ -39,12 +39,17 @@ const mutations: MutationTree<State> = {
       state.selection.providerId = 0;
     },
     [MUTATIONS.SET_PURCHASE](state, purchase: Purchase ) {
+      /*
       state.purchase.ticketId = purchase.ticketId;
       state.purchase.email = purchase.email;
+      state.purchase.resnum = purchase.resnum;
+      */
+      state.purchase = purchase
     },
     [MUTATIONS.RESET_PURCHASE](state) {
       state.purchase.ticketId = 0;
       state.purchase.email = "";
+      state.purchase.resnum = "";
     },
   };
 

@@ -120,7 +120,7 @@ switch ($meth) {
         // we expect a request type and a payload
         if (!(array_key_exists("request", $input)) || !(array_key_exists("payload", $input))) {
             mlog("Keys missing");
-            $result = array("payload" => array("reason" => REASON[1]),"status" => 0);
+            $result = array("data" => array("reason" => REASON[1]),"status" => 0);
             break;
         }
         $task = $input["request"];
@@ -129,22 +129,23 @@ switch ($meth) {
             case 1:
                 if (!(array_key_exists("ticket", $payload)) || !(array_key_exists("email", $payload))) {
                     mlog("Req 1 keys missing");
-                    $result = array("payload" => array("reason" => REASON[1]),"status" => 0);
+                    $result = array("data" => array("reason" => REASON[1]),"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
                 mlog("processing req 1");
                 $mailing["request"] = $task;
                 $mailing["payload"] = $payload;
-                $result = array("payload" => array("data" => "OK1"),"status" => 1);
+                $result = array("data" => array("text" => "OK1","resnum" => "abc"),"status" => 1);
                 break;
             case 2:
                 if (!(array_key_exists("ticket", $payload))
-                    || !(array_key_exists("email", $payload))
-                    || !(array_key_exists("code", $payload))
+                || !(array_key_exists("email", $payload))
+                || !(array_key_exists("resnum", $payload))
+                || !(array_key_exists("code", $payload))
                 ) {
                     mlog("Req 2 keys missing");
-                    $result = array("payload" => array("reason" => REASON[1]),"status" => 0);
+                    $result = array("data" => array("reason" => REASON[1]),"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
@@ -179,11 +180,11 @@ switch ($meth) {
                 $msg .=  PHP_EOL . "--" . PHP_EOL . "Das Lerninsel Team"  . PHP_EOL;
                 $r = sendSmtp($cfg,$to, $subj, $msg, $pdf);
                 mlog("Send ticket returned " . $r);
-                $result = array("payload" => array("data" => "OK2","qr" => $qr),"status" => 1);
+                $result = array("data" => array("text" => "OK2","qr" => $qr),"status" => 1);
                 break;
             default:
                 mlog("Invalid request");
-                $result = array("payload" => array("reason" => REASON[4]),"status" => 0);
+                $result = array("data" => array("reason" => REASON[4]),"status" => 0);
                 $task = 0; // clear request to indicate error
                 break;
         }

@@ -50,8 +50,10 @@
 <script lang="js">
 import { IonPage, IonButton, IonHeader, IonToolbar, IonTitle, 
   IonContent,IonCard, IonCardContent,
-  actionSheetController,
-  } from '@ionic/vue';
+  actionSheetController, modalController } from '@ionic/vue';
+
+import QrModal from '@/components/QrModal.vue'
+
 import Event from '@/components/Event.vue';
 import { defineComponent } from 'vue'; 
 
@@ -80,6 +82,7 @@ export default  defineComponent ({
       //evnt: {},
       items : [],
       ds: "",
+      qrModal: "",
     }
   },
   components: { Event, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
@@ -87,14 +90,34 @@ export default  defineComponent ({
     purchase() {
       console.log("Buy ticket: ")
     },
-    purchaseCompleted(result) {
+    async purchaseCompleted(result) {
         console.log("Completed: ",result,"status: ",
-        result.status,", ticket: ",result.payload.ticket)
+        ", ticket: ",this.store.state.purchase.ticket)
         if (result.status) {
-          this.presentActionSheet()
+          await this.openQr(result.data)
+          this.store.commit(MUTATIONS.RESET_PURCHASE)
+          //this.presentActionSheet()
         }
     },
-
+    async openQr(data) {
+      // see also https://stackoverflow.com/questions/65740559/cant-close-the-modal-in-ionic-vue-5-5-2
+      const modal = await modalController
+        .create({
+          component: QrModal,
+          cssClass: 'my-custom-class',
+          componentProps: {
+            title: data.text,
+            qr:data.qr
+          },
+        })
+      modal.onDidDismiss(this.ionModalDidDismiss)
+      this.qrModal = modal
+      //       await modal.onDidDismiss();
+      return modal.present();
+    },
+    ionModalDidDismiss(){
+        console.log("Dismissed")
+    },
     async presentActionSheet() {
       const actionSheet = await actionSheetController
         .create({

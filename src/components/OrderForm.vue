@@ -113,21 +113,41 @@ export default defineComponent ({
         return
       }
       const email = this.formValues.email
-      this.store.state.purchase.email = email
+      let purchase = this.store.state.purchase
+      if (purchase.resnum > "") {
+        console.log("Already sent at 1")
+        return
+      }
+      purchase.email = email
+      purchase.ticket = 1 // FIXME
+      this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
+      // DON'T: this.store.state.purchase.email = email
       console.log("Signup. Checked is ",this.formValues.checked)
       const posting = {request:1,payload:{
-        ticket: 1, 
+        ticket: this.store.state.purchase.ticket, 
         email: this.store.state.purchase.email,
         }
       }
       const result = await this.df.post(posting)
       console.log("Post1 result: ",result)
       this.payload = result.payload
+      // check axios status
       if (!result.status) {
-        console.log("Error1:", result.code," ",result.payload)
+        console.log("Error1:", result.code," ",this.payload)
         return
       }
-      console.log("OK")
+      console.log("OK",this.payload)
+      // check response status
+      if (!this.payload.status) {
+        console.log("Response Error1:", this.payload.data.reason)
+        return
+      }
+      console.log("OK",this.payload)
+      // set resnum
+      purchase = this.store.state.purchase
+      purchase.resnum = this.payload.data.resnum
+      console.log("Resnum:", purchase.resnum)
+      this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
       // open confirmation form
       this.formValues.code = ""
       this.showSubscription = false
@@ -138,19 +158,28 @@ export default defineComponent ({
       if (String(code).length != 6)
         return
       const posting = {request:2,payload:{
-        ticket: 1, 
+        ticket: this.store.state.purchase.ticket, 
         email: this.store.state.purchase.email,
+        resnum: this.store.state.purchase.resnum,
         code: code
         }
       }
       const result = await this.df.post(posting)
       console.log("Post2 result: ",result)
       this.payload = result.payload
+      // check axios status
       if (!result.status) {
         console.log("Error2:", result.code," ",result.payload)
         return
       }
-      console.log("OK")
+      console.log("OK2")
+      // check response status
+      if (!this.payload.status) {
+        console.log("Response Error1:", this.payload.data.reason)
+        return
+      }
+      //console.log("OK2",this.payload)
+
       this.payload.status = 1 // after validation
       this.$emit("purchaseComplete",this.payload)
       // form processing here
