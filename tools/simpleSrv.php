@@ -242,3 +242,47 @@ if ($forked) {
     mlog("wait end");
 }
 */
+
+/*
+prepared statement locking transactions
+
+more info here:
+https://www.php.net/manual/de/pdo.prepare.php
+https://www.php.net/manual/de/book.pdo.php
+
+
+
+echo "Prepared statement with row locking" . PHP_EOL;
+
+$sth = $pdo->prepare("SELECT * from event where provider_id = ? and title = ?  for update;");
+
+$sth->bindParam(1, $provider, PDO::PARAM_INT);
+$sth->bindParam(2, $title, PDO::PARAM_STR);
+
+// can alos use named parameters ...
+
+$provider = 7;
+$title = "Sport";
+
+$r = $pdo->beginTransaction();
+echo "begin transaction: " . $r . PHP_EOL;
+
+$sth->execute();
+
+$data = $sth->fetchAll();
+if (!$sth) {
+    echo "Error" . PHP_EOL;
+    die();
+}
+echo "Records1: " . count($data) . PHP_EOL ; 
+if (count($data))
+    print_r($data);
+
+    // keep locked
+sleep(10);
+
+$r = $pdo->commit();
+echo "Commit transaction: " . $r . PHP_EOL;
+
+
+*/
