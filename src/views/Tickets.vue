@@ -113,7 +113,12 @@ export default  defineComponent ({
       modal.onDidDismiss(this.ionModalDidDismiss)
       this.qrModal = modal
       //       await modal.onDidDismiss();
-      return modal.present();
+      //return modal.present();
+      await modal.present();
+      if modal.didDismiss() {
+        console.log("Dismissed1")
+
+      };
     },
     ionModalDidDismiss(){
         console.log("Dismissed")
