@@ -66,7 +66,7 @@ import DataStorage from "../services/dstore";
 
 // https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
-import { useStore, Selection, MUTATIONS } from '../services/quickStore';
+import { useStore, Selection, Qrcode, Purchase, MUTATIONS } from '../services/quickStore';
 
 // test
 import OrderForm from '@/components/OrderForm.vue';
@@ -95,7 +95,17 @@ export default  defineComponent ({
         console.log("Completed: ",result,"status: ",
         ", ticket: ",this.store.state.purchase.ticket)
         if (result.status) {
-          const qr = {"title":"event1","date":"2021-07-20", "time":"10:00","count":1,"provider":"Rathaus","qrsrc":result.data.qr}
+          // prepare new qr
+          const event = this.items[this.store.state.selection.eventId - 1]
+          console.log("Event: ",event)
+          const qr = {}
+          qr.qrsrc = result.data.qr
+          qr.title = event.title
+          qr.date = event.date
+          qr.time = event.time
+          qr.provider = event.provider
+          qr.count = 1
+          //{"title":"event1","date":"2021-07-20", "time":"10:00","count":1,"provider":"Rathaus","qrsrc":}
           await this.openQr(qr)
           this.store.commit(MUTATIONS.RESET_PURCHASE)
           this.store.commit(MUTATIONS.RESET_EVENT)
