@@ -17,6 +17,8 @@ require "sendMail.php";
 // --------------------------------------------------
 define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
 
+define("DRYRUN",true); // default: false
+
 // --------------------------------------------------
   // log function
   // --------------------------------------------------
@@ -134,8 +136,10 @@ switch ($meth) {
                     break;
                 }
                 mlog("processing req 1");
-                $mailing["request"] = $task;
-                $mailing["payload"] = $payload;
+                if (!DRYRUN) {
+                    $mailing["request"] = $task;
+                    $mailing["payload"] = $payload;
+                }
                 $result = array("data" => array("text" => "OK1","resnum" => "abc"),"status" => 1);
                 break;
             case 2:
@@ -178,8 +182,10 @@ switch ($meth) {
                 $msg = "Vielen Dank, dass Du an unserer Veranstaltung teilnimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
                 $msg .= "Du kannst es ausdrucken und mitbringen. Oder das Ticket auf Deinem Smartphone anzeigen."  . PHP_EOL;
                 $msg .=  PHP_EOL . "--" . PHP_EOL . "Das Lerninsel Team"  . PHP_EOL;
-                $r = sendSmtp($cfg,$to, $subj, $msg, $pdf);
-                mlog("Send ticket returned " . $r);
+                if (!DRYRUN) {
+                    $r = sendSmtp($cfg, $to, $subj, $msg, $pdf);
+                    mlog("Send ticket returned " . $r);
+                }
                 $result = array("data" => array("text" => "OK2","qr" => $qr),"status" => 1);
                 break;
             default:
