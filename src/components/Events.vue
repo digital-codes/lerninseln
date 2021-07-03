@@ -77,7 +77,7 @@ export default defineComponent({
     items : [],
     checks : [],
     providers: [],
-    filter : 0,
+    //filter : 0,
     chk1: 1, 
     chk2: 0, 
     chk3: 1, 
@@ -92,10 +92,10 @@ export default defineComponent({
       const item = this.items[e-1]
       console.log("Checked: ",item.id, item.checked)
       if (item.checked) {
-        this.filter = item.id
+        //this.filter = item.id
         this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
       } else {
-        this.filter = 0;
+        //this.filter = 0;
         this.store.commit(MUTATIONS.RESET_EVENT);
       }
     },
@@ -121,12 +121,15 @@ export default defineComponent({
   computed: {
     selIitems() {
       // https://v3.vuejs.org/guide/computed.html#computed-properties
-      console.log("Filter on:", this.filter,"length: ",this.items.length)
+      //console.log("Filter on:", this.filter,"length: ",this.items.length)
+      const filter = this.store.state.selection.eventId
+      console.log("Filter on:", filter,"length: ",this.items.length)
       const i = []
       this.items.forEach(item => { 
         //console.log(item)
         //if ((this.filter == 0) || (item.category_id == this.filter)) 
-        if ((this.filter == 0) || (item.id == this.filter)) 
+        //if ((this.filter == 0) || (item.id == this.filter)) 
+        if ((filter == 0) || (item.id == filter)) 
           i.push(item)
         })
       return i
