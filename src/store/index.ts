@@ -8,8 +8,8 @@ import { createStore, useStore as baseUseStore, Store, MutationTree, } from 'vue
 // interfaces for our State and todos
 export type Selection = { eventId: number; providerId: number};
 export type Purchase = { ticketId: number; email: string; resnum: string };
-export type Qrcode = {"event":string,"date":string, "time":string,"count":number,"location":string,"qrsrc":string};
-export type State = { selection: Selection; purchase: Purchase, qrcode: Qrcode[] };
+export type Qrcode = {"event": string;"date": string; "time": string; "count": number;"location": string;"qrsrc": string };
+export type State = { selection: Selection; purchase: Purchase; qrcode: Qrcode[] };
 
 export const key: InjectionKey<Store<State>> = Symbol();
 const state: State = {

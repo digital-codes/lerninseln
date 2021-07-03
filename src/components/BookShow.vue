@@ -31,15 +31,13 @@
 
 import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle,    
   } from '@ionic/vue';
-import { defineComponent, reactive } from 'vue'; // ref for modal
+import { defineComponent,  } from 'vue'; // ref for modal
 
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
 // https://next.vuex.vuejs.org/guide/composition-api.html#accessing-state-and-getters
 
 import { useStore, Selection, MUTATIONS } from '../store';
-
-const getCodes = reactive({ value: [] });
 
 export default defineComponent({
   components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, 
@@ -78,32 +76,11 @@ DofD4XA4HA6Hw+FwOBwOh8PhcDj8VnsDg+O/lIZXxKIAAAAASUVORK5CYII=',
       this.isZoomed = !this.isZoomed
       console.log("zoomed:",this.isZoomed)
     },
-    async loadCodesFromDb() {
-      if (this.ds) {
-        const qrString = await this.ds.getItem("qrcode") || "[]"
-        const items = JSON.parse(qrString)
-        getCodes.value = items
-      }
-    },
   },
-  // see https://www.reddit.com/r/vuejs/comments/kkac96/async_computed_property_for_vue_3/
   computed: {
     getCodes() {
-      this.loadCodesFromDb();
-      return getCodes
-      /*
-      const qrString = await this.ds.getItem("qrcode") || "[]"
-      const items = JSON.parse(qrString)
-      return items
-      */
+      return this.store.state.qrcode
     }
-  },
-  async beforeMount() {
-    this.ds = await DataStorage.getInstance()
-    const qrString = await this.ds.getItem("qrcode") || "[]"
-    const items = JSON.parse(qrString)
-    getCodes.value = items
-    //this.items = items
   },
   // store
   setup() {

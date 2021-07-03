@@ -96,13 +96,11 @@ export default  defineComponent ({
           await this.openQr(result.data)
           this.store.commit(MUTATIONS.RESET_PURCHASE)
           this.store.commit(MUTATIONS.RESET_EVENT)
-          console.log('Purchase completed and reset');
-          const qrString = await this.ds.getItem("qrcode") || "[]"
-          const qrcodes = JSON.parse(qrString)
-          qrcodes.push({"event":"event1","date":"2021-07-20", "time":"10:00","count":1,"location":"Rathaus","qrsrc":result.data.qr})
-          await this.ds.setItem("qrcode", JSON.stringify(qrcodes))
-          console.log(qrcodes.length, " codes: ",qrcodes)
           console.log("Event now:",(this.store.state.selection.eventId != 0) ? "set" : "reset")
+          console.log('Purchase completed and reset');
+          const qr = {"event":"event1","date":"2021-07-20", "time":"10:00","count":1,"location":"Rathaus","qrsrc":result.data.qr}
+          await this.store.commit(MUTATIONS.ADD_QR,qr)
+          console.log("total QRs: ",this.store.state.qrcode.length)
           //this.presentActionSheet()
         }
     },
