@@ -75,9 +75,7 @@ export default defineComponent({
   data () {
     return {
     items : [],
-    checks : [],
     providers: [],
-    //filter : 0,
     chk1: 1, 
     chk2: 0, 
     chk3: 1, 
@@ -125,6 +123,18 @@ export default defineComponent({
       const filter = this.store.state.selection.eventId
       console.log("Filter on:", filter,"length: ",this.items.length)
       const i = []
+      if (filter == 0) {
+        this.items.forEach(item => { 
+          item.checked = 0
+          i.push(item)
+        })
+      } else {
+        const item = this.items.find(x => x.id == filter) || 0
+        if (i != 0)
+        item.checked = 1
+        i.push(item)
+      }
+      /*
       this.items.forEach(item => { 
         //console.log(item)
         //if ((this.filter == 0) || (item.category_id == this.filter)) 
@@ -132,6 +142,7 @@ export default defineComponent({
         if ((filter == 0) || (item.id == filter)) 
           i.push(item)
         })
+        */
       return i
     },
     hasEvent() {
