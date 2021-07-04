@@ -26,7 +26,7 @@
 
         <OrderForm 
           @purchaseComplete="purchaseCompleted($event)"
-          info="Testbetrieb! Gib irgendeine Email und dann einen beliebigen Code ein"
+          info="Testbetrieb! Gib irgendeine Email und dann einen beliebigen 6-stelligen Code ein"
         ></OrderForm>
         <!--
         <ion-item>

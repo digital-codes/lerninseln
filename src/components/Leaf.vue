@@ -1,13 +1,12 @@
 <template>
   <div id="mapId">
 
-  <l-map style="height:40vh"
+  <l-map style="height:40vh" 
     :zoom="zoom"
     :center=selCenter 
     :max-zoom="maxZoom"
     @update:center="centerUpdate"
     @update:zoom="zoomUpdate"
-    @click="addPoint" 
   >
 
  <l-tile-layer 
@@ -46,7 +45,7 @@
 // DON'T load Leaflet components here!
 // Its CSS is needed though, if not imported elsewhere in your application.
 import "leaflet/dist/leaflet.css"
-import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon } from "@vue-leaflet/vue-leaflet";
+import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon,  } from "@vue-leaflet/vue-leaflet";
 import { defineComponent } from 'vue';
 
 import { useStore, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
@@ -68,13 +67,22 @@ import DataStorage from "../services/dstore";
 
 export default defineComponent ({
   name: "Leaf",
+  watch: {
+  '$route' (to, from) {
+    //console.log('Rout update2',to,from);
+    if (to.path == "/map") {
+      console.log('Now on map');
+      this.updated++
+      //this.$map.invalidateSize()
+      }
+    }
+  },
   components: {
     LMap,
     LTileLayer,
     LPopup,
     LMarker,
-    LIcon,
-    
+    LIcon,    
   },
   data() {
     return {
@@ -101,6 +109,7 @@ export default defineComponent ({
         */
       },
       ds: "",
+      updated: 0,
     };
   },
   computed: {
@@ -141,20 +150,6 @@ export default defineComponent ({
     },
     centerUpdate(center) {
       this.currentCenter = center;
-    },
-    addPoint(e) {
-      //console.log(`You clicked Add Point from`,e,"Type e",typeof(e),"Orig: ",e.originalEvent,"Target ",e.target,"Type target ",typeof(e.target))
-      if (undefined == e.originalEvent) return
-      this.startPnt[0] += .0003
-      this.startPnt[1] += .0003
-      console.log("Start:", this.startPnt)
-      const content = '<div class="popInfo">234<br>Click for more<p><a href="https://cern.ch" target="_blank">Link</a></p></div>'
-      this.markers.push({"id":this.geokey,"latlng":this.startPnt,"content":content,
-                "iconOptions":{"iconUrl":"https://placekitten.com/50/100","iconSize":[30,30]},
-      })
-      this.geokey += 1
-      this.highLight(3)
-      //console.log(this.markers)
     },
     async initialize() {
       const storedProviders = await this.ds.getItem("provider") || "[]"
