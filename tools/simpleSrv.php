@@ -24,7 +24,20 @@ define("DRYRUN",true); // default: false
   // --------------------------------------------------
 
 function reserveTicket($ticket,$email){
-    // returns: status, email, code, label, text
+    // returns: status, array(email, code, label, text)
+    $r = array();
+    $r["status"] = 1;
+    $d = array();
+    $d["email"] = $email;
+    $d["label"] = "label";
+    $d["text"] = "Ticket ist reserviert";
+    $d["code"] = random_int(100000,999999);
+    $r["data"] = $d;
+    return $r;
+}
+
+function bookTicket($ticket,$email,$label){
+    // returns: status, text, 
     $r = array();
     $r["status"] = 1;
     $r["email"] = $email;
@@ -33,6 +46,7 @@ function reserveTicket($ticket,$email){
     $r["code"] = random_int(100000,999999);
     return $r;
 }
+
 
 // --------------------------------------------------
   // log function
@@ -157,10 +171,10 @@ switch ($meth) {
                     // send mail only when all OK
                     if (!DRYRUN) {
                         $mailing["request"] = $task;
-                        $mailing["payload"] = array("email" => $r["email"],"code" => $r["code"]); // payload;
+                        $mailing["payload"] = $r["data"]; // extra data here, but doesn't matter 
                     }
                 }
-                $result = array("data" => array("text" => $r["text"],"resnum" => $r["label"]),"status" => $r["status"]);
+                $result = array("data" => $r["data"],"status" => $r["status"]);
                 break;
             case 2:
                 if (!(array_key_exists("ticket", $payload))
@@ -235,11 +249,17 @@ if ($mailing["request"] > 0) {
         ftruncate($fp, 0); // kürze Datei
         //$handle = popen('./a.php 2>&1', 'w');
         // strangely, this does not work with exec ...
-        $w = json_encode(array("data" => "aslslfqölwfmqö"));
+        $w = json_encode($mailing["payload"]); //array("data" => "aslslfqölwfmqö"));
         fputs($fp, $w);
         fflush($fp);
         $h = popen('./bgpipe.php & >/dev/null', 'w');
-        fwrite($h,"test");
+        //fwrite($h,"test"); // consume some time
+        // allow bgpip to truncate
+        for ($i = 0;$i < 5; $i++) {
+            clearstatcache();
+            if (fstat($fp)[7] < 1) break;
+            sleep(1);
+        }
         fclose($h);
         flock($fp, LOCK_UN); // Gib Sperre frei
     } else {
