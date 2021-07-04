@@ -12,7 +12,7 @@ fclose($fp);
 
 mlog("Sleep start. " . $r);
 
-$data = json_decode($r);
+$data = json_decode($r,true);
 if (!(array_key_exists("email", $data)) || !(array_key_exists("code", $data))) {
     mlog("Wrong parms");
     die();
@@ -25,7 +25,6 @@ $cfg = parse_ini_file("config.ini", false);
 //$cfg = parse_ini_file("/home/akugel/files/lerninseln/config.ini", false);
 
 $to = $data["email"];
-$to = "ak@akugel.de"; // overwrite!
 
 $subj = "Lerninsel Ticket Code";
 $msg = "Bitte gib diesen Code zur Bestätigung für das Ticket ein:" . PHP_EOL. PHP_EOL;

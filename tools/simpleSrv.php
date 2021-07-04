@@ -28,7 +28,7 @@ function reserveTicket($ticket,$email){
     $r = array();
     $r["status"] = 1;
     $d = array();
-    $d["email"] = $email;
+    $d["email"] = "ak@akugel.de"; //$email;
     $d["label"] = "label";
     $d["text"] = "Ticket ist reserviert";
     $d["code"] = random_int(100000,999999);
@@ -36,14 +36,16 @@ function reserveTicket($ticket,$email){
     return $r;
 }
 
-function bookTicket($ticket,$email,$label){
+function purchaseTicket($ticket,$email,$label){
     // returns: status, text, 
     $r = array();
     $r["status"] = 1;
-    $r["email"] = $email;
-    $r["label"] = "label";
-    $r["text"] = "Ticket ist reserviert";
-    $r["code"] = random_int(100000,999999);
+    $d = array();
+    $d["email"] = "ak@akugel.de"; //$email;
+    $d["label"] = "label";
+    $d["text"] = "Ticket ist reserviert";
+    $d["code"] = random_int(100000,999999);
+    $r["data"] = $d;
     return $r;
 }
 
@@ -165,7 +167,7 @@ switch ($meth) {
                     break;
                 }
                 mlog("processing req 1");
-                $r = reserveTicket($payload["ticket"],$payload["email"]);
+                $r = reserveTicket($payload["ticket"],trim($payload["email"]));
                 // returns: status, email, code, label, text
                 if ($r["status"] == 1) {
                     // send mail only when all OK
@@ -188,6 +190,7 @@ switch ($meth) {
                     break;
                 }
                 mlog("processing req 2");
+                $r = purchaseTicket($payload["ticket"],trim($payload["email"]),$payload["resnum"]);
                 
                 $to = "ak@akugel.de";
                 $event = array();
