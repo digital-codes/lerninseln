@@ -1,7 +1,7 @@
 <template>
   <div id="mapId">
 
-  <l-map style="height:40vh" 
+  <l-map style="height:40vh" ref="map"
     :zoom="zoom"
     :center=selCenter 
     :max-zoom="maxZoom"
@@ -73,7 +73,12 @@ export default defineComponent ({
     if (to.path == "/map") {
       console.log('Now on map');
       this.updated++
+      //console.log("1\n",this.$refs.map)
+      //console.log("2\n",this.$refs.map.leafletObject)
+      const map = this.$refs.map.leafletObject
       //this.$map.invalidateSize()
+      setTimeout(function(){ map._onResize(); }, 1000);
+     
       }
     }
   },
