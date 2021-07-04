@@ -20,6 +20,21 @@ define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
 define("DRYRUN",true); // default: false
 
 // --------------------------------------------------
+  // ticket functions
+  // --------------------------------------------------
+
+function reserveTicket($ticket,$email){
+    // returns: status, email, code, label, text
+    $r = array();
+    $r["status"] = 1;
+    $r["email"] = $email;
+    $r["label"] = "label";
+    $r["text"] = "Ticket ist reserviert";
+    $r["code"] = random_int(100000,999999);
+    return $r;
+}
+
+// --------------------------------------------------
   // log function
   // --------------------------------------------------
 
@@ -136,11 +151,16 @@ switch ($meth) {
                     break;
                 }
                 mlog("processing req 1");
-                if (!DRYRUN) {
-                    $mailing["request"] = $task;
-                    $mailing["payload"] = $payload;
+                $r = reserveTicket($payload["ticket"],$payload["email"]);
+                // returns: status, email, code, label, text
+                if ($r["status"] == 1) {
+                    // send mail only when all OK
+                    if (!DRYRUN) {
+                        $mailing["request"] = $task;
+                        $mailing["payload"] = array("email" => $r["email"],"code" => $r["code"]); // payload;
+                    }
                 }
-                $result = array("data" => array("text" => "OK1","resnum" => "abc"),"status" => 1);
+                $result = array("data" => array("text" => $r["text"],"resnum" => $r["label"]),"status" => $r["status"]);
                 break;
             case 2:
                 if (!(array_key_exists("ticket", $payload))
