@@ -24,7 +24,10 @@
           >
         </Event>
 
-        <OrderForm @purchaseComplete="purchaseCompleted($event)"></OrderForm>
+        <OrderForm 
+          @purchaseComplete="purchaseCompleted($event)"
+          info="Testbetrieb! Gib irgendeine Email und dann einen beliebigen Code ein"
+        ></OrderForm>
         <!--
         <ion-item>
         <Ion-button class="center-button" @click="presentActionSheet()">

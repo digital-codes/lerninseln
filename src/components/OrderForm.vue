@@ -71,12 +71,14 @@
   </ion-item>
   </form>
 
+  <ion-text v-if="info > ''" class="info">{{info}}</ion-text>
+
 </template>
 
 <script lang="js">
 // inspired by https://vueformulate.com/guide/forms/
 
-import { IonItem, IonLabel, IonInput, IonButton, IonCheckbox } from '@ionic/vue';
+import { IonItem, IonLabel, IonInput, IonText, IonButton, IonCheckbox } from '@ionic/vue';
 import { defineComponent } from 'vue'; 
 
 import DataFetch from "../services/fetch";
@@ -90,6 +92,9 @@ export default defineComponent ({
     IonItem, IonLabel, IonInput, 
     //IonCardSubtitle, IonCardTitle ,
     IonCheckbox, IonButton
+  },
+  props: {
+    info: {type: String, default: "",},
   },
   emits: ["purchaseComplete"],  // vue3 requires to define events here!
   data () {
@@ -225,6 +230,11 @@ export default defineComponent ({
 .footnote {
   /* font-size: 90%; */
   font-style: italic;
+}
+
+.info {
+  font-size: 120%;
+  color: rgb(200,0,0);
 }
 .input-item {
   
