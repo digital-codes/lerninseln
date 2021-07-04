@@ -54,8 +54,8 @@ import hashlib
 # tickets
 #   id, avail, reserved, limit,  event id
 
-# pending (unfinished reservations)
-#   id, count, date, user_id, event_id
+# pending (unfinished reservations). label might be useful
+#   id, label, count, date, user_id, ticket_id
 
 # codes
 #   id, count, ticket id, user id
@@ -234,7 +234,7 @@ class Code(Base):
  
     id = Column(Integer, primary_key=True)
     count = Column(Integer, nullable=False)
-
+    label = Column(String(255))
     
     ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
     ticket = relationship("Ticket", back_populates="code")
@@ -244,9 +244,10 @@ class Code(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, count, ticket, user):
+    def __init__(self, count, label, ticket, user):
         """"""
         self.count = count
+        self.label = label
         self.ticket_id = ticket
         self.user_id = user
 
@@ -318,8 +319,8 @@ class Pending(Base):
     count = Column(Integer, nullable=False)  
     date = Column(DateTime, nullable=False)
 
-    event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
-    event = relationship("Event", back_populates="pending")
+    ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
+    ticket = relationship("Ticket", back_populates="pending")
                             
     user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     user = relationship("User", back_populates="pending")
@@ -339,13 +340,13 @@ class Pending(Base):
 User.pending = relationship("Pending", order_by=Pending.id, \
     back_populates="user",cascade="all, delete, delete-orphan")
 
-Event.pending = relationship("Pending", order_by=Pending.id, \
-    back_populates="event",cascade="all, delete, delete-orphan")
-
 
 Event.ticket = relationship("Ticket", order_by=Ticket.id, \
     back_populates="event",cascade="all, delete, delete-orphan")
 
+
+Ticket.pending = relationship("Pending", order_by=Pending.id, \
+    back_populates="ticket",cascade="all, delete, delete-orphan")
 
 Ticket.code = relationship("Code", order_by=Code.id, \
     back_populates="ticket",cascade="all, delete, delete-orphan")
