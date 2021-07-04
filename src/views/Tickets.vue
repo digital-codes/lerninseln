@@ -71,6 +71,10 @@ import { useStore, Selection, Qrcode, Purchase, MUTATIONS } from '../services/qu
 // test
 import OrderForm from '@/components/OrderForm.vue';
 
+// storage
+import { Capacitor, Plugins, Encoding, FilesystemDirectory } from '@capacitor/core';
+const { Filesystem } = Plugins;
+
 /* passing data from child to parent 
 https://forum.vuejs.org/t/passing-data-back-to-parent/1201
 https://dev.to/freakflames29/how-to-pass-data-from-child-to-parent-in-vue-js-2d9m
@@ -105,7 +109,25 @@ export default  defineComponent ({
           qr.time = event.time
           qr.provider = event.provider
           qr.count = 1
-          //{"title":"event1","date":"2021-07-20", "time":"10:00","count":1,"provider":"Rathaus","qrsrc":}
+          // ----------------
+          // local store
+          /*
+          const time = new Date().getTime()
+          const fileName = "QR" + time + ".jpeg"
+          console.log("Writing to ",fileName)
+          if (Filesystem) {
+            console.log("Now Writing")
+            await Filesystem.writeFile({
+                  data: qr.qrsrc,
+                  path: fileName,
+                  directory: FilesystemDirectory.Data,
+                  encoding: Encoding.UTF8,
+                });
+          } else {
+            console.log("Can't write")
+          }
+          */
+          // ----------------
           await this.openQr(qr)
           this.store.commit(MUTATIONS.RESET_PURCHASE)
           this.store.commit(MUTATIONS.RESET_EVENT)
