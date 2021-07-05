@@ -37,6 +37,7 @@ define ("DBCALL", array(
     "SET_USER_ACCESS" => "update user set access = ? where id = ?;",
     "SET_USER_PWD" => "update user set pwdOrTotp = ? where id = ?;",
     "GET_EVENT" => "SELECT * from event where id = ?;",
+    "GET_PROVIDER" => "SELECT * from provider where id = ?;",
     "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
     "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
     "DELETE_PENDING" => "delete from pending where id = ?;",
@@ -332,10 +333,11 @@ function purchaseTicket($ticket,$email,$label){
         return $r;
     }
     $pid = $p["data"][0]["id"];
+    $pcnt = $p["data"][0]["count"];
     // create qr
     $qr = uniqid ("Lerninseln-Karlsruhe") . "-" . $uid . "-" . $pid;
     // add qr
-    $p = dbAccess($pdo,"ADD_QR",array($uid,$ticket,$qr,1));
+    $p = dbAccess($pdo,"ADD_QR",array($uid,$ticket,$qr,$pcnt));
     // delete pending
     dbAccess($pdo,"DELETE_PENDING",array($pid));
 
@@ -344,16 +346,32 @@ function purchaseTicket($ticket,$email,$label){
 
     // need to collect event description
     $eid = $t["data"][0]["event_id"];
-
+    $e = dbAccess($pdo,"GET_EVENT",array($eid));
+    mlog("Event: " . print_r($e,true));
+    if (count($e["data"]) == 0) {
+        mlog("No event");
+        $r["text"] = "Leider gibt es ein Problem. Versuche es später noch einmal";
+        return $r;
+    }
+    $event = $e["data"][0];
+    $provid = $event["provider_id"];
+    $pv = dbAccess($pdo,"GET_PROVIDER",array($provid));
+    mlog("Provider: " . print_r($pv,true));
+    if (count($pv["data"]) == 0) {
+        mlog("No provider");
+        $r["text"] = "Leider gibt es ein Problem. Versuche es später noch einmal";
+        return $r;
+    }
+    $provider = $pv["data"][0];
 
     $d["email"] = "ak@akugel.de"; //$email;
-    $d["name"] = "label";
-    $d["provider"] = "label";
-    $d["date"] = "label";
-    $d["time"] = "label";
-    $d["count"] = "label";
-    $d["location1"] = "label";
-    $d["location2"] = "label";
+    $d["name"] = $event["title"];
+    $d["provider"] = $provider["name"];
+    $d["date"] = $event["date"];
+    $d["time"] = $event["time"];
+    $d["count"] = $pcnt;
+    $d["location1"] = $provider["citycode"] . " " . $provider["city"];
+    $d["location2"] = $provider["street"] . " " . $provider["streetnum"];
 
     $d["qr"] = $qr;
     $r["data"] = $d;
