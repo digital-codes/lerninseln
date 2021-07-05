@@ -69,7 +69,7 @@ function dbAccess($cfg, $mode, $parms)
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $query = DBCALL[$mode];
-    // read table need special handling
+    // read table needs special handling. cannot use table name as parameter
     if (strstr($mode, "GET_TABLE")) {
         $query = DBCALL[$mode] . $parms[0] . ";";
     }
@@ -83,13 +83,14 @@ function dbAccess($cfg, $mode, $parms)
     
     // default results
     $r = array();
-    $r["status"] = 1;
+    $r["status"] = 0;
 
     // on get function, return all data
     if (strstr($mode, "GET_")) {
         $d = $sth->fetchAll();
         //mlog("Data:" . print_r($d, true));
         $r["data"] = $d;
+        $r["status"] = 1;
         return $r;
     } else {
         // special processing follows
