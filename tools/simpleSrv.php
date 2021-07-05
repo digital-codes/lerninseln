@@ -41,7 +41,7 @@ define ("DBCALL", array(
     "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
     "DELETE_PENDING" => "delete from pending where id = ?;",
     "GET_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
-    "ADD_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
+    "ADD_QR" => "insert into code set user_id = ?, ticket_id = ?, label = ?, count = ?;",
     "GET_TICKET" => "SELECT * from ticket where id = ?;",
     "SELECT_TICKET" => "SELECT * from ticket where id = ? for update;",
     "UPDATE_TICKET" => "update ticket set avail = ? where id = ?;",
@@ -154,7 +154,7 @@ function reserveTicket($ticket,$email){
     // returns: status, array(email, code, label, text)
     /* procedure
         create user (ignore error if exists)
-        get user
+        get user. break if not exists
         start transaction
             select ticket for update
             check is user is pending for this ticket => break 1 if yes
@@ -289,13 +289,63 @@ function purchaseTicket($ticket,$email,$label){
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $r = array();
-    $r["status"] = 1;
+    $r["status"] = 0;
     $r["text"] = "";
     $d = array();
-    // get access to ticket and event
-    $t = dbAccess($pdo,"GET_TICKET",array($ticket));
-    $user_id = 123;
-    $pending_id = 456;
+
+    $user = hash("sha256",$email);
+    $u = dbAccess($pdo,"GET_USER",array($user ));
+    if (count($u["data"]) == 0) {
+        mlog("Missing user");
+        $r["text"] = "Leider ein Problem mit der Anmeldung";
+        return $r;
+    }
+    $uid = $u["data"][0]["id"];
+    mlog("Found user: " . $uid);
+
+    // start transaction
+    $pdo->beginTransaction();
+    // lock ticket
+    $t = dbAccess($pdo,"SELECT_TICKET",array($ticket));
+    mlog("Ticket: " . print_r($t,true));
+    if (count($t["data"]) == 0) {
+        mlog("Missing Ticket");
+        $r["text"] = "Leider ein Problem mit Buchung";
+        $pdo->rollback();
+        return $r;
+    }
+    
+    // check pending
+    $p = dbAccess($pdo,"GET_PENDING",array($uid,$ticket));
+    mlog("Pending: " . print_r($p,true));
+    if (count($p["data"]) == 0) {
+        mlog("No reservation");
+        $r["text"] = "Du hast noch keine Reservierung";
+        $pdo->rollback();
+        return $r;
+    }
+    // check pending code
+    if ($p["data"][0]["code"] != $label) {
+        mlog("invalid reservation code");
+        $r["text"] = "Der Code ist ungültig";
+        $pdo->rollback();
+        return $r;
+    }
+    $pid = $p["data"][0]["id"];
+    // create qr
+    $qr = uniqid ("Lerninseln-Karlsruhe") . "-" . $uid . "-" . $pid;
+    // add qr
+    $p = dbAccess($pdo,"ADD_QR",array($uid,$ticket,$qr,1));
+    // delete pending
+    dbAccess($pdo,"DELETE_PENDING",array($pid));
+
+    // finally
+    $pdo->commit();
+
+    // need to collect event description
+    $eid = $t["data"][0]["event_id"];
+
+
     $d["email"] = "ak@akugel.de"; //$email;
     $d["name"] = "label";
     $d["provider"] = "label";
@@ -304,9 +354,10 @@ function purchaseTicket($ticket,$email,$label){
     $d["count"] = "label";
     $d["location1"] = "label";
     $d["location2"] = "label";
-    $d["text"] = "Ticket ist reserviert";
-    $d["qr"] = uniqid ("Lerninseln-Karlsruhe") . "-" . $user_id . "-" . $pending_id;
+
+    $d["qr"] = $qr;
     $r["data"] = $d;
+    $r["status"] = 1;
     $r["text"] = "Buchung erfolgreich";
     return $r;
 }
@@ -446,6 +497,13 @@ switch ($meth) {
 
                 mlog("processing req 2");
                 $r = purchaseTicket($payload["ticket"],$email,$payload["resnum"]);
+
+                if ($r["status"] == 0) {
+                    mlog("Booking failed");
+                    $result = array("data" => array(),"text" => $r["text"],"status" => 0);
+                    $task = 0; // clear request to indicate error
+                    break;
+                }
                 
                 $to = "ak@akugel.de";
                 $event = $r["data"];
