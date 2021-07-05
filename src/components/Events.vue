@@ -47,7 +47,7 @@
   <ion-button 
     v-if="hasEvent" 
     @click="buy()"
-    >Zu den Tickets
+    >Zur Buchung
   </ion-button>
 
 
@@ -114,12 +114,13 @@ export default defineComponent({
     this.items = items
     
     this.store.commit(MUTATIONS.RESET_EVENT)
-    //console.log("befMount: ",items)
+    console.log("befMount: ",items)
   },
   computed: {
     selIitems() {
       // https://v3.vuejs.org/guide/computed.html#computed-properties
       //console.log("Filter on:", this.filter,"length: ",this.items.length)
+      console.log("computed: ",this.items, this.items.length)
       const filter = this.store.state.selection.eventId
       console.log("Filter on:", filter,"length: ",this.items.length)
       const i = []

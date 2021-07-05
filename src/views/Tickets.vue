@@ -180,6 +180,8 @@ export default  defineComponent ({
     this.ds = await DataStorage.getInstance()
     const providerString = await this.ds.getItem("provider") || "[]"
     const providers = JSON.parse(providerString)
+    const ticketString = await this.ds.getItem("ticket") || "[]"
+    const tickets = JSON.parse(ticketString)
     const itemString = await this.ds.getItem("event") || "[]"
     const items = JSON.parse(itemString)
     for (let i=0; i < items.length; i++){
@@ -189,6 +191,7 @@ export default  defineComponent ({
       items[i].provider = name
     }
     this.items = items
+    console.log("FIXME: runs on events, not tickets so far")
   },
   // store
   setup() {

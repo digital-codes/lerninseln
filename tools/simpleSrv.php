@@ -91,6 +91,16 @@ function dbAccess($pdo, $mode, $parms)
         // special processing follows
         $r["data"] = array();
         switch ($mode) {
+            case "SELECT_TICKET":
+                $d = $sth->fetchAll();
+                $r["data"] = $d;
+                $r["status"] = 1;
+                break;
+            default:
+                $d = array();
+                $r["data"] = $d;
+                break;
+            /*    
             case "ADD_USER":
                 $d = array();
                 $r["data"] = $d;
@@ -107,10 +117,6 @@ function dbAccess($pdo, $mode, $parms)
                 $d = array();
                 $r["data"] = $d;
                 break;
-            case "SELECT_TICKET":
-                $d = $sth->fetchAll();
-                $r["data"] = $d;
-                break;
             case "UPDATE_TICKET":
                 $d = array();
                 $r["data"] = $d;
@@ -123,7 +129,7 @@ function dbAccess($pdo, $mode, $parms)
                 $d = array();
                 $r["data"] = $d;
                 break;
-            
+            */
             }
     }
     return $r;
@@ -365,13 +371,13 @@ function purchaseTicket($ticket,$email,$label){
     $provider = $pv["data"][0];
 
     $d["email"] = "ak@akugel.de"; //$email;
-    $d["name"] = $event["title"];
     $d["provider"] = $provider["name"];
+    $d["name"] = $event["title"];
     $d["date"] = $event["date"];
     $d["time"] = $event["time"];
     $d["count"] = $pcnt;
-    $d["location1"] = $provider["citycode"] . " " . $provider["city"];
-    $d["location2"] = $provider["street"] . " " . $provider["streetnum"];
+    $d["location1"] = $event["location1"];
+    $d["location2"] = $event["location2"];
 
     $d["qr"] = $qr;
     $r["data"] = $d;
@@ -459,7 +465,7 @@ switch ($meth) {
         // we expect a request type and a payload
         if (!(array_key_exists("request", $input)) || !(array_key_exists("payload", $input))) {
             mlog("Keys missing");
-            $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+            $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
             break;
         }
         $task = $input["request"];
@@ -468,7 +474,7 @@ switch ($meth) {
             case 1:
                 if (!(array_key_exists("ticket", $payload)) || !(array_key_exists("email", $payload))) {
                     mlog("Req 1 keys missing");
-                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+                    $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
@@ -476,7 +482,7 @@ switch ($meth) {
                 $email = trim($payload["email"]);
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     mlog("Invalid email");
-                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+                    $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
@@ -491,12 +497,12 @@ switch ($meth) {
                         $mailing["payload"] = $r["data"]; // extra data here, but doesn't matter 
                     }
                 }
-                $result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
+                //$result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
+                $result = array("status" => $r["status"],"text" => $r["text"]);
                 break;
             case 2:
                 if (!(array_key_exists("ticket", $payload))
                 || !(array_key_exists("email", $payload))
-                || !(array_key_exists("resnum", $payload))
                 || !(array_key_exists("code", $payload))
                 ) {
                     mlog("Req 2 keys missing");
@@ -514,7 +520,7 @@ switch ($meth) {
                 }
 
                 mlog("processing req 2");
-                $r = purchaseTicket($payload["ticket"],$email,$payload["resnum"]);
+                $r = purchaseTicket($payload["ticket"],$email,$payload["code"]);
 
                 if ($r["status"] == 0) {
                     mlog("Booking failed");
@@ -525,21 +531,9 @@ switch ($meth) {
                 
                 $to = "ak@akugel.de";
                 $event = $r["data"];
-                //mlog("Event: " . print_r($event,true));
-                /*
-                $event["name"] = $r["data"]["event"]; //"Extra Veranstaltung";
-                $event["date"] = $r["data"]["date"]; //"2021-07-20";
-                $event["time"] = $r["data"]["time"]; //"19:00";
-                $event["count"] = $r["data"]["count"]; //"1";
-                $event["location1"] = $r["data"]["location1"]; //"Digitallabor Rathaus Karlsruhe";
-                $event["location2"] = $r["data"]["location2"]; //"Markplatz, Karlsruhe";
-                */
+
                 $qr = makeQr( hash("sha256",$r["data"]["qr"]));
-                /*
-                $logo = file_get_contents("logo.jpg", false); //, stream_context_create($opciones_ssl));
-                $logo_base_64 = base64_encode($logo);
-                $event["logo"] = 'data:image/jpeg;base64,' . $logo_base_64;
-                */
+
                 $logo = file_get_contents("logo.png", false); //, stream_context_create($opciones_ssl));
                 $logo_base_64 = base64_encode($logo);
                 $event["logo"] = 'data:image/png;base64,' . $logo_base_64;
@@ -548,6 +542,10 @@ switch ($meth) {
                 $event["bg"] = 'data:image/jpeg;base64,' . $bg_base_64;
             
                 $pdf = pdfGen($event,$qr);
+                // clear some fields after pdf gen
+                $event["bg"] = "";
+                $event["logo"] = "";
+                $event["qr"] = "";
                 $subj = "Dein Lerninsel Ticket";
                 $msg = "Vielen Dank, dass Du an unserer Veranstaltung teilnimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
                 $msg .= "Du kannst es ausdrucken und mitbringen. Oder das Ticket auf Deinem Smartphone anzeigen."  . PHP_EOL;

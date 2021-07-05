@@ -71,7 +71,9 @@
   </ion-item>
   </form>
 
-  <ion-text v-if="info > ''" class="info">{{info}}</ion-text>
+  <ion-text v-if="message > ''" class="message"><p>{{message}}</p></ion-text>
+
+  <ion-text v-if="info > ''" class="info"><p>{{info}}</p></ion-text>
 
 </template>
 
@@ -103,6 +105,7 @@ export default defineComponent ({
       df:"",
       payload: {},
       showSubscription: true,
+      message: "",
     }
   },
   methods:{
@@ -113,13 +116,10 @@ export default defineComponent ({
         return
       }
       const email = this.formValues.email
-      let purchase = this.store.state.purchase
-      if (purchase.resnum > "") {
-        console.log("Already sent at 1")
-        return
-      }
+      const purchase = this.store.state.purchase
       purchase.email = email
       purchase.ticket = 1 // FIXME
+      console.log("FIXME: ticket number")
       this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
       // DON'T: this.store.state.purchase.email = email
       console.log("Signup. Checked is ",this.formValues.checked)
@@ -137,17 +137,13 @@ export default defineComponent ({
         return
       }
       console.log("OK1",this.payload)
+      this.message = result.payload.text
       // check response status
       if (!this.payload.status) {
-        console.log("Response Error1:", this.payload.data.reason)
+        console.log("Response Error1:", this.payload.text)
         return
       }
       console.log("OK2",this.payload)
-      // set resnum
-      purchase = this.store.state.purchase
-      purchase.resnum = this.payload.data.resnum
-      console.log("Resnum:", purchase.resnum)
-      this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
       // open confirmation form
       this.formValues.code = ""
       this.showSubscription = false
@@ -160,7 +156,6 @@ export default defineComponent ({
       const posting = {request:2,payload:{
         ticket: this.store.state.purchase.ticket, 
         email: this.store.state.purchase.email,
-        resnum: this.store.state.purchase.resnum,
         code: code
         }
       }
@@ -173,9 +168,10 @@ export default defineComponent ({
         return
       }
       console.log("OK2")
+      this.message = result.payload.text
       // check response status
       if (!this.payload.status) {
-        console.log("Response Error1:", this.payload.data.reason)
+        console.log("Response Error1:", this.payload.text)
         return
       }
       //console.log("OK2",this.payload)
@@ -236,6 +232,12 @@ export default defineComponent ({
   font-size: 120%;
   color: rgb(200,0,0);
 }
+
+.message {
+  font-size: 120%;
+  color: rgb(0,0,250);
+}
+
 .input-item {
   
 }

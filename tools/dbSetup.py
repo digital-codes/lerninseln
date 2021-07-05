@@ -264,6 +264,9 @@ class Event(Base):
     time = Column(String(255), nullable=False)
     cost = Column(Integer, nullable=False)
     costinfo = Column(String(255))
+    
+    location1 = Column(String(255))
+    location2 = Column(String(255))
 
     provider_id = Column(Integer, ForeignKey('provider.id', ondelete="CASCADE"), nullable=False)
     provider = relationship("Provider", back_populates="event")
@@ -276,13 +279,16 @@ class Event(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, title, date, time, cost, costinfo, provider, category, audience):
+    def __init__(self, title, date, time, cost, costinfo,
+                 location1, location2, provider, category, audience):
         """"""
         self.title = title
         self.date = date
         self.time = time
         self.cost = cost
         self.costinfo = costinfo
+        self.location1 = location1
+        self.location2 = location2
         self.provider_id = provider
         self.category_id = category
         self.audience_id = audience
@@ -495,6 +501,8 @@ for e in range(20):
                   "2021-" + f'{random.randint(6,12):02}' + "-" + f'{random.randint(1,28):02}',
                   f'{random.randint(1,24):02}' + ":00",
                   0,"Kostenlos",
+                  "Location 1 " + str(random.randint(1,10)),
+                  "Location 2 " + str(random.randint(1,10)),
                   random.randint(1,50),
                   random.randint(1,3),
                   random.randint(1,3)
