@@ -143,7 +143,8 @@ class User(Base):
     # if hash, we use something like
     # like hashlib.sha256(email.encode("utf-8")).hexdigest()
     pwdOrTotp = Column(String(255), nullable=False)
-    access = Column(TIMESTAMP,default=0)
+    #access = Column(TIMESTAMP,default=0)
+    access = Column(Integer,default=0)
     mode = Column(Integer, default = 0) # 1: mail/pwd 0: hash/totp
 
     #----------------------------------------------------------------------
@@ -317,7 +318,9 @@ class Pending(Base):
  
     id = Column(Integer, primary_key=True)
     count = Column(Integer, nullable=False)  
-    date = Column(DateTime, nullable=False)
+    #date = Column(DateTime, nullable=False)
+    date = Column(Integer, nullable=False) # unix timestamp in seconds
+    code = Column(Integer, nullable=False)
 
     ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
     ticket = relationship("Ticket", back_populates="pending")
@@ -327,8 +330,9 @@ class Pending(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, count, date, event, user):
+    def __init__(self, code, count, date, event, user):
         """"""
+        self.code = code
         self.count = count
         self.date = date
         self.event_id = event

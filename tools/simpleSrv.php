@@ -33,16 +33,18 @@ define("DRYRUN",true); // default: false
 // PDO statements
 define ("DBCALL", array(
     "GET_USER" => "SELECT * from user where username = ?;",
-    "ADD_USER" => "insert into user set username = ?;",
-    "UPDATE_USER" => "update user set access = ?;",
+    "ADD_USER" => "insert into user set username = ?, pwdOrTotp = ?, emailOrHash = ?;",
+    "SET_USER_ACCESS" => "update user set access = ? where id = ?;",
+    "SET_USER_PWD" => "update user set pwdOrTotp = ? where id = ?;",
     "GET_EVENT" => "SELECT * from event where id = ?;",
     "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
+    "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
     "DELETE_PENDING" => "delete from pending where id = ?;",
     "GET_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
     "ADD_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
     "GET_TICKET" => "SELECT * from ticket where id = ?;",
     "SELECT_TICKET" => "SELECT * from ticket where id = ? for update;",
-    "UPDATE_TICKET" => "update ticket set count = ? where id = ?;",
+    "UPDATE_TICKET" => "update ticket set avail = ? where id = ?;",
     "GET_TABLE" => "select * from ")
 );
 
@@ -59,12 +61,18 @@ function dbAccess($pdo, $mode, $parms)
     if (strstr($mode, "GET_TABLE")) {
         $query = DBCALL[$mode] . $parms[0] . ";";
     }
+
+    mlog("Action: " . $query . ", " . print_r($parms,true));
     // prepare and execute request
     $sth = $pdo->prepare($query);
     $action = $sth->execute($parms);
     if (!$action) {
         mlog("Action Error");
-        die();
+        // add user may intentionally fail
+        if (!$mode == "ADD_USER")
+            die();
+        else
+            return array();
     }
     
     // default results
@@ -86,7 +94,11 @@ function dbAccess($pdo, $mode, $parms)
                 $d = array();
                 $r["data"] = $d;
                 break;
-            case "UPDATE_USER":
+            case "SET_USER_ACCESS":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "SET_USER_PWD":
                 $d = array();
                 $r["data"] = $d;
                 break;
@@ -95,10 +107,14 @@ function dbAccess($pdo, $mode, $parms)
                 $r["data"] = $d;
                 break;
             case "SELECT_TICKET":
-                $d = array();
+                $d = $sth->fetchAll();
                 $r["data"] = $d;
                 break;
             case "UPDATE_TICKET":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "ADD_PENDING":
                 $d = array();
                 $r["data"] = $d;
                 break;
@@ -106,7 +122,7 @@ function dbAccess($pdo, $mode, $parms)
                 $d = array();
                 $r["data"] = $d;
                 break;
-
+            
             }
     }
     return $r;
@@ -143,8 +159,9 @@ function reserveTicket($ticket,$email){
             select ticket for update
             check is user is pending for this ticket => break 1 if yes
             check if tickets avail => break 2 if not
-            create reservation code and label
-            add pending for user and ticket
+            create reservation code, label
+            add pending for user, code and ticket
+            update user with access
             decrement ticket
         commit transaction
         if error somewhere => break 3
@@ -168,15 +185,74 @@ function reserveTicket($ticket,$email){
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $r = array();
-    $r["status"] = 1;
+    $r["status"] = 0;
     $r["text"] = "";
     $d = array();
-    $t = dbAccess($pdo,"GET_TICKET",array($ticket));
-    $d["email"] = "ak@akugel.de"; //$email;
-    $d["label"] = "label";
-    $d["code"] = random_int(100000,999999);
     $r["data"] = $d;
+    // create user name
+    $user = hash("sha256",$email);
+    $pwd = "dummy"; // not needed yet
+    dbAccess($pdo,"ADD_USER",array($user,$pwd,$user)); // in this mode, name and email are same
+    $u = dbAccess($pdo,"GET_USER",array($user ));
+    //mlog("user" . print_r($u,true));
+    if (count($u["data"]) == 0) {
+        mlog("Missing user");
+        $r["text"] = "Leider ein Problem mit der Anmeldung";
+        return $r;
+    }
+    $uid = $u["data"][0]["id"];
+    mlog("Found user: " . $uid);
+
+    // start transaction
+    $pdo->beginTransaction();
+    // lock ticket
+    $t = dbAccess($pdo,"SELECT_TICKET",array($ticket));
+    mlog("Ticket: " . print_r($t,true));
+    if (count($t["data"]) == 0) {
+        mlog("Missing Ticket");
+        $r["text"] = "Leider ein Problem mit Buchung";
+        $pdo->rollback();
+        return $r;
+    }
+    $avail =  $t["data"][0]["avail"];
+
+    // check pending
+    $p = dbAccess($pdo,"GET_PENDING",array($uid,$ticket));
+    mlog("Pending: " . print_r($p,true));
+    if (count($p["data"]) > 0) {
+        mlog("Already pending");
+        $r["text"] = "Du hast schon eine Reservierung";
+        $pdo->rollback();
+        return $r;
+    }
+    // check ticket count
+    if ($t["data"][0]["avail"] < 1) {
+        mlog("Sold out");
+        $r["text"] = "Leider kein Ticket mehr da";
+        $pdo->rollback();
+        return $r;
+    }     
+    // reservation code and label
+    $code = random_int(100000,999999);
+    $label = "Lerninsel Ticket"; // dummy
+    // add pending
+    $date = new DateTime();
+    dbAccess($pdo,"ADD_PENDING",array($uid,$ticket,$code,1,$date->getTimestamp()));
+    // update user time
+    dbAccess($pdo,"SET_USER_ACCESS",array($date->getTimestamp(),$uid));
+    // update ticket
+    dbAccess($pdo,"UPDATE_TICKET",array($avail - 1,$ticket)); // id is last ...
+
+    // finally
+    $pdo->commit();
+
+    //$t = dbAccess($pdo,"GET_TICKET",array($ticket));
+    $d["email"] = "ak@akugel.de"; //$email;
+    $d["label"] = $label;
+    $d["code"] = $code;
+    $r["data"] = $d; // update data
     $r["text"] = "Ticket ist reserviert";
+    $r["status"] = 1;
     return $r;
 }
 
@@ -346,7 +422,7 @@ switch ($meth) {
                         $mailing["payload"] = $r["data"]; // extra data here, but doesn't matter 
                     }
                 }
-                $result = array("data" => $r["data"],"status" => $r["status"]);
+                $result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
                 break;
             case 2:
                 if (!(array_key_exists("ticket", $payload))
@@ -355,7 +431,7 @@ switch ($meth) {
                 || !(array_key_exists("code", $payload))
                 ) {
                     mlog("Req 2 keys missing");
-                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+                    $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
@@ -363,7 +439,7 @@ switch ($meth) {
                 $email = trim($payload["email"]);
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     mlog("Invalid email");
-                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+                    $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
@@ -408,7 +484,7 @@ switch ($meth) {
                 break;
             default:
                 mlog("Invalid request");
-                $result = array("data" => array("reason" => REASON["REQ"]),"status" => 0);
+                $result = array("data" => array(),"text" => REASON["REQ"],"status" => 0);
                 $task = 0; // clear request to indicate error
                 break;
         }
@@ -416,7 +492,7 @@ switch ($meth) {
 
     default:
         mlog("Other");
-        $result = array("data" => array("reason" => REASON["SERV"]),"status" => 0);
+        $result = array("data" => array(),"text" => REASON["SERV"],"status" => 0);
         break;
 }
 
