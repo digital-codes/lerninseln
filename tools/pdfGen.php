@@ -19,10 +19,12 @@ function render_php($path,$event)
     return $var;
 }
 
-function pdfGen($event) {
+function pdfGen($event,$qr = false) {
     // options first
     $options = new Options();
     $options->set('isRemoteEnabled', TRUE);
+    if ($qr)
+        $event["qrdata"] = $qr; // merge qr only here
     /* https://github.com/dompdf/dompdf/wiki/Usage
     dpi: Image DPI setting
     This setting determines the default DPI setting for images and fonts. The DPI may be overridden for inline images by explicitly setting the image's width & height style attributes (i.e. if the image's native width is 600 pixels and you specify the image's width as 72 points, the image will have a DPI of 600 in the rendered PDF. The DPI of background images can not be overridden and is controlled entirely via this parameter.

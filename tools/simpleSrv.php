@@ -46,27 +46,13 @@ define ("DBCALL", array(
     "GET_TABLE" => "select * from ")
 );
 
-function dbAccess($cfg, $mode, $parms)
+function dbAccess($pdo, $mode, $parms)
 {
     if (!array_key_exists($mode, DBCALL)) {
         mlog("Invalid db mode: ", $mode);
         die();
     }
     //mlog("Parms " . print_r($parms,true));
-
-    try {
-        // setting utf-8 here is IMPORTANT !!!!
-        $pdo = new PDO(
-            'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
-            $cfg["dbuser"],
-            $cfg["dbpass"],
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
-        );
-    } catch (Exception $e) {
-        mlog("DB error", 9);
-        die("DB Error");
-    }
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $query = DBCALL[$mode];
     // read table needs special handling. cannot use table name as parameter
@@ -126,6 +112,28 @@ function dbAccess($cfg, $mode, $parms)
     return $r;
 }
 
+function readTable($table){
+    // returns: data
+    global $cfg;
+
+    try {
+        // setting utf-8 here is IMPORTANT !!!!
+        $pdo = new PDO(
+            'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
+            $cfg["dbuser"],
+            $cfg["dbpass"],
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+        );
+    } catch (Exception $e) {
+        mlog("DB error", 9);
+        die("DB Error");
+    }
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+    return dbAccess($pdo,"GET_TABLE",array($table));
+}
+
+
 function reserveTicket($ticket,$email){
     // returns: status, array(email, code, label, text)
     /* procedure
@@ -144,32 +152,86 @@ function reserveTicket($ticket,$email){
         return status + data(email, code, label, text)
     */
     global $cfg;
+
+    try {
+        // setting utf-8 here is IMPORTANT !!!!
+        $pdo = new PDO(
+            'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
+            $cfg["dbuser"],
+            $cfg["dbpass"],
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+        );
+    } catch (Exception $e) {
+        mlog("DB error", 9);
+        die("DB Error");
+    }
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
     $r = array();
     $r["status"] = 1;
+    $r["text"] = "";
     $d = array();
-    $t = dbAccess($cfg,"GET_TICKET",array($ticket));
+    $t = dbAccess($pdo,"GET_TICKET",array($ticket));
     $d["email"] = "ak@akugel.de"; //$email;
     $d["label"] = "label";
-    $d["text"] = "Ticket ist reserviert";
     $d["code"] = random_int(100000,999999);
     $r["data"] = $d;
+    $r["text"] = "Ticket ist reserviert";
     return $r;
 }
 
 
 function purchaseTicket($ticket,$email,$label){
-    global $cfg;
     // returns: status, text, 
+    /* procedure
+        get user
+        start transaction
+            select ticket for update ! prevent other session to interfere
+            check is user is pending for this ticket and code => break 0 if no
+            create qr based upon pending id and user id, add qr
+            delete pending
+        commit transaction
+        update qr with event data (outside transaction)
+        if error somewhere => break
+        text => OK
+        return status + data(email, qr, text)
+    */
+    global $cfg;
+
+    try {
+        // setting utf-8 here is IMPORTANT !!!!
+        $pdo = new PDO(
+            'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
+            $cfg["dbuser"],
+            $cfg["dbpass"],
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+        );
+    } catch (Exception $e) {
+        mlog("DB error", 9);
+        die("DB Error");
+    }
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
     $r = array();
     $r["status"] = 1;
+    $r["text"] = "";
     $d = array();
     // get access to ticket and event
-    $t = dbAccess($cfg,"GET_TICKET",array($ticket));
+    $t = dbAccess($pdo,"GET_TICKET",array($ticket));
+    $user_id = 123;
+    $pending_id = 456;
     $d["email"] = "ak@akugel.de"; //$email;
-    $d["label"] = "label";
+    $d["name"] = "label";
+    $d["provider"] = "label";
+    $d["date"] = "label";
+    $d["time"] = "label";
+    $d["count"] = "label";
+    $d["location1"] = "label";
+    $d["location2"] = "label";
     $d["text"] = "Ticket ist reserviert";
-    $d["code"] = random_int(100000,999999);
+    $d["qr"] = uniqid ("Lerninseln-Karlsruhe") . "-" . $user_id . "-" . $pending_id;
     $r["data"] = $d;
+    $r["text"] = "Buchung erfolgreich";
     return $r;
 }
 
@@ -241,7 +303,7 @@ switch ($meth) {
             mlog("Invalid table");
             header("HTTP/1.1 400 Bad request");
         }  else {
-            $result = dbAccess($cfg,"GET_TABLE",array($table));
+            $result = readTable($table);
         }
         break;
 
@@ -310,15 +372,17 @@ switch ($meth) {
                 $r = purchaseTicket($payload["ticket"],$email,$payload["resnum"]);
                 
                 $to = "ak@akugel.de";
-                $event = array();
-                $event["name"] = "Extra Veranstaltung";
-                $event["date"] = "2021-07-20";
-                $event["time"] = "19:00";
-                $event["count"] = "1";
-                $event["location1"] = "Digitallabor Rathaus Karlsruhe";
-                $event["location2"] = "Markplatz, Karlsruhe";
-                $qr = makeQr( hash("sha256","test123"));
-                $event["qrdata"] = $qr;
+                $event = $r["data"];
+                //mlog("Event: " . print_r($event,true));
+                /*
+                $event["name"] = $r["data"]["event"]; //"Extra Veranstaltung";
+                $event["date"] = $r["data"]["date"]; //"2021-07-20";
+                $event["time"] = $r["data"]["time"]; //"19:00";
+                $event["count"] = $r["data"]["count"]; //"1";
+                $event["location1"] = $r["data"]["location1"]; //"Digitallabor Rathaus Karlsruhe";
+                $event["location2"] = $r["data"]["location2"]; //"Markplatz, Karlsruhe";
+                */
+                $qr = makeQr( hash("sha256",$r["data"]["qr"]));
                 /*
                 $logo = file_get_contents("logo.jpg", false); //, stream_context_create($opciones_ssl));
                 $logo_base_64 = base64_encode($logo);
@@ -331,7 +395,7 @@ switch ($meth) {
                 $bg_base_64 = base64_encode($bg);
                 $event["bg"] = 'data:image/jpeg;base64,' . $bg_base_64;
             
-                $pdf = pdfGen($event);
+                $pdf = pdfGen($event,$qr);
                 $subj = "Dein Lerninsel Ticket";
                 $msg = "Vielen Dank, dass Du an unserer Veranstaltung teilnimmst. Hier ist Dein Ticket." . PHP_EOL. PHP_EOL;
                 $msg .= "Du kannst es ausdrucken und mitbringen. Oder das Ticket auf Deinem Smartphone anzeigen."  . PHP_EOL;
@@ -340,7 +404,7 @@ switch ($meth) {
                     $r = sendSmtp($cfg, $to, $subj, $msg, $pdf);
                     mlog("Send ticket returned " . $r);
                 }
-                $result = array("data" => array("text" => "OK2","qr" => $qr),"status" => 1);
+                $result = array("data" => array("text" => $r["text"], "event" => $event, "qr" => $qr),"status" => 1);
                 break;
             default:
                 mlog("Invalid request");
