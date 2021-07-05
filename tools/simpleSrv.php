@@ -15,7 +15,14 @@ require "sendMail.php";
 // --------------------------------------------------
 // error reasons
 // --------------------------------------------------
-define("REASON", ["AUTH","KEY","PAY","REQ","SERV","SOLD"]);
+define("REASON", [
+    "AUTH" => "AUTH",
+    "KEY" => "KEY",
+    "PAY" => "PAY",
+    "REQ" => "REQ",
+    "SERV" => "SERV",
+    "SOLD" => "SOLD"]
+);
 
 define("DRYRUN",true); // default: false
 
@@ -120,6 +127,21 @@ function dbAccess($cfg, $mode, $parms)
 
 function reserveTicket($ticket,$email){
     // returns: status, array(email, code, label, text)
+    /* procedure
+        create user (ignore error if exists)
+        get user
+        start transaction
+            select ticket for update
+            check is user is pending for this ticket => break 1 if yes
+            check if tickets avail => break 2 if not
+            create reservation code and label
+            add pending for user and ticket
+            decrement ticket
+        commit transaction
+        if error somewhere => break 3
+        text => OK
+        return status + data(email, code, label, text)
+    */
     global $cfg;
     $r = array();
     $r["status"] = 1;
@@ -218,34 +240,7 @@ switch ($meth) {
             mlog("Invalid table");
             header("HTTP/1.1 400 Bad request");
         }  else {
-            /*
-            try {
-                // setting utf-8 here is IMPORTANT !!!!
-                $pdo = new PDO(
-                    'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
-                    $cfg["dbuser"],
-                    $cfg["dbpass"],
-                    array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
-                );
-            } catch (Exception $e) {
-                mlog("DB error", 9);
-                die("DB Error");
-            }
-            
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            */
             $result = dbAccess($cfg,"GET_TABLE",array($table));
-            /*
-            $query = "SELECT * from " . $table;
-            
-            $statement = $pdo->query($query);
-            
-            foreach ($statement as $row) {
-                //echo("row").PHP_EOL;
-                //print_r($row);
-                array_push($result, $row);
-            }
-            */
         }
         break;
 
@@ -256,7 +251,7 @@ switch ($meth) {
         // we expect a request type and a payload
         if (!(array_key_exists("request", $input)) || !(array_key_exists("payload", $input))) {
             mlog("Keys missing");
-            $result = array("data" => array("reason" => REASON[1]),"status" => 0);
+            $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
             break;
         }
         $task = $input["request"];
@@ -265,12 +260,21 @@ switch ($meth) {
             case 1:
                 if (!(array_key_exists("ticket", $payload)) || !(array_key_exists("email", $payload))) {
                     mlog("Req 1 keys missing");
-                    $result = array("data" => array("reason" => REASON[1]),"status" => 0);
+                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
+
+                $email = trim($payload["email"]);
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    mlog("Invalid email");
+                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+                    $task = 0; // clear request to indicate error
+                    break;
+                }
+
                 mlog("processing req 1");
-                $r = reserveTicket($payload["ticket"],trim($payload["email"]));
+                $r = reserveTicket($payload["ticket"],$email);
                 // returns: status, email, code, label, text
                 if ($r["status"] == 1) {
                     // send mail only when all OK
@@ -288,12 +292,21 @@ switch ($meth) {
                 || !(array_key_exists("code", $payload))
                 ) {
                     mlog("Req 2 keys missing");
-                    $result = array("data" => array("reason" => REASON[1]),"status" => 0);
+                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
                     $task = 0; // clear request to indicate error
                     break;
                 }
+
+                $email = trim($payload["email"]);
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    mlog("Invalid email");
+                    $result = array("data" => array("reason" => REASON["KEY"]),"status" => 0);
+                    $task = 0; // clear request to indicate error
+                    break;
+                }
+
                 mlog("processing req 2");
-                $r = purchaseTicket($payload["ticket"],trim($payload["email"]),$payload["resnum"]);
+                $r = purchaseTicket($payload["ticket"],$email,$payload["resnum"]);
                 
                 $to = "ak@akugel.de";
                 $event = array();
@@ -330,7 +343,7 @@ switch ($meth) {
                 break;
             default:
                 mlog("Invalid request");
-                $result = array("data" => array("reason" => REASON[4]),"status" => 0);
+                $result = array("data" => array("reason" => REASON["REQ"]),"status" => 0);
                 $task = 0; // clear request to indicate error
                 break;
         }
@@ -338,6 +351,7 @@ switch ($meth) {
 
     default:
         mlog("Other");
+        $result = array("data" => array("reason" => REASON["SERV"]),"status" => 0);
         break;
 }
 
