@@ -23,11 +23,108 @@ define("DRYRUN",true); // default: false
   // ticket functions
   // --------------------------------------------------
 
+// PDO statements
+define ("DBCALL", array(
+    "GET_USER" => "SELECT * from user where username = ?;",
+    "ADD_USER" => "insert into user set username = ?;",
+    "UPDATE_USER" => "update user set access = ?;",
+    "GET_EVENT" => "SELECT * from event where id = ?;",
+    "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
+    "DELETE_PENDING" => "delete from pending where id = ?;",
+    "GET_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
+    "ADD_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
+    "GET_TICKET" => "SELECT * from ticket where id = ?;",
+    "SELECT_TICKET" => "SELECT * from ticket where id = ? for update;",
+    "UPDATE_TICKET" => "update ticket set count = ? where id = ?;",
+    "GET_TABLE" => "select * from ")
+);
+
+function dbAccess($cfg, $mode, $parms)
+{
+    if (!array_key_exists($mode, DBCALL)) {
+        mlog("Invalid db mode: ", $mode);
+        die();
+    }
+    //mlog("Parms " . print_r($parms,true));
+
+    try {
+        // setting utf-8 here is IMPORTANT !!!!
+        $pdo = new PDO(
+            'mysql:host=' . $cfg["dbserv"] . ';dbname=' . $cfg["dbname"],
+            $cfg["dbuser"],
+            $cfg["dbpass"],
+            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+        );
+    } catch (Exception $e) {
+        mlog("DB error", 9);
+        die("DB Error");
+    }
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+    $query = DBCALL[$mode];
+    // read table need special handling
+    if (strstr($mode, "GET_TABLE")) {
+        $query = DBCALL[$mode] . $parms[0] . ";";
+    }
+    // prepare and execute request
+    $sth = $pdo->prepare($query);
+    $action = $sth->execute($parms);
+    if (!$action) {
+        mlog("Action Error");
+        die();
+    }
+    
+    // default results
+    $r = array();
+    $r["status"] = 1;
+
+    // on get function, return all data
+    if (strstr($mode, "GET_")) {
+        $d = $sth->fetchAll();
+        //mlog("Data:" . print_r($d, true));
+        $r["data"] = $d;
+        return $r;
+    } else {
+        // special processing follows
+        $r["data"] = array();
+        switch ($mode) {
+            case "ADD_USER":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "UPDATE_USER":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "ADD_QR":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "SELECT_TICKET":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "UPDATE_TICKET":
+                $d = array();
+                $r["data"] = $d;
+                break;
+            case "DELETE_PENDING":
+                $d = array();
+                $r["data"] = $d;
+                break;
+
+            }
+    }
+    return $r;
+}
+
 function reserveTicket($ticket,$email){
     // returns: status, array(email, code, label, text)
+    global $cfg;
     $r = array();
     $r["status"] = 1;
     $d = array();
+    $t = dbAccess($cfg,"GET_TICKET",array($ticket));
     $d["email"] = "ak@akugel.de"; //$email;
     $d["label"] = "label";
     $d["text"] = "Ticket ist reserviert";
@@ -36,11 +133,15 @@ function reserveTicket($ticket,$email){
     return $r;
 }
 
+
 function purchaseTicket($ticket,$email,$label){
+    global $cfg;
     // returns: status, text, 
     $r = array();
     $r["status"] = 1;
     $d = array();
+    // get access to ticket and event
+    $t = dbAccess($cfg,"GET_TICKET",array($ticket));
     $d["email"] = "ak@akugel.de"; //$email;
     $d["label"] = "label";
     $d["text"] = "Ticket ist reserviert";
@@ -116,7 +217,8 @@ switch ($meth) {
         if (array_search($table, TABLES) === false) {
             mlog("Invalid table");
             header("HTTP/1.1 400 Bad request");
-        } else {
+        }  else {
+            /*
             try {
                 // setting utf-8 here is IMPORTANT !!!!
                 $pdo = new PDO(
@@ -131,9 +233,9 @@ switch ($meth) {
             }
             
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            /* $query = "SELECT * from sensors order by `index` asc"; */
-            /*$query = "SELECT id,count,co2,bat,pres,hum,temp,light,rssi,rfu,date,pkt,rep from sensors order by `index` asc"; */
-            
+            */
+            $result = dbAccess($cfg,"GET_TABLE",array($table));
+            /*
             $query = "SELECT * from " . $table;
             
             $statement = $pdo->query($query);
@@ -143,6 +245,7 @@ switch ($meth) {
                 //print_r($row);
                 array_push($result, $row);
             }
+            */
         }
         break;
 
@@ -297,10 +400,10 @@ https://www.php.net/manual/de/book.pdo.php
 
 echo "Prepared statement with row locking" . PHP_EOL;
 
-$sth = $pdo->prepare("SELECT * from event where provider_id = ? and title = ?  for update;");
+$statement = $pdo->prepare("SELECT * from event where provider_id = ? and title = ?  for update;");
 
-$sth->bindParam(1, $provider, PDO::PARAM_INT);
-$sth->bindParam(2, $title, PDO::PARAM_STR);
+$statement->bindParam(1, $provider, PDO::PARAM_INT);
+$statement->bindParam(2, $title, PDO::PARAM_STR);
 
 // can alos use named parameters ...
 
@@ -310,10 +413,10 @@ $title = "Sport";
 $r = $pdo->beginTransaction();
 echo "begin transaction: " . $r . PHP_EOL;
 
-$sth->execute();
+$statement->execute();
 
-$data = $sth->fetchAll();
-if (!$sth) {
+$data = $statement->fetchAll();
+if (!$statement) {
     echo "Error" . PHP_EOL;
     die();
 }
