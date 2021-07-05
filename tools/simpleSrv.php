@@ -229,6 +229,7 @@ function reserveTicket($ticket,$email){
     if (count($p["data"]) > 0) {
         mlog("Already pending");
         $r["text"] = "Du hast schon eine Reservierung";
+        $r["status"] = 2;
         $pdo->rollback();
         return $r;
     }

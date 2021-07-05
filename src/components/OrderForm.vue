@@ -144,6 +144,10 @@ export default defineComponent ({
         return
       }
       console.log("OK2",this.payload)
+      // we might receive status 2 if already reserved. message will be displayed
+      if (this.payload.status == 2) {
+        console.log("Already pending", this.payload.text)
+      }
       // open confirmation form
       this.formValues.code = ""
       this.showSubscription = false
