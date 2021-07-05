@@ -262,8 +262,8 @@ function purchaseTicket($ticket,$email,$label){
     /* procedure
         get user
         start transaction
-            select ticket for update ! prevent other session to interfere
-            check is user is pending for this ticket and code => break 0 if no
+            select ticket for update !! prevent other session to interfere
+            check if pending for this ticket, user and code exists => break 0 if no
             create qr based upon pending id and user id, add qr
             delete pending
         commit transaction
