@@ -29,6 +29,7 @@
           :cost=ticket.cost 
           :costinfo=ticket.costinfo
           :limit=ticket.limit
+          @costUpdate="costUpdate($event,ticket.id)"
           >
           </Ticket>
         </div>
@@ -108,6 +109,12 @@ export default  defineComponent ({
   },
   components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm },
   methods: {
+    async costUpdate(e,t) {
+      console.log("Costupdate",e,t)
+      const tidx = this.tickets.findIndex(tick => tick.id == t)
+      console.log("Index ",tidx)
+      this.tickets[tidx].count = e
+    },
     purchase() {
       console.log("Buy ticket: ")
     },
@@ -121,11 +128,11 @@ export default  defineComponent ({
           console.log("Event: ",event)
           const qr = {}
           qr.qrsrc = result.data.qr
-          qr.title = event.title
-          qr.date = event.date
-          qr.time = event.time
-          qr.provider = event.provider
-          qr.count = 1
+          qr.title = result.data.event.name
+          qr.date = result.data.event.date
+          qr.time = result.data.event.time
+          qr.provider = result.data.event.provider
+          qr.count = result.data.event.count
           // ----------------
           // local store
           /*
@@ -196,6 +203,7 @@ export default  defineComponent ({
       if ((this.store.state.selection.eventId != 0) && (this.events.length > 0)) {
         console.log("Event: ", this.store.state.selection.eventId, "Tickets: ",this.tickets)
         const tickets = this.tickets.filter(t => t.event_id == this.store.state.selection.eventId)
+        for (let i=0;i<tickets.length;i++) tickets[i].count = 0
         console.log("Ticket id: ",tickets)
         return tickets
       } else 
@@ -203,8 +211,14 @@ export default  defineComponent ({
       return {x:1}
     },
     getCost() {
-      return 0
-    }
+      let cost = 0
+      const tickets = this.tickets.filter(t => t.event_id == this.store.state.selection.eventId)
+      tickets.forEach(t => {
+        console.log(t)
+        cost += parseInt(t.count)*(parseInt(t.cost))
+        })
+      return cost 
+    },
   },
   async beforeMount() {
     this.ds = await DataStorage.getInstance()
