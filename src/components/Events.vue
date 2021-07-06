@@ -105,8 +105,12 @@ export default defineComponent({
     const itemString = await this.ds.getItem("event") || "[]"
     const items = JSON.parse(itemString)
     for (let i=0; i < items.length; i++){
+      /*
       const id = items[i].provider_id - 1
       const name = providers[id].name
+      */
+      const id = items[i].provider_id
+      const name = (providers.find(p => p.id == id)).name
       //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
       items[i].checked = 0
