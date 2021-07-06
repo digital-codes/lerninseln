@@ -37,6 +37,14 @@
 
         <h2 class="totalcost">Kosten: {{getCost}} €</h2>
 
+        <div v-if="getCost > 0">
+        <Paypal 
+          :invoice=payInvoice 
+          :url=payUrl 
+        > 
+        </Paypal>
+        </div>
+
         <OrderForm 
           @purchaseComplete="purchaseCompleted($event)"
           info="Testbetrieb! Gib irgendeine Email und dann einen beliebigen 6-stelligen Code ein"
@@ -86,8 +94,9 @@ import DataStorage from "../services/dstore";
 
 import { useStore, Selection, Qrcode, Purchase, MUTATIONS } from '../services/quickStore';
 
-// test
+// ordering
 import OrderForm from '@/components/OrderForm.vue';
+import Paypal from '@/components/Paypal.vue';
 
 // storage
 import { Capacitor, Plugins, Encoding, FilesystemDirectory } from '@capacitor/core';
@@ -106,9 +115,11 @@ export default  defineComponent ({
       events: [],
       tickets : [],
       ds: "",
+      payUrl : "https://lerninsel.ok-lab-karlsruhe.de/pay.php",
+      payInvoice : "Inv123"
     }
   },
-  components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm },
+  components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm, Paypal },
   methods: {
     async costUpdate(e,t) {
       console.log("Costupdate",e,t)
