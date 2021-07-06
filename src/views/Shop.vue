@@ -89,7 +89,7 @@ export default  defineComponent ({
   data () {
     return {
       events: [],
-      items : [],
+      tickets : [],
       ds: "",
     }
   },
@@ -103,7 +103,7 @@ export default  defineComponent ({
         ", ticket: ",this.store.state.purchase.ticket)
         if (result.status) {
           // prepare new qr
-          //const event = this.items[this.store.state.selection.eventId - 1]
+          //const event = this.tickets[this.store.state.selection.eventId - 1]
           const event = this.events.find(e => e.id == this.store.state.selection.eventId)
           console.log("Event: ",event)
           const qr = {}
@@ -172,6 +172,9 @@ export default  defineComponent ({
     getEvent() {
       if ((this.store.state.selection.eventId != 0) && (this.events.length > 0)) {
         const evnt = this.events.find(e => e.id == this.store.state.selection.eventId) 
+        //console.log(this.store.state.selection.eventId, this.tickets)
+        const ticket = this.tickets.filter(t => t.event_id == this.store.state.selection.eventId)
+        console.log("Ticket id: ",ticket)
         return evnt
       } else 
       return {x:1}
@@ -192,10 +195,8 @@ export default  defineComponent ({
       events[i].provider = name
     }
     this.events = events
-    //this.items = items
-    const options = tickets.filter(t => t.event_id == this.store.state.selection.eventId)
-    console.log(options)
-    this.items = options
+    //this.tickets = items
+    this.tickets = tickets
 
     console.log("FIXME: runs on events, not tickets so far")
   },
