@@ -88,7 +88,7 @@ export default  defineComponent ({
   name: 'Tickets',
   data () {
     return {
-      //evnt: {},
+      events: [],
       items : [],
       ds: "",
     }
@@ -103,7 +103,8 @@ export default  defineComponent ({
         ", ticket: ",this.store.state.purchase.ticket)
         if (result.status) {
           // prepare new qr
-          const event = this.items[this.store.state.selection.eventId - 1]
+          //const event = this.items[this.store.state.selection.eventId - 1]
+          const event = this.events.find(e => e.id == this.store.state.selection.eventId)
           console.log("Event: ",event)
           const qr = {}
           qr.qrsrc = result.data.qr
@@ -165,12 +166,12 @@ export default  defineComponent ({
   },
   computed: {
     hasEvent() {
-      return (this.store.state.selection.eventId != 0)
+      const valid = (this.store.state.selection.eventId != 0) && (this.events.length > 0)
+      return valid
     },
     getEvent() {
-      if (this.store.state.selection.eventId != 0) {
-        const evnt = this.items[this.store.state.selection.eventId - 1] 
-        //console.log("event item: ",evnt)
+      if ((this.store.state.selection.eventId != 0) && (this.events.length > 0)) {
+        const evnt = this.events.find(e => e.id == this.store.state.selection.eventId) 
         return evnt
       } else 
       return {x:1}
@@ -182,15 +183,20 @@ export default  defineComponent ({
     const providers = JSON.parse(providerString)
     const ticketString = await this.ds.getItem("ticket") || "[]"
     const tickets = JSON.parse(ticketString)
-    const itemString = await this.ds.getItem("event") || "[]"
-    const items = JSON.parse(itemString)
-    for (let i=0; i < items.length; i++){
-      const id = items[i].provider_id - 1
+    const eventString = await this.ds.getItem("event") || "[]"
+    const events = JSON.parse(eventString)
+    for (let i=0; i < events.length; i++){
+      const id = events[i].provider_id - 1
       const name = providers[id].name
       //console.log("i: ",i,", id: ",id, ", name: ",name)
-      items[i].provider = name
+      events[i].provider = name
     }
-    this.items = items
+    this.events = events
+    //this.items = items
+    const options = tickets.filter(t => t.event_id == this.store.state.selection.eventId)
+    console.log(options)
+    this.items = options
+
     console.log("FIXME: runs on events, not tickets so far")
   },
   // store

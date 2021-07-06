@@ -12,9 +12,9 @@
           <ion-label>Angebote</ion-label>
         </ion-tab-button>
         
-        <ion-tab-button tab="tickets" href="/tickets">
+        <ion-tab-button tab="shop" href="/shop">
           <ion-icon :icon="cartOutline" />
-          <ion-label>Tickets</ion-label>
+          <ion-label>Buchen</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="codes" href="/codes">

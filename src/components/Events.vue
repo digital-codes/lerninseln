@@ -84,7 +84,7 @@ export default defineComponent({
   },
   methods:{
     buy() {
-      router.push("/tickets")
+      router.push("/shop")
     },
     select(e) {
       const item = this.items[e-1]
