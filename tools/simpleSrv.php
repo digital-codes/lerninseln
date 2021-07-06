@@ -35,6 +35,8 @@ define ("DBCALL", array(
     "GET_USER" => "SELECT * from user where username = ?;",
     "ADD_USER" => "insert into user set username = ?, pwdOrTotp = ?, emailOrHash = ?;",
     "SET_USER_ACCESS" => "update user set access = ? where id = ?;",
+    "SET_USER_PENDINGS" => "update user set pendings = ? where id = ?;",
+    "SET_USER_BOOKINGS" => "update user set bookings = ? where id = ?;",
     "SET_USER_PWD" => "update user set pwdOrTotp = ? where id = ?;",
     "GET_EVENT" => "SELECT * from event where id = ?;",
     "GET_PROVIDER" => "SELECT * from provider where id = ?;",
@@ -168,7 +170,7 @@ function reserveTicket($ticket,$email){
             check if tickets avail => break 2 if not
             create reservation code, label
             add pending for user, code and ticket
-            update user with access
+            update user with access and pendings
             decrement ticket
         commit transaction
         if error somewhere => break 3
@@ -208,6 +210,7 @@ function reserveTicket($ticket,$email){
         return $r;
     }
     $uid = $u["data"][0]["id"];
+    $pendings = $u["data"][0]["pendings"];
     mlog("Found user: " . $uid);
 
     // start transaction
@@ -248,6 +251,8 @@ function reserveTicket($ticket,$email){
     dbAccess($pdo,"ADD_PENDING",array($uid,$ticket,$code,1,$date->getTimestamp()));
     // update user time
     dbAccess($pdo,"SET_USER_ACCESS",array($date->getTimestamp(),$uid));
+    // update user pendings
+    dbAccess($pdo,"SET_USER_PENDINGS",array($pendings+1,$uid));
     // update ticket
     dbAccess($pdo,"UPDATE_TICKET",array($avail - 1,$ticket)); // id is last ...
 
@@ -276,6 +281,7 @@ function purchaseTicket($ticket,$email,$label){
             delete pending
         commit transaction
         update qr with event data (outside transaction)
+        update user with access and tickets
         if error somewhere => break
         text => OK
         return status + data(email, qr, text)
@@ -309,6 +315,7 @@ function purchaseTicket($ticket,$email,$label){
         return $r;
     }
     $uid = $u["data"][0]["id"];
+    $bookings = $u["data"][0]["bookings"];
     mlog("Found user: " . $uid);
 
     // start transaction
@@ -341,12 +348,19 @@ function purchaseTicket($ticket,$email,$label){
     }
     $pid = $p["data"][0]["id"];
     $pcnt = $p["data"][0]["count"];
+
     // create qr
-    $qr = uniqid ("Lerninseln-Karlsruhe") . "-" . $uid . "-" . $pid;
+    $qr = uniqid ("Lerninseln-Karlsruhe-") . "-" . $uid . "-" . $pid;
     // add qr
     $p = dbAccess($pdo,"ADD_QR",array($uid,$ticket,$qr,$pcnt));
     // delete pending
     dbAccess($pdo,"DELETE_PENDING",array($pid));
+    //  update user
+    $date = new DateTime();
+    // update user time
+    dbAccess($pdo,"SET_USER_ACCESS",array($date->getTimestamp(),$uid));
+    // update user pendings
+    dbAccess($pdo,"SET_USER_BOOKINGS",array($bookings+1,$uid));
 
     // finally
     $pdo->commit();

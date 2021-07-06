@@ -29,12 +29,13 @@
           :cost=ticket.cost 
           :costinfo=ticket.costinfo
           :limit=ticket.limit
+          :count=ticket.count
           @costUpdate="costUpdate($event,ticket.id)"
           >
           </Ticket>
         </div>
 
-        <p class="totalcost">Kosten: {{getCost}} €</p>
+        <h2 class="totalcost">Kosten: {{getCost}} €</h2>
 
         <OrderForm 
           @purchaseComplete="purchaseCompleted($event)"
@@ -113,7 +114,15 @@ export default  defineComponent ({
       console.log("Costupdate",e,t)
       const tidx = this.tickets.findIndex(tick => tick.id == t)
       console.log("Index ",tidx)
-      this.tickets[tidx].count = e
+      let cnt = this.tickets[tidx].count
+      if ((e < 0) && (cnt > 0)) cnt-- 
+      if ((e > 0) && (cnt < this.tickets[tidx].limit)) cnt++ 
+      for (let i=0;i<this.tickets.length;i++) this.tickets[i].count = 0 // reset all
+      this.tickets[tidx].count = cnt  // update selected
+      // update global ticket
+      const purchase = this.store.state.purchase
+      purchase.ticket = t
+      this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
     },
     purchase() {
       console.log("Buy ticket: ")

@@ -118,8 +118,6 @@ export default defineComponent ({
       const email = this.formValues.email
       const purchase = this.store.state.purchase
       purchase.email = email
-      purchase.ticket = 1 // FIXME
-      console.log("FIXME: ticket number")
       this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
       // DON'T: this.store.state.purchase.email = email
       console.log("Signup. Checked is ",this.formValues.checked)

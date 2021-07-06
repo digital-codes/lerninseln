@@ -145,10 +145,13 @@ class User(Base):
     pwdOrTotp = Column(String(255), nullable=False)
     #access = Column(TIMESTAMP,default=0)
     access = Column(Integer,default=0)
+    pendings = Column(Integer,default=0)
+    bookings = Column(Integer,default=0)
     mode = Column(Integer, default = 0) # 1: mail/pwd 0: hash/totp
 
     #----------------------------------------------------------------------
-    def __init__(self, username, firstname, lastname, email, pwd, access, mode=0):
+    def __init__(self, username, firstname, lastname, email, pwd, access,
+                 pendings = 0, bookings = 0,mode=0):
         """"""
         self.username = username
         self.firstname = firstname
@@ -156,6 +159,8 @@ class User(Base):
         self.emailOrHash = email
         self.pwdOrTotp = pwd
         self.access = access
+        self.pendings = pendings
+        self.bookings = bookings
         self.mode = mode
 
 ########################################################################
