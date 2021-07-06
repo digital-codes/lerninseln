@@ -49,10 +49,10 @@ import hashlib
 #   id, type
 
 # events
-#   id, title,date,time,cost (normally 0), category, provider id, category id, audiency id
+#   id, title,date,time, category, provider id, category id, audiency id
 
 # tickets
-#   id, avail, reserved, limit,  event id
+#   id, avail, reserved, cost (normally 0), limit,  event id
 
 # pending (unfinished reservations). label might be useful
 #   id, label, count, date, user_id, ticket_id
@@ -262,8 +262,6 @@ class Event(Base):
     title = Column(String(255), nullable=False)
     date = Column(String(255), nullable=False)
     time = Column(String(255), nullable=False)
-    cost = Column(Integer, nullable=False)
-    costinfo = Column(String(255))
     
     location1 = Column(String(255))
     location2 = Column(String(255))
@@ -279,14 +277,12 @@ class Event(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, title, date, time, cost, costinfo,
+    def __init__(self, title, date, time, 
                  location1, location2, provider, category, audience):
         """"""
         self.title = title
         self.date = date
         self.time = time
-        self.cost = cost
-        self.costinfo = costinfo
         self.location1 = location1
         self.location2 = location2
         self.provider_id = provider
@@ -304,16 +300,22 @@ class Ticket(Base):
     avail = Column(Integer, nullable=False)  # cannot use not nullable on ints from 0
     reserved = Column(Integer, nullable=False)
     limit = Column(Integer, default=1)
+
+    cost = Column(Integer, nullable=False)
+    costinfo = Column(String(255))
+
     event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
     # next one only for sqlalch orm to get access to addr.user.<key>
     event = relationship("Event", back_populates="ticket")
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, avail, reserved, event, limit=1):
+    def __init__(self, avail, reserved, event, cost, costinfo, limit=1):
         """"""
         self.avail = avail
         self.limit = limit
+        self.cost = cost
+        self.costinfo = costinfo
         self.reserved = reserved
         self.event_id = event
 
@@ -496,11 +498,11 @@ if MODE != 0:
 ######### generate some event ########
 
 EVENT_TITLES = ["Schach","Musik","Sport","Robots"]
+event_ids = []
 for e in range(20):
     event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
                   "2021-" + f'{random.randint(6,12):02}' + "-" + f'{random.randint(1,28):02}',
                   f'{random.randint(1,24):02}' + ":00",
-                  0,"Kostenlos",
                   "Location 1 " + str(random.randint(1,10)),
                   "Location 2 " + str(random.randint(1,10)),
                   random.randint(1,50),
@@ -508,14 +510,15 @@ for e in range(20):
                   random.randint(1,3)
                   )
     session.add(event)
+    event_ids.append(e)
     session.commit()
-    print("New event: ",e)
+    print("New event: ",e+1)
 
 ######### generate some tickets ########
 
 
-for t in range(1,20):  
-    ticket = Ticket(random.randint(1,30),0,random.randint(1,20))
+for t in range(1,20):
+    ticket = Ticket(random.randint(1,30),0,random.choices(event_ids)[0],0,"Kostenlos")
     session.add(ticket)
     session.commit()
     print("New ticket: ",t)

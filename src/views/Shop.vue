@@ -24,6 +24,17 @@
           >
         </Event>
 
+        <div v-for="ticket in getTickets" :key=ticket.id class="tickets" >
+        <Ticket
+          :cost=ticket.cost 
+          :costinfo=ticket.costinfo
+          :limit=ticket.limit
+          >
+          </Ticket>
+        </div>
+
+        <p class="totalcost">Kosten: {{getCost}} €</p>
+
         <OrderForm 
           @purchaseComplete="purchaseCompleted($event)"
           info="Testbetrieb! Gib irgendeine Email und dann einen beliebigen 6-stelligen Code ein"
@@ -55,11 +66,13 @@
 import { IonPage, IonButton, IonHeader, 
   IonToolbar, IonTitle, 
   IonContent,IonCard, IonCardContent,
+  IonList, IonItem, IonLabel,
   modalController } from '@ionic/vue';
 
 import QrModal from '@/components/QrModal.vue'
 
 import Event from '@/components/Event.vue';
+import Ticket from '@/components/Ticket.vue';
 import { defineComponent } from 'vue'; 
 
 import { rocket, trash,  } from 'ionicons/icons';
@@ -93,7 +106,7 @@ export default  defineComponent ({
       ds: "",
     }
   },
-  components: { Event, IonContent, IonPage,IonCard, IonCardContent, OrderForm  },
+  components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm },
   methods: {
     purchase() {
       console.log("Buy ticket: ")
@@ -178,6 +191,19 @@ export default  defineComponent ({
         return evnt
       } else 
       return {x:1}
+    },
+    getTickets() {
+      if ((this.store.state.selection.eventId != 0) && (this.events.length > 0)) {
+        console.log("Event: ", this.store.state.selection.eventId, "Tickets: ",this.tickets)
+        const tickets = this.tickets.filter(t => t.event_id == this.store.state.selection.eventId)
+        console.log("Ticket id: ",tickets)
+        return tickets
+      } else 
+        console.log("Error: no tickets")
+      return {x:1}
+    },
+    getCost() {
+      return 0
     }
   },
   async beforeMount() {
