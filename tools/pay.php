@@ -36,6 +36,10 @@ mlog("Post: " . print_r($_POST,true));
 
 mlog("Get: " . print_r($_GET,true));
 
-exit();
+//header("Location: https://lerninseln.ok-lab-karlsruhe.de/tickets");
+//header("Location: https://lerninseln.ok-lab-karlsruhe.de/shop");
+header("Location: http://localhost:8100/shop");
+
+die();
 
 ?>

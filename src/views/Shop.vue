@@ -115,8 +115,8 @@ export default  defineComponent ({
       events: [],
       tickets : [],
       ds: "",
-      payUrl : "https://lerninsel.ok-lab-karlsruhe.de/pay.php",
-      payInvoice : "Inv123"
+      payUrl : "https://lerninseln.ok-lab-karlsruhe.de/pay.php",
+      payInvoice : "Inv1234"
     }
   },
   components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm, Paypal },
