@@ -159,7 +159,7 @@ function readTable($table){
 }
 
 
-function reserveTicket($ticket,$email){
+function reserveTicket($ticket,$count,$email){
     // returns: status, array(email, code, label, text)
     /* procedure
         create user (ignore error if exists)
@@ -237,7 +237,7 @@ function reserveTicket($ticket,$email){
         return $r;
     }
     // check ticket count
-    if ($t["data"][0]["avail"] < 1) {
+    if ($t["data"][0]["avail"] < $count) {
         mlog("Sold out");
         $r["text"] = "Leider kein Ticket mehr da";
         $pdo->rollback();
@@ -248,13 +248,13 @@ function reserveTicket($ticket,$email){
     $label = "Lerninsel Ticket"; // dummy
     // add pending
     $date = new DateTime();
-    dbAccess($pdo,"ADD_PENDING",array($uid,$ticket,$code,1,$date->getTimestamp()));
+    dbAccess($pdo,"ADD_PENDING",array($uid,$ticket,$code,$count,$date->getTimestamp()));
     // update user time
     dbAccess($pdo,"SET_USER_ACCESS",array($date->getTimestamp(),$uid));
     // update user pendings
     dbAccess($pdo,"SET_USER_PENDINGS",array($pendings+1,$uid));
     // update ticket
-    dbAccess($pdo,"UPDATE_TICKET",array($avail - 1,$ticket)); // id is last ...
+    dbAccess($pdo,"UPDATE_TICKET",array($avail - $count,$ticket)); // id is last ...
 
     // finally
     $pdo->commit();
@@ -487,7 +487,10 @@ switch ($meth) {
         $payload = $input["payload"];
         switch ($task) {
             case 1:
-                if (!(array_key_exists("ticket", $payload)) || !(array_key_exists("email", $payload))) {
+                if (!(array_key_exists("ticket", $payload)) || 
+                    !(array_key_exists("email", $payload)) ||
+                    !(array_key_exists("count", $payload))
+                    ) {
                     mlog("Req 1 keys missing");
                     $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
                     $task = 0; // clear request to indicate error
@@ -503,7 +506,7 @@ switch ($meth) {
                 }
 
                 mlog("processing req 1");
-                $r = reserveTicket($payload["ticket"],$email);
+                $r = reserveTicket($payload["ticket"],$payload["count"],$email);
                 // returns: status, email, code, label, text
                 if ($r["status"] == 1) {
                     // send mail only when all OK

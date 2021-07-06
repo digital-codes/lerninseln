@@ -123,6 +123,7 @@ export default defineComponent ({
       console.log("Signup. Checked is ",this.formValues.checked)
       const posting = {request:1,payload:{
         ticket: this.store.state.purchase.ticket, 
+        count: this.store.state.purchase.count,
         email: this.store.state.purchase.email,
         }
       }
@@ -157,6 +158,7 @@ export default defineComponent ({
         return
       const posting = {request:2,payload:{
         ticket: this.store.state.purchase.ticket, 
+        count: this.store.state.purchase.count,
         email: this.store.state.purchase.email,
         code: code
         }

@@ -122,6 +122,7 @@ export default  defineComponent ({
       // update global ticket
       const purchase = this.store.state.purchase
       purchase.ticket = t
+      purchase.count = cnt
       this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
     },
     purchase() {
