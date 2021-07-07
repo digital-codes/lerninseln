@@ -61,6 +61,9 @@
         <h2>Nichts ausgewählt!</h2>
         Bitte wähle zuerst eine Veranstaltung aus.
       </div>
+      <!-- optionally display url query parameter (see router/index.js)
+      <div>Query: {{query}}</div>
+      -->
 
       </ion-card-content>
 
@@ -110,6 +113,9 @@ https://v3.vuejs.org/guide/migration/emits-option.html#_3-x-behavior
 
 export default  defineComponent ({
   name: 'Tickets',
+  props: {
+      query: {type: String, default: ""}, // capture url query parameter from router
+  }, 
   data () {
     return {
       events: [],
@@ -242,6 +248,7 @@ export default  defineComponent ({
     },
   },
   async beforeMount() {
+    if (this.query != "") console.log("Query: ",this.query)
     this.ds = await DataStorage.getInstance()
     const providerString = await this.ds.getItem("provider") || "[]"
     const providers = JSON.parse(providerString)
@@ -259,7 +266,6 @@ export default  defineComponent ({
     //this.tickets = items
     this.tickets = tickets
 
-    console.log("FIXME: runs on events, not tickets so far")
   },
   // store
   setup() {

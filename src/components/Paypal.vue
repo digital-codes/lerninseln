@@ -19,6 +19,17 @@
 <script>
 
 // see https://developer.paypal.com/docs/paypal-payments-standard/integration-guide/formbasics/
+// Note: normally invoice number must be unique. can be deactivated in profile
+// else duplicate id lead to "system error" after payment process
+
+// ecnryption see:
+//    https://developer.paypal.com/docs/paypal-payments-standard/integration-guide/encryptedwebpayments/
+//    https://developer.paypal.com/docs/paypal-payments-standard/integration-guide/encryptedwebpayments/
+
+// button monagement: https://developer.paypal.com/docs/archive/button-manager/integration-guide/#inventory-management-for-digital-downloads
+// IPN: https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNIntro/
+// https://github.com/paypal/ipn-code-samples/tree/master/php
+
 /*
 You should not write HTML button code for saved buttons. Always use the code that PayPal generates. 
 However, you can enhance the generated code for saved buttons by adding hidden HTML

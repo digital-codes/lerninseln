@@ -27,7 +27,10 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'shop',
-        component: () => import('@/views/Shop.vue')
+        component: () => import('@/views/Shop.vue'),
+        // the following captures the query parameter "name" from the url
+        // apply together with the props "query"
+        props: (route) => ({ query: route.query.name }),
       },
       {
         path: 'codes',
