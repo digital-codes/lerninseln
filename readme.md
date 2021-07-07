@@ -3,7 +3,9 @@
 
 ## Issues
 Forms incomplete
-Database: event avail checking
+Database: event avail checking (OK)
+    block user on too many pendings
+    invoice handling    
 
 
 ## Extensions

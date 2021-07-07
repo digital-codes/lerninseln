@@ -3,7 +3,7 @@
 # https://docs.sqlalchemy.org/en/14/orm/
 
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy import Date, Time, DateTime, TIMESTAMP
 
 from sqlalchemy.schema import Table, MetaData
@@ -61,12 +61,23 @@ import hashlib
 #   id, count, ticket id, user id
 #   all fields => hash => qrcode => base64
 
+# invoices
+#  still to be defined ... pending_id should probably not be a foreign key
+#   as pendings get erase after a while.
+# invoice_number, amount, created (timestamp), payed (timestamp or 0), 
+#  pending_id, user_id, ticket_id
+
 # users
 # 2 modes, normal and anonymous
 # anon: mode = 0, pwd is totp, email is email hash, access is current timestamp
 # named: mode = 1, pwd is encrypted pwd, email is plaintext email, access  is current timestamp
 #   username is mailhash or random hash for client on totp challenge to improve security
 # normally search user by email (hash or plaintext), only with totp search username
+# pendings and bookings. Block user if more than X (like 3) pendings. Take this
+#   from current pendings by user (not from pendings - bookings)
+
+# black
+# blacklist users. optional
 
 TABLES = [
     "config",
@@ -162,6 +173,24 @@ class User(Base):
         self.pendings = pendings
         self.bookings = bookings
         self.mode = mode
+
+########################################################################
+class Black(Base):
+    """"""
+    __tablename__ = "black"
+ 
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer,nullable=False, unique=True) 
+    created = Column(Integer,default=0) # created
+    access = Column(Integer,default=0)  # last access
+    
+
+    #----------------------------------------------------------------------
+    def __init__(self, user, created, access):
+        """"""
+        self.user_id = user
+        self.created = created
+        self.access = access
 
 ########################################################################
 class Provider(Base):
@@ -308,7 +337,7 @@ class Ticket(Base):
     reserved = Column(Integer, nullable=False)
     limit = Column(Integer, default=1)
 
-    cost = Column(Integer, nullable=False)
+    cost = Column(Float, nullable=False)
     costinfo = Column(String(255))
 
     event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
@@ -354,9 +383,45 @@ class Pending(Base):
         self.user_id = user
 
 ########################################################################
+class Invoice(Base):
+    """"""
+    __tablename__ = "invoice"
+ 
+    id = Column(Integer, primary_key=True)
+    amount = Column(Float)  
+    created = Column(Integer, nullable=False) # unix timestamp in seconds
+    payed = Column(Integer ) # unix timestamp in seconds or 0
+
+    ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
+    ticket = relationship("Ticket", back_populates="invoice")
+                            
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    user = relationship("User", back_populates="invoice")
+
+    # no foreign key here, probably ..
+    pending_id = Column(Integer, nullable=False)
+
+
+    #----------------------------------------------------------------------
+    def __init__(self, amount, created, payed, user, ticket, pending):
+        """"""
+        self.amount = amount
+        self.created = created
+        self.payed = payed
+        self.user_id = user
+        self.ticket_id = ticket
+        self.pending_id = pending
+
+########################################################################
+
+
+########################################################################
 
 # see above, only python
 User.pending = relationship("Pending", order_by=Pending.id, \
+    back_populates="user",cascade="all, delete, delete-orphan")
+
+User.invoice = relationship("Invoice", order_by=Invoice.id, \
     back_populates="user",cascade="all, delete, delete-orphan")
 
 
@@ -365,6 +430,9 @@ Event.ticket = relationship("Ticket", order_by=Ticket.id, \
 
 
 Ticket.pending = relationship("Pending", order_by=Pending.id, \
+    back_populates="ticket",cascade="all, delete, delete-orphan")
+
+Ticket.invoice = relationship("Invoice", order_by=Invoice.id, \
     back_populates="ticket",cascade="all, delete, delete-orphan")
 
 Ticket.code = relationship("Code", order_by=Code.id, \

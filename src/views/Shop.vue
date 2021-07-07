@@ -243,7 +243,7 @@ export default  defineComponent ({
       const tickets = this.tickets.filter(t => t.event_id == this.store.state.selection.eventId)
       tickets.forEach(t => {
         console.log(t)
-        cost += parseInt(t.count)*(parseInt(t.cost))
+        cost += parseInt(t.count)*(parseFloat(t.cost))
         })
       return cost 
     },
