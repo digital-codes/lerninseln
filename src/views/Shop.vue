@@ -122,7 +122,7 @@ export default  defineComponent ({
       tickets : [],
       ds: "",
       payUrl : "https://lerninseln.ok-lab-karlsruhe.de/pay.php",
-      payInvoice : "Inv1234"
+      payInvoice : "Inv1234",
     }
   },
   components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm, Paypal },
@@ -140,6 +140,7 @@ export default  defineComponent ({
       const purchase = this.store.state.purchase
       purchase.ticket = t
       purchase.count = cnt
+      this.ticketCount = cnt
       this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
     },
     purchase() {

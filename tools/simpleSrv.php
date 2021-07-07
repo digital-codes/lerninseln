@@ -32,13 +32,16 @@ define("DRYRUN",true); // default: false
 
 // PDO statements
 define ("DBCALL", array(
-    "GET_USER" => "SELECT * from user where username = ?;",
+    "GET_USER_BY_NAME" => "SELECT * from user where username = ?;",
     "ADD_USER" => "insert into user set username = ?, pwdOrTotp = ?, emailOrHash = ?;",
     "SET_USER_ACCESS" => "update user set access = ? where id = ?;",
     "SET_USER_PENDINGS" => "update user set pendings = ? where id = ?;",
     "SET_USER_BOOKINGS" => "update user set bookings = ? where id = ?;",
     "SET_USER_PWD" => "update user set pwdOrTotp = ? where id = ?;",
+    "SELECT_USER_BY_NAME" => "SELECT * from user where username = ? for update;",
     "GET_EVENT" => "SELECT * from event where id = ?;",
+    "SELECT_EVENT" => "SELECT * from event where id = ? for update;",
+    "UPDATE_EVENT" => "update event set avail = ? where id = ?;",
     "GET_PROVIDER" => "SELECT * from provider where id = ?;",
     "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
     "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
@@ -94,6 +97,8 @@ function dbAccess($pdo, $mode, $parms)
         $r["data"] = array();
         switch ($mode) {
             case "SELECT_TICKET":
+            case "SELECT_USER_BY_NAME":
+            case "SELECT_EVENT":
                 $d = $sth->fetchAll();
                 $r["data"] = $d;
                 $r["status"] = 1;
@@ -102,37 +107,7 @@ function dbAccess($pdo, $mode, $parms)
                 $d = array();
                 $r["data"] = $d;
                 break;
-            /*    
-            case "ADD_USER":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            case "SET_USER_ACCESS":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            case "SET_USER_PWD":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            case "ADD_QR":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            case "UPDATE_TICKET":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            case "ADD_PENDING":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            case "DELETE_PENDING":
-                $d = array();
-                $r["data"] = $d;
-                break;
-            */
-            }
+        }
     }
     return $r;
 }
@@ -165,13 +140,13 @@ function reserveTicket($ticket,$count,$email){
         create user (ignore error if exists)
         get user. break if not exists
         start transaction
-            select ticket for update
+            select ticket, user and event for update
             check is user is pending for this ticket => break 1 if yes
             check if tickets avail => break 2 if not
             create reservation code, label
             add pending for user, code and ticket
             update user with access and pendings
-            decrement ticket
+            decrement ticket and event
         commit transaction
         if error somewhere => break 3
         text => OK
@@ -202,7 +177,9 @@ function reserveTicket($ticket,$count,$email){
     $user = hash("sha256",$email);
     $pwd = "dummy"; // not needed yet
     dbAccess($pdo,"ADD_USER",array($user,$pwd,$user)); // in this mode, name and email are same
-    $u = dbAccess($pdo,"GET_USER",array($user ));
+    //$u = dbAccess($pdo,"GET_USER_BY_NAME",array($user ));
+    // select + lock user
+    $u = dbAccess($pdo,"SELECT_USER_BY_NAME",array($user));
     //mlog("user" . print_r($u,true));
     if (count($u["data"]) == 0) {
         mlog("Missing user");
@@ -226,6 +203,18 @@ function reserveTicket($ticket,$count,$email){
     }
     $avail =  $t["data"][0]["avail"];
 
+    // lock event for this ticket
+    $e = dbAccess($pdo,"SELECT_EVENT",array($t["data"][0]["event_id"]));
+    mlog("Event: " . print_r($e,true));
+    if (count($e["data"]) == 0) {
+        mlog("Missing Event");
+        $r["text"] = "Leider ein Problem mit Buchung";
+        $pdo->rollback();
+        return $r;
+    }
+    $evAvail =  $e["data"][0]["avail"];
+    $evId =  $e["data"][0]["id"];
+
     // check pending
     $p = dbAccess($pdo,"GET_PENDING",array($uid,$ticket));
     mlog("Pending: " . print_r($p,true));
@@ -236,13 +225,14 @@ function reserveTicket($ticket,$count,$email){
         $pdo->rollback();
         return $r;
     }
-    // check ticket count
-    if ($t["data"][0]["avail"] < $count) {
+    // check ticket count and event avail count
+    if (($avail < $count) || ($evAvail < $count)) {
         mlog("Sold out");
         $r["text"] = "Leider kein Ticket mehr da";
         $pdo->rollback();
         return $r;
     }     
+
     // reservation code and label
     $code = random_int(100000,999999);
     $label = "Lerninsel Ticket"; // dummy
@@ -255,6 +245,8 @@ function reserveTicket($ticket,$count,$email){
     dbAccess($pdo,"SET_USER_PENDINGS",array($pendings+1,$uid));
     // update ticket
     dbAccess($pdo,"UPDATE_TICKET",array($avail - $count,$ticket)); // id is last ...
+    // update event
+    dbAccess($pdo,"UPDATE_EVENT",array($evAvail - $count,$evId)); // id is last ...
 
     // finally
     $pdo->commit();
@@ -308,7 +300,7 @@ function purchaseTicket($ticket,$email,$label){
     $d = array();
 
     $user = hash("sha256",$email);
-    $u = dbAccess($pdo,"GET_USER",array($user ));
+    $u = dbAccess($pdo,"GET_USER_BY_NAME",array($user ));
     if (count($u["data"]) == 0) {
         mlog("Missing user");
         $r["text"] = "Leider ein Problem mit der Anmeldung";

@@ -3,8 +3,8 @@
 
 ## Issues
 Forms incomplete
-QR Code display
-Database
+Database: event avail checking
+
 
 ## Extensions
 Event Feedback? 

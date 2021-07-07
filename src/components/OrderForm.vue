@@ -117,6 +117,10 @@ export default defineComponent ({
       }
       const email = this.formValues.email
       const purchase = this.store.state.purchase
+      if (purchase.count == 0) {
+        console.log("No tickets selected")
+        return
+      }
       purchase.email = email
       this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
       // DON'T: this.store.state.purchase.email = email

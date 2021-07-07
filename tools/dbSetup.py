@@ -267,6 +267,7 @@ class Event(Base):
     title = Column(String(255), nullable=False)
     date = Column(String(255), nullable=False)
     time = Column(String(255), nullable=False)
+    avail = Column(Integer, nullable=False) 
     
     location1 = Column(String(255))
     location2 = Column(String(255))
@@ -282,12 +283,13 @@ class Event(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, title, date, time, 
+    def __init__(self, title, date, time, avail,
                  location1, location2, provider, category, audience):
         """"""
         self.title = title
         self.date = date
         self.time = time
+        self.avail = avail
         self.location1 = location1
         self.location2 = location2
         self.provider_id = provider
@@ -508,6 +510,7 @@ for e in range(20):
     event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
                   "2021-" + f'{random.randint(6,12):02}' + "-" + f'{random.randint(1,28):02}',
                   f'{random.randint(1,24):02}' + ":00",
+                  random.randint(1,30),
                   "Location 1 " + str(random.randint(1,10)),
                   "Location 2 " + str(random.randint(1,10)),
                   random.randint(1,50),
