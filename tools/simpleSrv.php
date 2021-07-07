@@ -26,6 +26,8 @@ define("REASON", [
 
 define("DRYRUN",true); // default: false
 
+define ("USER_PENDING_LIMIT",3);
+
 // --------------------------------------------------
   // ticket functions
   // --------------------------------------------------
@@ -44,6 +46,7 @@ define ("DBCALL", array(
     "UPDATE_EVENT" => "update event set avail = ? where id = ?;",
     "GET_PROVIDER" => "SELECT * from provider where id = ?;",
     "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
+    "GET_PENDING_BY_USER" => "SELECT * from pending where user_id;",
     "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
     "DELETE_PENDING" => "delete from pending where id = ?;",
     "GET_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
@@ -215,7 +218,17 @@ function reserveTicket($ticket,$count,$email){
     $evAvail =  $e["data"][0]["avail"];
     $evId =  $e["data"][0]["id"];
 
-    // check pending
+    // check pendings for user
+    $p = dbAccess($pdo,"GET_PENDING_BY_USER",array($uid));
+    mlog("Pending for user: " . count($p["data"]) . ", " . print_r($p,true));
+    if (count($p["data"]) > USER_PENDING_LIMIT) {
+        mlog("Too many pendings");
+        $r["text"] = "Bitte schließe Deine Bestellungen ab";
+        $r["status"] = 0;
+        $pdo->rollback();
+        return $r;
+    }
+    // check pendings for ticket and user
     $p = dbAccess($pdo,"GET_PENDING",array($uid,$ticket));
     mlog("Pending: " . print_r($p,true));
     if (count($p["data"]) > 0) {
@@ -225,6 +238,7 @@ function reserveTicket($ticket,$count,$email){
         $pdo->rollback();
         return $r;
     }
+
     // check ticket count and event avail count
     if (($avail < $count) || ($evAvail < $count)) {
         mlog("Sold out");

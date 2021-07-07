@@ -71,6 +71,14 @@
   </ion-item>
   </form>
 
+   <ion-toast v-bind:message="message"
+    :is-open="msgOpenRef"
+    :duration="2000"
+    position="middle"
+    @didDismiss="msgOpenRef = false"
+  >
+  </ion-toast>
+
   <ion-text v-if="message > ''" class="message"><p>{{message}}</p></ion-text>
 
   <ion-text v-if="info > ''" class="info"><p>{{info}}</p></ion-text>
@@ -80,8 +88,8 @@
 <script lang="js">
 // inspired by https://vueformulate.com/guide/forms/
 
-import { IonItem, IonLabel, IonInput, IonText, IonButton, IonCheckbox } from '@ionic/vue';
-import { defineComponent } from 'vue'; 
+import { IonItem, IonLabel, IonInput, IonText, IonButton, IonCheckbox, IonToast } from '@ionic/vue';
+import { defineComponent, ref } from 'vue'; 
 
 import DataFetch from "../services/fetch";
 
@@ -93,7 +101,7 @@ export default defineComponent ({
   components: {
     IonItem, IonLabel, IonInput, 
     //IonCardSubtitle, IonCardTitle ,
-    IonCheckbox, IonButton
+    IonCheckbox, IonButton, IonToast
   },
   props: {
     info: {type: String, default: "",},
@@ -141,6 +149,10 @@ export default defineComponent ({
       }
       console.log("OK1",this.payload)
       this.message = result.payload.text
+      //msgOpenRef = true
+      //msgOpenRef.value = true
+      this.msgOpenRef = true
+      //this.msgOpenRef.value = true
       // check response status
       if (!this.payload.status) {
         console.log("Response Error1:", this.payload.text)
@@ -202,8 +214,10 @@ export default defineComponent ({
   },
   // store
   setup() {
+    const msgOpenRef = ref(false);
+    //const setOpen = (state: boolean) => isOpenRef.value = state;
     const store = useStore();
-    return { store};
+    return { store, msgOpenRef };
   },
 })
 
