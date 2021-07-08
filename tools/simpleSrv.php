@@ -62,7 +62,7 @@ define ("DBCALL", array(
     "GET_PROVIDER" => "SELECT * from provider where id = ?;",
     "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
     "GET_PENDING_BY_USER" => "SELECT * from pending where user_id = ?;",
-    "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
+    "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?, remote = ?;",
     "DELETE_PENDING" => "delete from pending where id = ?;",
     "GET_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
     "ADD_QR" => "insert into code set user_id = ?, ticket_id = ?, label = ?, count = ?;",
@@ -152,7 +152,7 @@ function readTable($table){
 }
 
 
-function reserveTicket($ticket,$count,$email){
+function reserveTicket($ticket,$count,$email,$remote){
     // returns: status, array(email, code, label, text)
     /* procedure
         create user (ignore error if exists)
@@ -270,7 +270,7 @@ function reserveTicket($ticket,$count,$email){
     $label = "Lerninsel Ticket"; // dummy
     // add pending
     $date = new DateTime();
-    dbAccess($pdo,"ADD_PENDING",array($uid,$ticket,$code,$count,$date->getTimestamp()));
+    dbAccess($pdo,"ADD_PENDING",array($uid,$ticket,$code,$count,$date->getTimestamp(),$remote));
     // update user time
     dbAccess($pdo,"SET_USER_ACCESS",array($date->getTimestamp(),$uid));
     // update user pendings
@@ -531,8 +531,13 @@ switch ($meth) {
                     break;
                 }
 
+                // remote address
+                $remote = "";
+                if (array_key_exists("REMOTE_ADDR",$_SERVER))
+                    $remote = $_SERVER["REMOTE_ADDR"];
+                mlog("Remote: " . $remote);
                 mlog("processing req 1");
-                $r = reserveTicket($payload["ticket"],$payload["count"],$email);
+                $r = reserveTicket($payload["ticket"],$payload["count"],$email,$remote);
                 // returns: status, email, code, label, text
                 if ($r["status"] == 1) {
                     // send mail only when all OK

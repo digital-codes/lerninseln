@@ -126,6 +126,9 @@ export default defineComponent ({
       e.preventDefault();
       if (!this.formValues.checked) {
         console.log("Not checked")
+        this.message = "Du hast nicht zugestimmt"
+        this.messagePos = "middle"
+        this.msgOpenRef = true
         return
       }
       const email = this.formValues.email

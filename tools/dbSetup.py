@@ -55,7 +55,7 @@ import hashlib
 #   id, avail, reserved, cost (normally 0), limit,  event id
 
 # pending (unfinished reservations). label might be useful
-#   id, label, count, date, user_id, ticket_id
+#   id, label, count, date, user_id, ticket_id, remote_ip
 
 # codes
 #   id, count, ticket id, user id
@@ -365,6 +365,7 @@ class Pending(Base):
     #date = Column(DateTime, nullable=False)
     date = Column(Integer, nullable=False) # unix timestamp in seconds
     code = Column(Integer, nullable=False)
+    remote = Column(String(64), default = "")
 
     ticket_id = Column(Integer, ForeignKey('ticket.id', ondelete="CASCADE"), nullable=False)
     ticket = relationship("Ticket", back_populates="pending")
@@ -374,13 +375,14 @@ class Pending(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, code, count, date, event, user):
+    def __init__(self, code, count, date, event, user,remote):
         """"""
         self.code = code
         self.count = count
         self.date = date
         self.event_id = event
         self.user_id = user
+        self.remote = remote
 
 ########################################################################
 class Invoice(Base):
