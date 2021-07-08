@@ -42,14 +42,14 @@ import hashlib
 # providers
 #   id, name, info, city, plz, country, street, streetnum, geo, email, phone, www
 
-# categories
-#   id, name, color, iconUrl
+# features
+#   id, name, color, icon
 
 # audience # zeilgruppe
 #   id, type
 
 # events
-#   id, title,date,time, category, provider id, category id, audiency id
+#   id, title,date,time, feature, provider id, feature id, audiency id
 
 # tickets
 #   id, avail, reserved, cost (normally 0), limit,  event id
@@ -79,15 +79,6 @@ import hashlib
 # black
 # blacklist users. optional
 
-TABLES = [
-    "config",
-    "providers",
-    "categories",
-    "events",
-    "tickets",
-    "codes",
-    "users"
-    ]
 
 # initialize
 DROP_ALL = True
@@ -231,22 +222,36 @@ class Provider(Base):
 
 
 ########################################################################
+class Feature(Base):
+    """"""
+    __tablename__ = "feature"
+ 
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False, unique=True)
+    color = Column(String(255), nullable=False)
+    icon = Column(String(255))
+                            
+
+    #----------------------------------------------------------------------
+    def __init__(self, name,color, icon):
+        """"""
+        self.name = name
+        self.color = color
+        self.icon = icon
+
+########################################################################
 class Category(Base):
     """"""
     __tablename__ = "category"
  
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False, unique=True)
-    color = Column(String(255), nullable=False)
-    iconUrl = Column(String(255))
+    name = Column(String(1024), nullable=False, unique=True)
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, name,color, iconUrl):
+    def __init__(self, name):
         """"""
         self.name = name
-        self.color = color
-        self.iconUrl = iconUrl
 
 ########################################################################
 class Audience(Base):
@@ -304,8 +309,8 @@ class Event(Base):
     provider_id = Column(Integer, ForeignKey('provider.id', ondelete="CASCADE"), nullable=False)
     provider = relationship("Provider", back_populates="event")
 
-    category_id = Column(Integer, ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
-    category = relationship("Category", back_populates="event")
+    category_id = Column(Integer, ForeignKey('feature.id', ondelete="CASCADE"), nullable=False)
+    feature = relationship("Feature", back_populates="event")
                             
     audience_id = Column(Integer, ForeignKey('audience.id', ondelete="CASCADE"), nullable=False)
     audience = relationship("Audience", back_populates="event")
@@ -313,7 +318,7 @@ class Event(Base):
 
     #----------------------------------------------------------------------
     def __init__(self, title, date, time, avail,
-                 location1, location2, provider, category, audience):
+                 location1, location2, provider, feature, audience):
         """"""
         self.title = title
         self.date = date
@@ -322,7 +327,7 @@ class Event(Base):
         self.location1 = location1
         self.location2 = location2
         self.provider_id = provider
-        self.category_id = category
+        self.category_id = feature
         self.audience_id = audience
 
 
@@ -447,8 +452,8 @@ User.code = relationship("Code", order_by=Code.id, \
 Provider.event = relationship("Event", order_by=Event.id, \
     back_populates="provider",cascade="all, delete, delete-orphan")
 
-Category.event = relationship("Event", order_by=Event.id, \
-    back_populates="category",cascade="all, delete, delete-orphan")
+Feature.event = relationship("Event", order_by=Event.id, \
+    back_populates="feature",cascade="all, delete, delete-orphan")
 
 Audience.event = relationship("Event", order_by=Event.id, \
     back_populates="audience",cascade="all, delete, delete-orphan")
@@ -490,7 +495,7 @@ if DROP_ALL:
 ##            print("Duplicate provider",r.Name)
 ##            # important to rollback, else cannot complete
 ##            session.rollback()
-##            pass # check audience and category still ##continue
+##            pass # check audience and feature still ##continue
 ##
 
         if None == session.query(Provider).filter(Provider.name == r.Name).first():
@@ -502,10 +507,10 @@ if DROP_ALL:
             print("Provider inserted ",r.Name)
 
         # alternative was to check existence
-        # if OK, check category and audience
+        # if OK, check feature and audience
         if None == session.query(Category).filter(Category.name == r.Beschreibung).first():
-            print("Insert category: ",r.Beschreibung)
-            category = Category(r.Beschreibung,"#00ff00","")
+            print("Insert catgeory: ",r.Beschreibung)
+            category = Category(r.Beschreibung)
             session.add(category)
             session.commit()
             
@@ -557,7 +562,7 @@ if MODE != 0:
             print("Duplication on user",u)
             # important to rollback, else cannot complete
             session.rollback()
-            continue # check audience and category still ##continue
+            continue # check audience and feature still ##continue
         print("New user: ",u[0])
 
         # verify pwd
@@ -571,6 +576,18 @@ if MODE != 0:
         print("Pwd verified: ", new_key == k)
 
     
+######### generate categories ########
+
+FEATURE_TITLES = ["Ruhe","Gruppe","Wifi","Werkzeug","Hilfe"]
+FEATURE_ICONS = ["volume-off-outline",
+                 "people-outline","wifi-outline",
+                 "construct-outline","medkit-outline"]
+
+for i,f in enumerate(FEATURE_TITLES):
+    feature = Feature(f,"#00ff00",icon=FEATURE_ICONS[i])
+    session.add(feature)
+    session.commit()
+    print("New feature: ",f)
 
 ######### generate some event ########
 

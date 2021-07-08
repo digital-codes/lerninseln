@@ -489,7 +489,7 @@ switch ($meth) {
             $table = $args["table"];
         }
         
-        define("TABLES", array("config","provider","category","audience","event","ticket","code"));
+        define("TABLES", array("config","provider","category","audience","event","feature","ticket","code"));
         
         if (array_search($table, TABLES) === false) {
             mlog("Invalid table");
