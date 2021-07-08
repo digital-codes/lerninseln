@@ -5,10 +5,13 @@
       <ion-label class="event"><h2>{{title}}, ID {{id}}</h2></ion-label>
     </ion-item-divider>
     <ion-item color="light">
-      <ion-icon :icon="getIcon()" slot="start"/>
+      <ion-icon :icon="getIcon()" slot="start" class="eventIcon"/>
       <ion-label position="fixed" class="eventDate">
       <div>{{date}}</div>
       <div>{{time}}</div>
+      </ion-label>
+      <ion-label class="eventMore">
+      <a href="https://www.cern.ch" target="_blank">Mehr ...</a>
       </ion-label>
     </ion-item>
     <ion-item-divider>
@@ -83,12 +86,23 @@ h2 {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.eventIcon {
+  margin-right: .5em;
+}
+
 .eventDate {
   text-align: left;
   /* with position: fixed adjust size */
-  flex-basis: 150px;
+  flex-basis: 110px;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.eventMore {
+  text-align: left;
+  /* with position: fixed adjust size */
+  display: inline-block;
 }
 
 .footer {
