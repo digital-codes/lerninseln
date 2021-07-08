@@ -78,7 +78,9 @@
   >
   </ion-toast>
 
+  <!--
   <ion-text v-if="message > ''" class="message"><p>{{message}}</p></ion-text>
+  -->
 
   <ion-text v-if="info > ''" class="info"><p>{{info}}</p></ion-text>
 
@@ -130,6 +132,9 @@ export default defineComponent ({
       const purchase = this.store.state.purchase
       if (purchase.count == 0) {
         console.log("No tickets selected")
+        this.message = "Du hast kein Ticket gewählt"
+        this.messagePos = "middle"
+        this.msgOpenRef = true
         return
       }
       purchase.email = email
@@ -197,6 +202,9 @@ export default defineComponent ({
       this.message = result.payload.text
       // check response status
       if (!this.payload.status) {
+        this.message = result.payload.text
+        this.messagePos = "middle"
+        this.msgOpenRef = true
         console.log("Response Error1:", this.payload.text)
         return
       }

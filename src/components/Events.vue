@@ -76,10 +76,12 @@ export default defineComponent({
     return {
     items : [],
     providers: [],
+    ds: "",
+    /*
     chk1: 1, 
     chk2: 0, 
-    chk3: 1, 
-    ds: "",
+    chk3: 1,
+    */ 
     }
   },
   methods:{
@@ -87,7 +89,7 @@ export default defineComponent({
       router.push("/shop")
     },
     select(e) {
-      const item = this.items[e-1]
+      const item = this.items.find(i => i.id ==e)
       console.log("Checked: ",item.id, item.checked)
       if (item.checked) {
         //this.filter = item.id
@@ -102,23 +104,27 @@ export default defineComponent({
     this.ds = await DataStorage.getInstance()
     const providerString = await this.ds.getItem("provider") || "[]"
     const providers = JSON.parse(providerString)
+    const ticketString = await this.ds.getItem("ticket") || "[]"
+    const tickets = JSON.parse(ticketString)
     const itemString = await this.ds.getItem("event") || "[]"
     const items = JSON.parse(itemString)
+    const validItems = []
     for (let i=0; i < items.length; i++){
-      /*
-      const id = items[i].provider_id - 1
-      const name = providers[id].name
-      */
-      const id = items[i].provider_id
-      const name = (providers.find(p => p.id == id)).name
+      // cechk if we have any tickets on this event
+      const tick = tickets.find(t => t.event_id == items[i].id) || 0
+      console.log("Tick: ",tick)
+      if (tick == 0) continue
+      const pid = items[i].provider_id
+      const name = (providers.find(p => p.id == pid)).name
       //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
       items[i].checked = 0
+      validItems.push(items[i])
     }
-    this.items = items
+    this.items = validItems
     
     this.store.commit(MUTATIONS.RESET_EVENT)
-    console.log("befMount: ",items)
+    //console.log("befMount: ",items,validItems)
   },
   computed: {
     selIitems() {
