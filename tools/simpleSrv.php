@@ -29,6 +29,21 @@ define("DRYRUN",true); // default: false
 define ("USER_PENDING_LIMIT",3);
 
 // --------------------------------------------------
+  // mail hash functions
+  // --------------------------------------------------
+
+function mailHash($cfg,$email) {
+    $prefix="lerninseln";
+    if (array_key_exists("mprefix",$cfg)) {
+        $prefix=$cfg["mprefix"];
+    }
+    $h = hash("sha256",$prefix . $email);;
+    mlog("Hashed mail: " . $h);
+    return $h;
+}
+
+
+// --------------------------------------------------
   // ticket functions
   // --------------------------------------------------
 
@@ -46,7 +61,7 @@ define ("DBCALL", array(
     "UPDATE_EVENT" => "update event set avail = ? where id = ?;",
     "GET_PROVIDER" => "SELECT * from provider where id = ?;",
     "GET_PENDING" => "SELECT * from pending where user_id = ? and ticket_id = ?;",
-    "GET_PENDING_BY_USER" => "SELECT * from pending where user_id;",
+    "GET_PENDING_BY_USER" => "SELECT * from pending where user_id = ?;",
     "ADD_PENDING" => "insert into pending set user_id = ?, ticket_id = ?, code = ?, count = ?, date = ?;",
     "DELETE_PENDING" => "delete from pending where id = ?;",
     "GET_QR" => "SELECT * from code where user_id = ? and ticket_id = ?;",
@@ -177,9 +192,13 @@ function reserveTicket($ticket,$count,$email){
     $d = array();
     $r["data"] = $d;
     // create user name
-    $user = hash("sha256",$email);
+    $user = mailHash($cfg,$email);
     $pwd = "dummy"; // not needed yet
     dbAccess($pdo,"ADD_USER",array($user,$pwd,$user)); // in this mode, name and email are same
+
+    // start transaction
+    $pdo->beginTransaction();
+
     //$u = dbAccess($pdo,"GET_USER_BY_NAME",array($user ));
     // select + lock user
     $u = dbAccess($pdo,"SELECT_USER_BY_NAME",array($user));
@@ -187,14 +206,13 @@ function reserveTicket($ticket,$count,$email){
     if (count($u["data"]) == 0) {
         mlog("Missing user");
         $r["text"] = "Leider ein Problem mit der Anmeldung";
+        $pdo->rollback();
         return $r;
     }
     $uid = $u["data"][0]["id"];
     $pendings = $u["data"][0]["pendings"];
     mlog("Found user: " . $uid);
 
-    // start transaction
-    $pdo->beginTransaction();
     // lock ticket
     $t = dbAccess($pdo,"SELECT_TICKET",array($ticket));
     mlog("Ticket: " . print_r($t,true));
@@ -313,17 +331,6 @@ function purchaseTicket($ticket,$email,$label){
     $r["text"] = "";
     $d = array();
 
-    $user = hash("sha256",$email);
-    $u = dbAccess($pdo,"GET_USER_BY_NAME",array($user ));
-    if (count($u["data"]) == 0) {
-        mlog("Missing user");
-        $r["text"] = "Leider ein Problem mit der Anmeldung";
-        return $r;
-    }
-    $uid = $u["data"][0]["id"];
-    $bookings = $u["data"][0]["bookings"];
-    mlog("Found user: " . $uid);
-
     // start transaction
     $pdo->beginTransaction();
     // lock ticket
@@ -335,6 +342,19 @@ function purchaseTicket($ticket,$email,$label){
         $pdo->rollback();
         return $r;
     }
+
+    $user = mailHash($cfg,$email);
+    //$u = dbAccess($pdo,"GET_USER_BY_NAME",array($user ));
+    $u = dbAccess($pdo,"SELECT_USER_BY_NAME",array($user));
+    if (count($u["data"]) == 0) {
+        mlog("Missing user");
+        $r["text"] = "Leider ein Problem mit der Anmeldung";
+        $pdo->rollback();
+        return $r;
+    }
+    $uid = $u["data"][0]["id"];
+    mlog("Found user: " . $uid);
+    $bookings = $u["data"][0]["bookings"]; // need this later
     
     // check pending
     $p = dbAccess($pdo,"GET_PENDING",array($uid,$ticket));

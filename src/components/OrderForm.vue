@@ -71,10 +71,9 @@
   </ion-item>
   </form>
 
-   <ion-toast v-bind:message="message"
+   <ion-toast v-bind:message="message" v-bind:position="messagePos" ref="msgToast"
     :is-open="msgOpenRef"
     :duration="2000"
-    position="middle"
     @didDismiss="msgOpenRef = false"
   >
   </ion-toast>
@@ -114,9 +113,13 @@ export default defineComponent ({
       payload: {},
       showSubscription: true,
       message: "",
+      messagePos: "middle",
     }
   },
   methods:{
+    async closeMsg() {
+      this.msgOpenRef = false
+    },
     async processSignupForm(e) {
       e.preventDefault();
       if (!this.formValues.checked) {
@@ -149,9 +152,12 @@ export default defineComponent ({
       }
       console.log("OK1",this.payload)
       this.message = result.payload.text
-      //msgOpenRef = true
-      //msgOpenRef.value = true
+      this.messagePos = "middle"
       this.msgOpenRef = true
+      //console.log(this.$refs.msgToast)
+      //await this.$refs.msgToast.onDidDismiss()
+      //await this.$refs.msgToast.onDidDismiss()
+      //console.log("Toast dismissed")
       //this.msgOpenRef.value = true
       // check response status
       if (!this.payload.status) {
