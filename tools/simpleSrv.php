@@ -26,8 +26,9 @@ define("REASON", [
 
 define("DRYRUN",true); // default: false
 
-define ("USER_PENDING_LIMIT",3);
+define("USER_PENDING_LIMIT",3);
 
+define("DUMMY_PWD","dummy");
 // --------------------------------------------------
   // mail hash functions
   // --------------------------------------------------
@@ -188,12 +189,10 @@ function reserveTicket($ticket,$count,$email,$remote){
 
     $r = array();
     $r["status"] = 0;
-    $r["text"] = "";
-    $d = array();
-    $r["data"] = $d;
+    $r["text"] = "Leider ein Fehler: versuche es bitte später noch einmal.";
     // create user name
     $user = mailHash($cfg,$email);
-    $pwd = "dummy"; // not needed yet
+    $pwd = DUMMY_PWD; // not needed yet
     dbAccess($pdo,"ADD_USER",array($user,$pwd,$user)); // in this mode, name and email are same
 
     // start transaction
@@ -284,10 +283,8 @@ function reserveTicket($ticket,$count,$email,$remote){
     $pdo->commit();
 
     //$t = dbAccess($pdo,"GET_TICKET",array($ticket));
-    $d["email"] = "ak@akugel.de"; //$email;
-    $d["label"] = $label;
-    $d["code"] = $code;
-    $r["data"] = $d; // update data
+    $r["email"] = "ak@akugel.de"; //$email;
+    $r["code"] = $code;
     $r["text"] = "Ticket ist reserviert";
     $r["status"] = 1;
     return $r;
@@ -387,6 +384,18 @@ function purchaseTicket($ticket,$email,$label){
     dbAccess($pdo,"SET_USER_ACCESS",array($date->getTimestamp(),$uid));
     // update user pendings
     dbAccess($pdo,"SET_USER_BOOKINGS",array($bookings+1,$uid));
+    // update user passwd, if not set
+    if ($u["data"][0]["pwdOrTotp"] == DUMMY_PWD) {
+        $pwd = uniqid();
+        $pwHash = password_hash($pwd,PASSWORD_BCRYPT);
+        // verify with password_verify ( string $password , string $hash );
+        dbAccess($pdo,"SET_USER_PWD",array($pwHash,$uid));
+        // add pwd to return data
+        $r["pwd"] = $pwd;
+    } else {
+        $r["pwd"] = ""; // no pwd if already registered
+    }
+
 
     // finally
     $pdo->commit();
@@ -411,7 +420,7 @@ function purchaseTicket($ticket,$email,$label){
     }
     $provider = $pv["data"][0];
 
-    $d["email"] = "ak@akugel.de"; //$email;
+    $r["email"] = "ak@akugel.de"; //$email;
     $d["provider"] = $provider["name"];
     $d["name"] = $event["title"];
     $d["date"] = $event["date"];
@@ -543,7 +552,9 @@ switch ($meth) {
                     // send mail only when all OK
                     if (!DRYRUN) {
                         $mailing["request"] = $task;
-                        $mailing["payload"] = $r["data"]; // extra data here, but doesn't matter 
+                        $mailing["payload"] = array("email" => $r["email"], "code" => $r["code"]); 
+                    } else {
+                        mlog("Dryrun1 for " . $r["email"]);
                     }
                 }
                 //$result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
@@ -578,7 +589,7 @@ switch ($meth) {
                     break;
                 }
                 
-                $to = "ak@akugel.de";
+                $to = $r["email"];
                 $event = $r["data"];
 
                 $qr = makeQr( hash("sha256",$r["data"]["qr"]));
@@ -602,8 +613,15 @@ switch ($meth) {
                 if (!DRYRUN) {
                     $r = sendSmtp($cfg, $to, $subj, $msg, $pdf);
                     mlog("Send ticket returned " . $r);
-                }
-                $result = array("data" => array("text" => $r["text"], "event" => $event, "qr" => $qr),"status" => 1);
+                    } else {
+                        mlog("Dryrun2 for " . $to);
+                    }
+                $result = array("data" => array(
+                    "event" => $event, 
+                    "qr" => $qr),
+                    "text" => $r["text"],
+                    "pwd" => $r["pwd"],
+                    "status" => 1);
                 break;
             default:
                 mlog("Invalid request");

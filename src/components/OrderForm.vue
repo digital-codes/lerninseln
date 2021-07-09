@@ -14,7 +14,6 @@
     <ion-item>
     <ion-label class="input-label" position="stacked">Email</ion-label>
     <ion-input v-model="formValues.email" class="input-item"
-      email="email"
       type="email"
       placeholder="Email"
       validation="required"
@@ -94,7 +93,7 @@ import { defineComponent, ref } from 'vue';
 
 import DataFetch from "../services/fetch";
 
-import { useStore, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
+import { useStore, Selection, Identity, MUTATIONS, ACTIONS } from '../services/quickStore';
 
 
 export default defineComponent ({
@@ -124,6 +123,7 @@ export default defineComponent ({
     },
     async processSignupForm(e) {
       e.preventDefault();
+      // 
       if (!this.formValues.checked) {
         console.log("Not checked")
         this.message = "Du hast nicht zugestimmt"
@@ -148,6 +148,7 @@ export default defineComponent ({
         ticket: this.store.state.purchase.ticket, 
         count: this.store.state.purchase.count,
         email: this.store.state.purchase.email,
+        pwd: this.store.state.identity.pwd, // blank, if not set
         }
       }
       const result = await this.df.post(posting)
@@ -190,9 +191,11 @@ export default defineComponent ({
         ticket: this.store.state.purchase.ticket, 
         count: this.store.state.purchase.count,
         email: this.store.state.purchase.email,
-        code: code
+        pwd: this.store.state.identity.pwd, // blank, if not set
+        code: code,
         }
       }
+
       const result = await this.df.post(posting)
       console.log("Post2 result: ",result)
       this.payload = result.payload
@@ -213,6 +216,17 @@ export default defineComponent ({
       }
       //console.log("OK2",this.payload)
 
+      // check pwd in response and set new id, if present
+      console.log("PWD:", result.payload.pwd)
+      if (result.payload.pwd > "") {
+        const id = {
+          "email": this.store.state.purchase.email,
+          "pwd": result.payload.pwd
+        }
+        this.store.commit(MUTATIONS.SET_ID,id)
+        console.log("New ID:", id)
+      }
+
       this.payload.status = 1 // after validation
       this.$emit("purchaseComplete",this.payload)
       // form processing here
@@ -226,6 +240,11 @@ export default defineComponent ({
     // use vue refs method to access the form instance
     const signupForm = this.$refs.orderForm
     signupForm.addEventListener('submit', this.processSignupForm);
+    // FIXME set email form id store, if exists
+    const id = this.store.state.identity
+    if (id.email > "") {
+      this.formValues.email = id.email
+    }
     const confirmationForm = this.$refs.confirmationForm
     confirmationForm.addEventListener('submit', this.processConfirmationForm);
   },
