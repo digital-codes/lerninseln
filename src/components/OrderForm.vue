@@ -178,8 +178,12 @@ export default defineComponent ({
       if (this.payload.status == 2) {
         console.log("Already pending", this.payload.text)
       }
+      if (this.payload.status == 3) {
+        this.formValues.code = result.payload.code
+      } else {
+        this.formValues.code = ""
+      }
       // open confirmation form
-      this.formValues.code = ""
       this.showSubscription = false
     },
     async processConfirmationForm(e) {
@@ -244,6 +248,7 @@ export default defineComponent ({
     const id = this.store.state.identity
     if (id.email > "") {
       this.formValues.email = id.email
+      this.formValues.checked = 1
     }
     const confirmationForm = this.$refs.confirmationForm
     confirmationForm.addEventListener('submit', this.processConfirmationForm);

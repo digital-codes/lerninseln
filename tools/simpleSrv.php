@@ -29,6 +29,13 @@ define("DRYRUN",true); // default: false
 define("USER_PENDING_LIMIT",3);
 
 define("DUMMY_PWD","dummy");
+
+define("RESERVATION_STATUS",[
+    "ERROR" => 0,
+    "GOOD" => 1,
+    "PENDING" => 2,
+    "IDENTIFIED" => 3,
+]);
 // --------------------------------------------------
   // mail hash functions
   // --------------------------------------------------
@@ -102,14 +109,14 @@ function dbAccess($pdo, $mode, $parms)
     
     // default results
     $r = array();
-    $r["status"] = 0;
+    $r["status"] = RESERVATION_STATUS["ERROR"];
 
     // on get function, return all data
     if (strstr($mode, "GET_")) {
         $d = $sth->fetchAll();
         //mlog("Data:" . print_r($d, true));
         $r["data"] = $d;
-        $r["status"] = 1;
+        $r["status"] = RESERVATION_STATUS["GOOD"];
         return $r;
     } else {
         // special processing follows
@@ -120,7 +127,7 @@ function dbAccess($pdo, $mode, $parms)
             case "SELECT_EVENT":
                 $d = $sth->fetchAll();
                 $r["data"] = $d;
-                $r["status"] = 1;
+                $r["status"] = RESERVATION_STATUS["GOOD"];
                 break;
             default:
                 $d = array();
@@ -153,7 +160,7 @@ function readTable($table){
 }
 
 
-function reserveTicket($ticket,$count,$email,$remote){
+function reserveTicket($ticket,$count,$email,$pwd,$remote){
     // returns: status, array(email, code, label, text)
     /* procedure
         create user (ignore error if exists)
@@ -170,6 +177,9 @@ function reserveTicket($ticket,$count,$email,$remote){
         if error somewhere => break 3
         text => OK
         return status + data(email, code, label, text)
+
+        update 20210709: if pwd is set and matches user password
+        then return code via response immediately and don't send email
     */
     global $cfg;
 
@@ -188,12 +198,12 @@ function reserveTicket($ticket,$count,$email,$remote){
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $r = array();
-    $r["status"] = 0;
+    $r["status"] = RESERVATION_STATUS["ERROR"];
     $r["text"] = "Leider ein Fehler: versuche es bitte später noch einmal.";
     // create user name
     $user = mailHash($cfg,$email);
-    $pwd = DUMMY_PWD; // not needed yet
-    dbAccess($pdo,"ADD_USER",array($user,$pwd,$user)); // in this mode, name and email are same
+    $dummyPass = DUMMY_PWD; // not needed yet
+    dbAccess($pdo,"ADD_USER",array($user,$dummyPass,$user)); // in this mode, name and email are same
 
     // start transaction
     $pdo->beginTransaction();
@@ -251,7 +261,7 @@ function reserveTicket($ticket,$count,$email,$remote){
     if (count($p["data"]) > 0) {
         mlog("Already pending");
         $r["text"] = "Du hast schon eine Reservierung";
-        $r["status"] = 2;
+        $r["status"] = RESERVATION_STATUS["PENDING"];
         $pdo->rollback();
         return $r;
     }
@@ -286,7 +296,12 @@ function reserveTicket($ticket,$count,$email,$remote){
     $r["email"] = "ak@akugel.de"; //$email;
     $r["code"] = $code;
     $r["text"] = "Ticket ist reserviert";
-    $r["status"] = 1;
+    // check pwd 
+    if (password_verify ($pwd,$u["data"][0]["pwdOrTotp"])) {
+        $r["status"] = RESERVATION_STATUS["IDENTIFIED"];
+    } else {
+        $r["status"] = RESERVATION_STATUS["GOOD"];
+    }
     return $r;
 }
 
@@ -522,9 +537,11 @@ switch ($meth) {
         $payload = $input["payload"];
         switch ($task) {
             case 1:
+                // pwd can be blank here
                 if (!(array_key_exists("ticket", $payload)) || 
-                    !(array_key_exists("email", $payload)) ||
-                    !(array_key_exists("count", $payload))
+                !(array_key_exists("email", $payload)) ||
+                !(array_key_exists("pwd", $payload)) ||
+                !(array_key_exists("count", $payload))
                     ) {
                     mlog("Req 1 keys missing");
                     $result = array("data" => array(),"text" => REASON["KEY"],"status" => 0);
@@ -546,7 +563,7 @@ switch ($meth) {
                     $remote = $_SERVER["REMOTE_ADDR"];
                 mlog("Remote: " . $remote);
                 mlog("processing req 1");
-                $r = reserveTicket($payload["ticket"],$payload["count"],$email,$remote);
+                $r = reserveTicket($payload["ticket"],$payload["count"],$email,$payload["pwd"],$remote);
                 // returns: status, email, code, label, text
                 if ($r["status"] == 1) {
                     // send mail only when all OK
@@ -557,8 +574,12 @@ switch ($meth) {
                         mlog("Dryrun1 for " . $r["email"]);
                     }
                 }
+                // clear code after putting into mailing unless identified
+                if ($r["status"] != RESERVATION_STATUS["IDENTIFIED"]) {
+                    $r["code"] = 0;
+                }
                 //$result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
-                $result = array("status" => $r["status"],"text" => $r["text"]);
+                $result = array("status" => $r["status"],"text" => $r["text"],"code" => $r["code"]);
                 break;
             case 2:
                 if (!(array_key_exists("ticket", $payload))
