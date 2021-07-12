@@ -627,7 +627,8 @@ switch ($meth) {
 
                 $qr = makeQr( hash("sha256",$r["data"]["qr"]));
 
-                $logo = file_get_contents("logo.png", false); //, stream_context_create($opciones_ssl));
+                //$logo = file_get_contents("logo.png", false); //, stream_context_create($opciones_ssl));
+                $logo = file_get_contents("insel-logo.png", false); //, stream_context_create($opciones_ssl));
                 $logo_base_64 = base64_encode($logo);
                 $event["logo"] = 'data:image/png;base64,' . $logo_base_64;
                 $bg = file_get_contents("bg.jpg", false); //, stream_context_create($opciones_ssl));
