@@ -2,7 +2,8 @@ import os
 import skimage.io
 from skimage.transform import resize
 # use like resize(img,shap)e
-import json
+import numpy as np
+from matplotlib import pyplot as plt
 
 shapes = [
     {
@@ -97,11 +98,19 @@ logo = skimage.io.imread(SRC)
 for s in shapes:
     shape = s["shape"]
     name = s["name"]
+    size = min((shape[0],shape[1]))
+    bg = np.ndarray(shape)
+    bg.fill(1)
     print(name, shape)
-    i = resize(logo,shape)
+    i = resize(logo,(size // 2,size // 2, shape[2]))
+    for r in range(size // 2):
+        for c in range(size // 2):
+            bg[(shape[0] - size // 2) // 2 + r][(shape[1] - size // 2) // 2 + c]=i[r][c]        
+    # skimage.io.imshow(bg)
+    # plt.show()
     f = DST_BASE + name + "/splash.png"
     try:
-        skimage.io.imsave(f,i)
+        skimage.io.imsave(f,bg)
     except:
         print("Failed on ",name)
         pass
