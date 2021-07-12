@@ -24,7 +24,7 @@ define("REASON", [
     "SOLD" => "SOLD"]
 );
 
-define("DRYRUN",true); // default: false
+define("DRYRUN",false); // default: false
 
 define("USER_PENDING_LIMIT",3);
 
@@ -657,6 +657,19 @@ switch ($meth) {
                     "pwd" => $r["pwd"],
                     "status" => RESERVATION_STATUS["GOOD"]);
                 break;
+            case 9:  // remote log
+                if (!(array_key_exists("text", $payload))) {
+                    mlog("Req 9 keys missing");
+                    $result = array("status" => 0);
+                } else {
+                    $result = array("status" => 1);
+                    $text = $payload["text"];
+                    mlog("Device: " . substr($text,0,256));
+                }
+                $task = 0; // clear request to indicate error
+                break;
+
+    
             default:
                 mlog("Invalid request");
                 $result = array("data" => array(),"text" => REASON["REQ"],"status" => 0);

@@ -45,29 +45,29 @@ export default class DataFetch {
         return result.data
       }
 
-      async post(data: Record<string,any>) {
-        console.log("Axios post")
-        const url = baseUrl
-        //const url ="http://localhost:9000/simpleSrv.php"
-        const result: {status: number; code: number; payload: any} = 
-          {status:0,code:0,payload:{}}
-        await DataFetch.fetch.post(url,data, postConfig)
-        .then((response: { data: any }) => {
-          //console.log("Response:",response.data);
-          result.payload = response.data
-          result.status = 1
-          result.code = 0
-        })
-        .catch((error: any) => {
-            console.log("Axios error:", error);
-            result.payload = error.status_text
-            result.status = 0
-            result.code = error.status
+    async post(data: Record<string,any>) {
+      console.log("Axios post")
+      const url = baseUrl
+      //const url ="http://localhost:9000/simpleSrv.php"
+      const result: {status: number; code: number; payload: any} = 
+        {status:0,code:0,payload:{}}
+      await DataFetch.fetch.post(url,data, postConfig)
+      .then((response: { data: any }) => {
+        //console.log("Response:",response.data);
+        result.payload = response.data
+        result.status = 1
+        result.code = 0
+      })
+      .catch((error: any) => {
+          console.log("Axios error:", error);
+          result.payload = error.status_text
+          result.status = 0
+          result.code = error.status
 
-          });
-          return result
-        }
+        });
+        return result
       }
+    }
 
 /*
 must set caller to JS 

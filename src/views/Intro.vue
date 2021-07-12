@@ -63,8 +63,8 @@ export default  defineComponent ({
   async beforeMount() {
     console.log("QR length:", this.$store.state.qrcode.length)
 
-    this.ds = await DataStorage.getInstance()
     this.df = await DataFetch.getInstance()
+    this.ds = await DataStorage.getInstance()
     /* test 
     const x = await this.df.getTable("ticket");
     console.log("X:",x)
