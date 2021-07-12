@@ -4,8 +4,8 @@
 // cors: https://web.dev/cross-origin-resource-sharing/
 //const axios = await import ('axios');
 //import axios from 'axios';
-//const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php"
-const baseUrl = "http://localhost:9000/simpleSrv.php"
+const baseUrl = "https://lerninseln.ok-lab-karlsruhe.de/simpleSrv.php"
+//const baseUrl = "http://localhost:9000/simpleSrv.php"
 const baseGetUrl = baseUrl + "?table=";
 //const config = { headers: {'Access-Control-Allow-Origin': '*'}}
 const getConfig = { headers: {'Access-Control-Allow-Origin': '*'}}

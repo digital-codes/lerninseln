@@ -215,6 +215,7 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     if (count($u["data"]) == 0) {
         mlog("Missing user");
         $r["text"] = "Leider ein Problem mit der Anmeldung";
+        $r["status"] = RESERVATION_STATUS["ERROR"];
         $pdo->rollback();
         return $r;
     }
@@ -227,6 +228,7 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     mlog("Ticket: " . print_r($t,true));
     if (count($t["data"]) == 0) {
         mlog("Missing Ticket");
+        $r["status"] = RESERVATION_STATUS["ERROR"];
         $r["text"] = "Leider ein Problem mit Buchung";
         $pdo->rollback();
         return $r;
@@ -238,6 +240,7 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     mlog("Event: " . print_r($e,true));
     if (count($e["data"]) == 0) {
         mlog("Missing Event");
+        $r["status"] = RESERVATION_STATUS["ERROR"];
         $r["text"] = "Leider ein Problem mit Buchung";
         $pdo->rollback();
         return $r;
@@ -251,7 +254,7 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     if (count($p["data"]) > USER_PENDING_LIMIT) {
         mlog("Too many pendings");
         $r["text"] = "Bitte schließe Deine Bestellungen ab";
-        $r["status"] = 0;
+        $r["status"] = RESERVATION_STATUS["PENDING"];
         $pdo->rollback();
         return $r;
     }
@@ -269,6 +272,7 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     // check ticket count and event avail count
     if (($avail < $count) || ($evAvail < $count)) {
         mlog("Sold out");
+        $r["status"] = RESERVATION_STATUS["ERROR"];
         $r["text"] = "Leider kein Ticket mehr da";
         $pdo->rollback();
         return $r;
@@ -293,14 +297,18 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     $pdo->commit();
 
     //$t = dbAccess($pdo,"GET_TICKET",array($ticket));
-    $r["email"] = "ak@akugel.de"; //$email;
+    //$r["email"] = "ak@akugel.de"; //$email;
+    $r["email"] = $email;
     $r["code"] = $code;
-    $r["text"] = "Ticket ist reserviert";
     // check pwd 
     if (password_verify ($pwd,$u["data"][0]["pwdOrTotp"])) {
+        $r["text"] = "Bitte sende den vorbereiteten Code ab";
         $r["status"] = RESERVATION_STATUS["IDENTIFIED"];
+        mlog("User verified");
     } else {
+        $r["text"] = "Bitte schau in Deinen Mails nach dem Code";
         $r["status"] = RESERVATION_STATUS["GOOD"];
+        mlog("User not verified");
     }
     return $r;
 }
@@ -339,7 +347,7 @@ function purchaseTicket($ticket,$email,$label){
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     $r = array();
-    $r["status"] = 0;
+    $r["status"] = RESERVATION_STATUS["ERROR"];
     $r["text"] = "";
     $d = array();
 
@@ -401,6 +409,7 @@ function purchaseTicket($ticket,$email,$label){
     dbAccess($pdo,"SET_USER_BOOKINGS",array($bookings+1,$uid));
     // update user passwd, if not set
     if ($u["data"][0]["pwdOrTotp"] == DUMMY_PWD) {
+        mlog("Setting new pwd");
         $pwd = uniqid();
         $pwHash = password_hash($pwd,PASSWORD_BCRYPT);
         // verify with password_verify ( string $password , string $hash );
@@ -408,6 +417,7 @@ function purchaseTicket($ticket,$email,$label){
         // add pwd to return data
         $r["pwd"] = $pwd;
     } else {
+        mlog("No pwd set");
         $r["pwd"] = ""; // no pwd if already registered
     }
 
@@ -435,7 +445,8 @@ function purchaseTicket($ticket,$email,$label){
     }
     $provider = $pv["data"][0];
 
-    $r["email"] = "ak@akugel.de"; //$email;
+    //$r["email"] = "ak@akugel.de"; //$email;
+    $r["email"] = $email;
     $d["provider"] = $provider["name"];
     $d["name"] = $event["title"];
     $d["date"] = $event["date"];
@@ -446,7 +457,7 @@ function purchaseTicket($ticket,$email,$label){
 
     $d["qr"] = $qr;
     $r["data"] = $d;
-    $r["status"] = 1;
+    $r["status"] = RESERVATION_STATUS["GOOD"];
     $r["text"] = "Buchung erfolgreich";
     return $r;
 }
@@ -565,7 +576,7 @@ switch ($meth) {
                 mlog("processing req 1");
                 $r = reserveTicket($payload["ticket"],$payload["count"],$email,$payload["pwd"],$remote);
                 // returns: status, email, code, label, text
-                if ($r["status"] == 1) {
+                if ($r["status"] == RESERVATION_STATUS["GOOD"]) {
                     // send mail only when all OK
                     if (!DRYRUN) {
                         $mailing["request"] = $task;
@@ -577,6 +588,7 @@ switch ($meth) {
                 // clear code after putting into mailing unless identified
                 if ($r["status"] != RESERVATION_STATUS["IDENTIFIED"]) {
                     $r["code"] = 0;
+                    mlog("Code cleared for " . $r["email"]);
                 }
                 //$result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
                 $result = array("status" => $r["status"],"text" => $r["text"],"code" => $r["code"]);
@@ -632,8 +644,8 @@ switch ($meth) {
                 $msg .= "Du kannst es ausdrucken und mitbringen. Oder das Ticket auf Deinem Smartphone anzeigen."  . PHP_EOL;
                 $msg .=  PHP_EOL . "--" . PHP_EOL . "Das Lerninsel Team"  . PHP_EOL;
                 if (!DRYRUN) {
-                    $r = sendSmtp($cfg, $to, $subj, $msg, $pdf);
-                    mlog("Send ticket returned " . $r);
+                    $m = sendSmtp($cfg, $to, $subj, $msg, $pdf);
+                    mlog("Send ticket returned " . $m);
                     } else {
                         mlog("Dryrun2 for " . $to);
                     }
@@ -642,7 +654,7 @@ switch ($meth) {
                     "qr" => $qr),
                     "text" => $r["text"],
                     "pwd" => $r["pwd"],
-                    "status" => 1);
+                    "status" => RESERVATION_STATUS["GOOD"]);
                 break;
             default:
                 mlog("Invalid request");

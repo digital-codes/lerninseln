@@ -1,5 +1,5 @@
 {
-	"appId": "io.ionic.starter",
+	"appId": "de.digital-codes.okl",
 	"appName": "Lerninseln",
 	"webDir": "dist",
 	"bundledWebRuntime": false
