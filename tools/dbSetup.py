@@ -333,6 +333,34 @@ class Event(Base):
 
 
 ########################################################################
+class Feedback(Base):
+    """"""
+    __tablename__ = "feedback"
+ 
+    id = Column(Integer, primary_key=True)
+    score = Column(Integer, nullable=False) 
+    pro = Column(String(255))
+    con = Column(String(255))
+    
+    event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
+    event = relationship("Event", back_populates="feedback")
+                            
+    user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    user = relationship("User", back_populates="feedback")
+                            
+                            
+
+    #----------------------------------------------------------------------
+    def __init__(self, score, pro, con, user, event):
+        """"""
+        self.score = score
+        self.pro = pro
+        self.con = con
+        self.user_id = user
+        self.event_id = event
+
+
+########################################################################
 class Ticket(Base):
     """"""
     __tablename__ = "ticket"
@@ -431,6 +459,12 @@ User.pending = relationship("Pending", order_by=Pending.id, \
 User.invoice = relationship("Invoice", order_by=Invoice.id, \
     back_populates="user",cascade="all, delete, delete-orphan")
 
+User.feedback = relationship("Feedback", order_by=Feedback.id, \
+    back_populates="user",cascade="all, delete, delete-orphan")
+
+
+Event.feedback = relationship("Feedback", order_by=Feedback.id, \
+    back_populates="event",cascade="all, delete, delete-orphan")
 
 Event.ticket = relationship("Ticket", order_by=Ticket.id, \
     back_populates="event",cascade="all, delete, delete-orphan")
