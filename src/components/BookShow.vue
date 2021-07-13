@@ -1,6 +1,11 @@
 <template>
 
     <div v-if="hasCodes">
+    <ion-card-header>
+      <ion-card-subtitle>Deine Codes</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
     <ul class="list">
       <li v-for="item in getCodes"  :key="item.qrsrc" class="listItem">
             <h2 class="qrlabel">{{item.title}}</h2>
@@ -13,10 +18,13 @@
             >
       </li>
     </ul>
+    </ion-card-content>
     </div>
     <div v-else>
-      <h1 class="headline">Du hast noch keine Codes</h1>
+    <ion-card-header>
+      <ion-card-subtitle>Du hast noch keine Codes</ion-card-subtitle>
       Buche eine Veranstaltung ...
+    </ion-card-header>
     </div>
 
 </template>

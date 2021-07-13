@@ -58,9 +58,10 @@
         -->
       </div>
       <div v-else> 
-        <h2>Nichts ausgewählt!</h2>
-        Bitte wähle zuerst eine Veranstaltung aus.
-      </div>
+    <ion-card-header>
+      <ion-card-subtitle>Bitte wähle zuerst eine Veranstaltung aus.</ion-card-subtitle>
+    </ion-card-header>
+    </div>
       <!-- optionally display url query parameter (see router/index.js)
       <div>Query: {{query}}</div>
       -->
@@ -77,7 +78,7 @@
 
 <script lang="js">
 import { IonPage, IonButton, IonHeader, 
-  IonToolbar, IonTitle, 
+  IonToolbar, IonTitle, IonCardHeader, IonCardSubtitle,
   IonContent,IonCard, IonCardContent,
   IonList, IonItem, IonLabel,
   modalController } from '@ionic/vue';
@@ -125,7 +126,7 @@ export default  defineComponent ({
       payInvoice : "Inv1234",
     }
   },
-  components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm, Paypal },
+  components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm, IonCardHeader, IonCardSubtitle, Paypal },
   methods: {
     async costUpdate(e,t) {
       console.log("Costupdate",e,t)

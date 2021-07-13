@@ -1,16 +1,13 @@
 <template>
     <ion-card>
     <ion-card-header>
-      <ion-card-title>Lerninseln</ion-card-title>
       <ion-card-subtitle>Eine Initiative der Stadt Karlsruhe</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
-        Die Idee der „Lerninseln“ ist es, diese Orte in einer interaktiven Karte von Karlsruhe zu
-        verorten und sichtbar zu machen. Schulische, sowie außerschulische Lernorte aufzuzeigen, die
+        Die Idee der „Lerninseln“ ist es, schulische sowie außerschulische Lernorte aufzuzeigen, die
         die unterschiedlichste Angebote machen und das Lernen in der „realen Welt“ ermöglichen.
-        Vor allem im MINT-Bereich gibt es bereits zahlreiche Initiativen und Lernorte in Karlsruhe, die
-        durch die interaktive Karte deutlich sichtbarer und besser gefunden werden können.
+        Diese Orte werden in einer interaktiven Karte sichtbar und zugänglich gemacht. 
         <div>
           <a href="https://lerninseln.ok-lab-karlsruhe.de" target=_blank>Lerninseln Webseite</a>
         </div>
@@ -24,13 +21,13 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle,  } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 
 export default defineComponent ({
   name: "IntroText",
-  components: { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle },
+  components: { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle,  },
 
 });
 </script>

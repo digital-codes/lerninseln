@@ -17,11 +17,8 @@
         <ion-card-title>Deine QR Codes</ion-card-title>
       </ion-card-header>
       -->
-      <ion-card-content>
-
         <BookShow></BookShow>
 
-      </ion-card-content>
       </ion-card>
 
     </ion-content>
@@ -30,11 +27,11 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonCard, IonCardContent  } from '@ionic/vue';
+import { IonPage,  IonTitle, IonContent,IonCard } from '@ionic/vue';
 import BookShow from '@/components/BookShow.vue';
 
 export default  {
   name: 'Codes',
-  components: { BookShow, IonContent, IonPage,IonCard, IonCardContent  }
+  components: { BookShow, IonPage,IonCard,   }
 }
 </script>

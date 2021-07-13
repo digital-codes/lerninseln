@@ -16,6 +16,8 @@
     <LoginForm></LoginForm>
     -->
 
+    <IntroSlides></IntroSlides>
+
     <Providers></Providers>
 
 
@@ -31,6 +33,7 @@ import { defineComponent } from 'vue';
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 //import LoginForm from '@/components/LoginForm.vue';
 import IntroText from '@/components/IntroText.vue';
+import IntroSlides from '@/components/IntroSlides.vue';
 import Providers from '@/components/Providers.vue';
 
 // load all data from server and write to database
@@ -50,7 +53,7 @@ const { App } = Plugins;
 export default  defineComponent ({
   name: 'Intro',
   components: { //LoginForm, 
-    IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,
+    IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IntroSlides
   },
   data: function() {
     return {
