@@ -13,13 +13,6 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 export default class DataStorage {
 
     private static storage: Storage;
-    /*
-    const storage = new Storage({
-      name: '__lerninseln',
-      driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
-    })
-    */
-
     private static instance: DataStorage;
 
     static async getInstance() {
@@ -27,7 +20,7 @@ export default class DataStorage {
         console.log("New DS instance")
         DataStorage.instance = new DataStorage();
         DataStorage.storage = new Storage({
-          name: '__lerninseln',
+          name: '__lerninseln', // name is not used for native DB ???
           driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
         })
         await DataStorage.storage.defineDriver(CordovaSQLiteDriver)
@@ -41,7 +34,8 @@ export default class DataStorage {
           console.log("Error datastore")
           console.log("Creating new DataStore")
           await DataStorage.storage.create();
-          await DataStorage.storage.clear()
+          // FIXME check if clear needed!
+          //await DataStorage.storage.clear()
           await DataStorage.storage.set("magic",1)
         }
       } else {

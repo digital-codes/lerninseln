@@ -88,15 +88,15 @@ export default defineComponent({
     buy() {
       router.push("/shop")
     },
-    select(e) {
+    async select(e) {
       const item = this.items.find(i => i.id ==e)
       console.log("Checked: ",item.id, item.checked)
       if (item.checked) {
         //this.filter = item.id
-        this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
+        await this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
       } else {
         //this.filter = 0;
-        this.store.commit(MUTATIONS.RESET_EVENT);
+        await this.store.commit(MUTATIONS.RESET_EVENT);
       }
     },
   },
@@ -123,7 +123,7 @@ export default defineComponent({
     }
     this.items = validItems
     
-    this.store.commit(MUTATIONS.RESET_EVENT)
+    await this.store.commit(MUTATIONS.RESET_EVENT)
     //console.log("befMount: ",items,validItems)
   },
   computed: {

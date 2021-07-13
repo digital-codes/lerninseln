@@ -96,8 +96,24 @@ import DataFetch from "../services/fetch";
 import { useStore, Selection, Identity, MUTATIONS, ACTIONS } from '../services/quickStore';
 
 
+// load all data from server and write to database
+import DataStorage from "../services/dstore";
+
+
 export default defineComponent ({
   name: "OrderForm",
+  watch: {
+    '$route' (to, from) {
+    //console.log('Rout update2',to,from);
+      if (to.path == "/shop") {
+        console.log('Now on shop');
+        const id = this.store.state.identity
+        console.log("store id id:", id,id.email,id.pwd)
+        //this.checkId().then(console.log("Checked"))
+        }
+      }
+  },
+
   components: {
     IonItem, IonLabel, IonInput, 
     //IonCardSubtitle, IonCardTitle ,
@@ -111,13 +127,30 @@ export default defineComponent ({
     return {
       formValues: {checked:0},
       df:"",
+      ds:"",
       payload: {},
       showSubscription: true,
       message: "",
       messagePos: "middle",
+      update:0,
     }
   },
   methods:{
+    async checkId() {
+        const db = await DataStorage.getInstance()
+        const idString = await db.getItem("identity") || "[]"
+        console.log("DB id:", idString)
+        const fetch = await DataFetch.getInstance()
+        const posting = {request:9,payload:{text:"CheckID identity: " + idString}}
+        await fetch.post(posting)
+        const id = JSON.parse(idString)
+        if (id.email > "") {
+          await this.store.commit(MUTATIONS.SET_ID,id)
+          this.formValues.email = id.email
+          this.formValues.checked = 1
+          this.update++
+        }
+    },
     async closeMsg() {
       this.msgOpenRef = false
     },
@@ -141,7 +174,7 @@ export default defineComponent ({
         return
       }
       purchase.email = email
-      this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
+      await this.store.commit(MUTATIONS.SET_PURCHASE,purchase)
       // DON'T: this.store.state.purchase.email = email
       console.log("Signup. Checked is ",this.formValues.checked)
       const posting = {request:1,payload:{
@@ -227,8 +260,11 @@ export default defineComponent ({
           "email": this.store.state.purchase.email,
           "pwd": result.payload.pwd
         }
-        this.store.commit(MUTATIONS.SET_ID,id)
+        await this.store.commit(MUTATIONS.SET_ID,id)
+        await this.ds.setItem("identity",JSON.stringify(id))
+        await this.df.post({request:9,payload:{text:"id set to : " + JSON.stringify(id)}})
         console.log("New ID:", id)
+        console.log("New ID from DS:", await this.ds.getItem("identity") || "")
       }
 
       this.payload.status = 1 // after validation
@@ -238,14 +274,23 @@ export default defineComponent ({
   },
   async beforeMount(){
     this.df = await DataFetch.getInstance()
+    this.ds = await DataStorage.getInstance()
   },
-  mounted() {
+  async mounted() {
     //const signupForm = document.getElementById('signup-form');
     // use vue refs method to access the form instance
     const signupForm = this.$refs.orderForm
     signupForm.addEventListener('submit', this.processSignupForm);
     // FIXME set email form id store, if exists
+    // const id = this.store.state.identity
     const id = this.store.state.identity
+    /*
+    const fetch = await DataFetch.getInstance()
+    const posting = {request:9,payload:{text:"Current identity: " + JSON.stringify(id)}}
+    await fetch.post(posting)
+    */
+    //const idString = await this.ds.getItem("id") || "[]"
+    //const id = JSON.parse(idString)
     if (id.email > "") {
       this.formValues.email = id.email
       this.formValues.checked = 1

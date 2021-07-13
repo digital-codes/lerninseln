@@ -58,7 +58,7 @@ export default  {
   name: 'Map',
   components: {  IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, },
   async beforeMount() {
-    this.store.commit(MUTATIONS.RESET_EVENT);
+    await this.store.commit(MUTATIONS.RESET_EVENT);
   },
   setup() {
     const store = useStore();

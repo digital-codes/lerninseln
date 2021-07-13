@@ -61,7 +61,7 @@ export default  defineComponent ({
     } 
   },
   async beforeMount() {
-    console.log("QR length:", this.$store.state.qrcode.length)
+    console.log("QR length:", this.store.state.qrcode.length)
 
     this.df = await DataFetch.getInstance()
     this.ds = await DataStorage.getInstance()
@@ -72,10 +72,12 @@ export default  defineComponent ({
     const dbMagic = await this.ds.getItem("magic")
     if ((dbMagic || 0) == 0) {
       console.log("Problem with DataStore")
-      console.log("Magic set")
+      console.log("Magic not set")
     } else {
       console.log("Datastore verified")
 
+      let posting = {request:9,payload:{text:"Datastore OK"}}
+      await this.df.post(posting)
       // load data
       const tables = ["config","provider","event","ticket","feature","category","audience"]
       for (const ti in tables) {
@@ -85,17 +87,35 @@ export default  defineComponent ({
         //console.log("Table ",t,": ",result)
         await this.ds.setItem(t, JSON.stringify(result))
       }
+      // try to load id
+      const idString = await this.ds.getItem("identity") || ""
+      //console.log("ID from db: ",dbId)
+      if (idString.length > 0) {
+        const dbId = JSON.parse(idString)
+        const id = {
+          "email": dbId.email,
+          "pwd": dbId.pwd
+        }
+        posting = {request:9,payload:{text:"Identity: valid"}}
+        await this.df.post(posting)
+        //console.log("Saving id: ",id)
+        await this.store.commit(MUTATIONS.SET_ID,id)
+        //console.log("Store id: ",this.store.state.identity)
+
+      }
 
     }
 
   },
   setup() {
+    const store = useStore();
     const ionRouter = useIonRouter();
     useBackButton(-1, () => {
       if (!ionRouter.canGoBack()) {
         App.exitApp();
       }
     });
+    return { store};
   }
 })
 
