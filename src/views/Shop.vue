@@ -156,6 +156,7 @@ export default  defineComponent ({
           console.log("Event: ",event)
           const qr = {}
           qr.qrsrc = result.data.qr
+          qr.ticket = result.data.event.ticket
           qr.title = result.data.event.name
           qr.date = result.data.event.date
           qr.time = result.data.event.time

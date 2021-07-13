@@ -452,6 +452,7 @@ function purchaseTicket($ticket,$email,$label){
     $d["date"] = $event["date"];
     $d["time"] = $event["time"];
     $d["count"] = $pcnt;
+    $d["ticket"] = $ticket;
     $d["location1"] = $event["location1"];
     $d["location2"] = $event["location2"];
 
@@ -593,6 +594,8 @@ switch ($meth) {
                 //$result = array("data" => $r["data"],"status" => $r["status"],"text" => $r["text"]);
                 $result = array("status" => $r["status"],"text" => $r["text"],"code" => $r["code"]);
                 break;
+            // ---------------------------------------------------
+            // ---------------------------------------------------
             case 2:
                 if (!(array_key_exists("ticket", $payload))
                 || !(array_key_exists("email", $payload))
@@ -657,6 +660,8 @@ switch ($meth) {
                     "pwd" => $r["pwd"],
                     "status" => RESERVATION_STATUS["GOOD"]);
                 break;
+            // ---------------------------------------------------
+            // ---------------------------------------------------
             case 9:  // remote log
                 if (!(array_key_exists("text", $payload))) {
                     mlog("Req 9 keys missing");
@@ -670,6 +675,8 @@ switch ($meth) {
                 break;
 
     
+            // ---------------------------------------------------
+            // ---------------------------------------------------
             default:
                 mlog("Invalid request");
                 $result = array("data" => array(),"text" => REASON["REQ"],"status" => 0);
