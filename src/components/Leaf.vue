@@ -8,12 +8,20 @@
     @update:center="centerUpdate"
     @update:zoom="zoomUpdate"
   >
-
+<!--
  <l-tile-layer 
         :url="url" 
         :attribution="attribution"
   >
   </l-tile-layer>
+-->
+
+ <l-tile-layer 
+        :url="stl3" 
+        :attribution="attr3"
+  >
+  </l-tile-layer>
+
 
   <!--
   <l-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng"
@@ -49,6 +57,10 @@ import { LMap, LGeoJson,LMarker, LPopup, LTileLayer, LIcon,  } from "@vue-leafle
 import { defineComponent } from 'vue';
 
 import { useStore, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
+
+// https://github.com/leaflet-extras/leaflet-providers
+//import "leaflet-providers/leaflet-providers.js";
+//http://maps.stamen.com/#terrain/12/37.7706/-122.3782
 
 // storage 
 /*
@@ -98,6 +110,7 @@ export default defineComponent ({
       //center2: geojsonOptions.latlng(49.004,  8.403),
       //center: this.geojsonOptions.latlng(49.004,  8.403),
       center: [49.004,  8.403],
+      //url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -115,6 +128,12 @@ export default defineComponent ({
       },
       ds: "",
       updated: 0,
+      stl1: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png",
+      stl2: "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
+      stl3: "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
+      attr1: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+      attr2: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+      attr3: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',
     };
   },
   computed: {
@@ -198,7 +217,13 @@ export default defineComponent ({
     //const { map, marker, tileLayer, markerLayer, LayerGroup, latLng } = await import("leaflet/dist/leaflet-src.esm");
     const { latLng } = await import("leaflet/dist/leaflet-src.esm");
     //const { LMarker, LPopup, LTileLayer } = await import("leaflet/dist/leaflet-src.esm");
-
+    /*
+    const providers = await import("leaflet-providers/leaflet-providers.js")
+    const stl = new providers.TileLayer("Stamen.Watercolor")
+    console.log("Stamen:",stl)
+    this.stl = stl
+    //LMap.addLayer(stamenLayer);
+    */
     const kaLat = {
       "center": 49.004,
       "min": 48.96,
