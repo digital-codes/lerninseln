@@ -21,3 +21,9 @@ Event Info: modal on event
 
 ## Tools
 bgpip.php: remember to change init file location on server
+
+## Android development
+Webview with Chromium and USB:
+chrome://inspect/#devices
+see https://developer.chrome.com/docs/devtools/remote-debugging/
+

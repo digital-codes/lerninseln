@@ -23,7 +23,7 @@ import { IonSlides, IonSlide } from '@ionic/vue';
 
 import { IonImg,  } from '@ionic/vue';
 
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 
 // maybe check https://thewebdev.info/2021/01/10/add-a-swiper-carousel-into-a-vue-3-app-with-swiper-6/
@@ -32,20 +32,20 @@ import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: "IntroSlides",
+  watch: {
+  '$route' (to, from) {
+    //console.log('Rout update2',to,from);
+    if (to.path == "/intro") {
+      console.log('Now on intro');
+      if (this.sliderLoaded)
+        this.$refs.slider.$el.startAutoplay().then(() => {console.log("Autoplay started")})
+      }
+    }
+  },
   components: { IonSlides, IonSlide, IonImg },
   data : function() {
     return {
-        slideOpts : {
-          initialSlide: 0,
-          // multiple per view
-          //slidesPerView: 2,
-          spaceBetween: 20,
-          speed: 1200,
-          //watchSlidesProgress: true,
-          autoplay: true, // 2500
-          loop: false,
-        },
-        swiper:""
+        sliderLoaded:false,
     }
   },
   methods: {
@@ -59,18 +59,20 @@ export default defineComponent({
       console.log("Next:",event)
     }
     */
-    async slidesLoaded(event) {
+    async slidesLoaded() {
       console.log("Slides Loaded") //,event.target)
-      console.log("Options",this.slideOpts) //,event.target)
-
-      const swiper = await this.$refs.slider.$el.getSwiper()
+      // autoplay is set on option, don't need to do this here again
+      //await this.$refs.slider.$el.startAutoplay()
+      //await this.$refs.slider.$el.lockSwipes(true)
+      this.sliderLoaded = true
+      /*
       console.log("Swiper",swiper)
       const index = await this.$refs.slider.$el.getActiveIndex()
-      console.log("Indexr",index)
-      await this.$refs.slider.$el.slideTo(2)
-      await this.$refs.slider.$el.startAutoplay()
+      console.log("Index",index)
+      //await this.$refs.slider.$el.slideTo(2)
+      */
+      // await this.$refs.slider.$el.startAutoplay()
 
-      this.swiper = swiper
 
       
       /*
@@ -87,9 +89,17 @@ export default defineComponent({
     },
   },
   setup(){
-    const myslides = ref(null)
-
-      return {myslides}
+    const slideOpts = {
+          initialSlide: 0,
+          // multiple per view
+          //slidesPerView: 2,
+          spaceBetween: 20,
+          speed: 1200,
+          //watchSlidesProgress: true,
+          autoplay: true, // 2500
+          loop: false,
+        }
+      return {slideOpts}
     }
 });
 
