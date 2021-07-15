@@ -18,6 +18,8 @@ import { defineComponent } from 'vue';
 
 import VueApexCharts from "vue3-apexcharts";
 
+const ranks = ["Neuling","Mittelfeld","Top 10","Number One"]
+
 export default defineComponent ({
   name: "ScoreSheet",
   components: {
@@ -27,22 +29,38 @@ export default defineComponent ({
     return {
       series: [
         {
-          name: 'sales',
-          data: [3,4,5,5,7,7,9,11,23],
+          name: 'Angebote',
+          data: [12,15,15],
         },
         {
-          name: 'sales1',
-          data: [40,35,50,49,60,70,91,125,200],
+          name: 'Buchungen',
+          data: [20,30,35],
+        },
+        {
+          name: 'Bewertungen',
+          data: [10,20,30],
+        },
+        {
+          name: 'Dein Status',
+          data: [1,2,2],
         },
       ],
       type: "bar",
       options : {
         xaxis: {
-          categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+          categories: ["Mai","Juni","Juli"],
+          labels: {
+            style: {
+              colors: '#000000',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 600,
+            }
+          },
         },
         yaxis: [
         {
-          opposite: true,
+          opposite: false,
           axisTicks: {
             show: true,
           },
@@ -53,16 +71,22 @@ export default defineComponent ({
           labels: {
             style: {
               colors: '#000000',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
             }
           },
           title: {
-            text: "Right side",
+            text: "Angebote",
             style: {
               color: '#ff0000',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
             }
           },
           tooltip: {
-            enabled: true
+            enabled: false
           }
         },
         {
@@ -76,29 +100,103 @@ export default defineComponent ({
           labels: {
             style: {
               colors: '#000000',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
             }
           },
           title: {
-            text: "Left side",
+            text: "Buchungen",
             style: {
               color: '#00ff00',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
             }
           },
           tooltip: {
-            enabled: true
+            enabled: false
+          }
+        },
+        {
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: '#0000ff'
+          },
+          labels: {
+            style: {
+              colors: '#000000',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
+            }
+          },
+          title: {
+            text: "Bewertungen",
+            style: {
+              color: '#0000ff',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
+            }
+          },
+          tooltip: {
+            enabled: false
+          }
+        },
+        {
+          opposite: true,
+          tickAmount: 4,
+          //min: 3,
+          max: 4,
+          axisTicks: {
+            show: false,
+          },
+          axisBorder: {
+            show: true,
+            color: '#00ffff'
+          },
+          labels: {
+            formatter: (value: any) => { return ranks[value - 1] },
+            style: {
+              colors: '#000000',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
+            }
+          },
+          title: {
+            text: "Dein Status",
+            rotate: 90,
+            style: {
+              color: '#00ffff',
+              fontSize: '1em',
+              fontFamily: 'sans-serif',
+              fontWeight: 400,
+            }
+          },
+          tooltip: {
+            enabled: false
           }
         },
         ],
         // https://apexcharts.com/docs/colors/
-        colors: ['#ff0000', '#00ff00'], // global for series
+        colors: ['#ff0000', '#00ff00','#0000ff',"#00ffff"], // global for series
         /* 
         fill: {
           colors: ['#ff0000', '#00ff00'] // bars, lines ...
         },
         */
         dataLabels: {
-          style: {
-            colors: ['#000000', '#000000',]
+          enabledOnSeries: [0,1,2],
+          style:{
+            colors: ['#000000', '#000000','#000000',"#000000"],
+            fontSize: "1em",
+            fontFamily: 'sans-serif',
+            fontWeight: 400,
           }
         },
         responsive: [
