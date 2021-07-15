@@ -1,9 +1,11 @@
 <template>
 
+  <h3>Score Sheet</h3>
   <!--
   <apexchart width="500" :type="type" :options="options" :series="series"></apexchart>
   -->
-  <apexchart width="100%" :type="type" :options="options" :series="series"></apexchart>
+  <apexchart  width="100%"  :type="type" :options="options" :series="series"></apexchart>
+
 </template>
 
 <script lang="ts">
@@ -11,10 +13,15 @@
 import { defineComponent } from 'vue';
 
 // https://apexcharts.com/docs/vue-charts/
-// local import not working. maybe check vue documentation
+// local import working, see axample at https://apexcharts.com/vue-chart-demos/bar-charts/grouped/
+
+import VueApexCharts from "vue3-apexcharts";
 
 export default defineComponent ({
   name: "ScoreSheet",
+  components: {
+      apexchart: VueApexCharts,
+  },
   data () {
     return {
       series: [
@@ -32,9 +39,36 @@ export default defineComponent ({
         xaxis: {
           categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
         },
+        // https://apexcharts.com/docs/colors/
+        colors: ['#F44336', '#E91E63'], // global for series
+        /* 
+        fill: {
+          colors: ['#F44336', '#E91E63'] // bars, lines ...
+        },
+        */
+        dataLabels: {
+          style: {
+            colors: ['#000000', '#000000',]
+          }
+        },
         responsive: [
           {
             breakpoint: 600,
+            height: "400px",
+            options: {
+              plotOptions: {
+                bar: {
+                  horizontal: true
+                }
+              },
+              legend: {
+                position: "bottom"
+              }
+            }
+          },
+          {
+            breakpoint: 400,
+            height: "300px",
             options: {
               plotOptions: {
                 bar: {
@@ -56,4 +90,6 @@ export default defineComponent ({
 </script>
 
 <style scoped>
+
+
 </style>

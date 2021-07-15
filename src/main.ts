@@ -58,17 +58,10 @@ const store = createStore({
 
 import { store, key } from './services/quickStore'
 
-import VueApexCharts from "vue3-apexcharts";
-
-
-// --------------------
-//   .use(VueApexCharts)
-
 
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
-  .use(VueApexCharts)
   .use(store, key);
   
 router.isReady().then(() => {
