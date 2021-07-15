@@ -4,7 +4,9 @@
   <!--
   <apexchart width="500" :type="type" :options="options" :series="series"></apexchart>
   -->
-  <apexchart  width="100%"  :type="type" :options="options" :series="series"></apexchart>
+  <div  class="chart">
+  <apexchart  width="100%" height="100%" :type="type" :options="options" :series="series"></apexchart>
+  </div>
 
 </template>
 
@@ -209,7 +211,7 @@ export default defineComponent ({
         responsive: [
           {
             breakpoint: 600,
-            height: "400px",
+            //height: "400px", // height set by container
             options: {
               plotOptions: {
                 bar: {
@@ -224,7 +226,7 @@ export default defineComponent ({
           },
           {
             breakpoint: 400,
-            height: "300px",
+            //height: "300px",
             options: {
               plotOptions: {
                 bar: {
@@ -246,6 +248,29 @@ export default defineComponent ({
 </script>
 
 <style scoped>
+
+.chart {
+  height: 500px;
+}
+
+@media only screen and (max-width: 400px) {
+  .chart {
+    height: 300px;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .chart {
+    height: 400px;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .chart {
+    height: 500px;
+  }
+}
+
 
 
 </style>

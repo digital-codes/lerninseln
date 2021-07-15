@@ -66,12 +66,34 @@
       <ion-card>
       <ion-card-header>
       <ion-card-subtitle>Zur Buchung wähle bitte eine Veranstaltung aus unseren Angeboten</ion-card-subtitle>
-      Du siehts im Diagramm, was im letzten Monat los war und Deinen Status. Für die Top-10 winkt eine Verlosung!
+      Im Diagram siehst Du, was im letzten Monat los war und Deinen Status. Für die Top-10 winkt eine Verlosung!
       </ion-card-header>
 
       <ion-card-content>
 
         <ScoreSheet></ScoreSheet>
+
+
+      <p class="scoreHdr">
+      Wie kommst Du in die <span style="font-weight:800">Top 10</span>?
+      </p>
+      <p class="scoreInfo">
+      <ul>
+        <li>
+        Du besuchst Veranstaltungen, die Du über die App gebucht hast.
+        </li>
+        <li>
+        Du bewertest die besuchten Veranstaltungen.
+        </li>
+        <li>
+        Du bewertest die App im Store.
+        </li>
+        <li>
+        Du teilst die App mit einer <em>Empfehlung</em>.
+        </li>
+      </ul>
+
+      </p>
 
       </ion-card-content>
 
