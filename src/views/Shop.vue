@@ -61,6 +61,7 @@
     <ion-card-header>
       <ion-card-subtitle>Bitte wähle zuerst eine Veranstaltung aus.</ion-card-subtitle>
     </ion-card-header>
+    <ScoreSheet />
     </div>
       <!-- optionally display url query parameter (see router/index.js)
       <div>Query: {{query}}</div>
@@ -84,6 +85,7 @@ import { IonPage, IonButton, IonHeader,
   modalController } from '@ionic/vue';
 
 import QrModal from '@/components/QrModal.vue'
+import ScoreSheet from '@/components/ScoreSheet.vue'
 
 import Event from '@/components/Event.vue';
 import Ticket from '@/components/Ticket.vue';
@@ -126,7 +128,9 @@ export default  defineComponent ({
       payInvoice : "Inv1234",
     }
   },
-  components: { Event, IonContent, IonPage,IonCard, IonCardContent, Ticket, OrderForm, IonCardHeader, IonCardSubtitle, Paypal },
+  components: { Event, IonContent, IonPage,IonCard, IonCardContent, 
+  Ticket, OrderForm,  Paypal, ScoreSheet, 
+  IonCardHeader, IonCardSubtitle, },
   methods: {
     async costUpdate(e,t) {
       console.log("Costupdate",e,t)
