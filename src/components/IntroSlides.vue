@@ -42,6 +42,9 @@ import { IonImg, IonSlides, IonSlide } from '@ionic/vue';
 
 import { defineComponent } from 'vue';
 
+// test, see https://next.router.vuejs.org/api/#onbeforerouteleave
+import { onBeforeRouteLeave,  onBeforeRouteUpdate } from "vue-router";
+
 // vue swiper 
 import SwiperCore, { Navigation, Pagination, Autoplay, EffectFlip } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -144,19 +147,39 @@ export default defineComponent({
     },
   },
   setup(){
-    const slideOpts = {
-          initialSlide: 0,
-          // multiple per view
-          //slidesPerView: 2,
-          spaceBetween: 20,
-          speed: 1200,
-          //watchSlidesProgress: true,
-          autoplay: true, // 2500
-          loop: false,
+    /* update not working
+      onBeforeRouteUpdate(function (to, from, next) {
+        debugger
+      console.log("Update: ",to,from)
+      next()
+      })
+      */
+      onBeforeRouteLeave(function (to, from, next) {
+        console.log("Leaving ...")
+        /* no access to this here!
+        if (this.sliderLoaded) {
+          this.$refs.slider.$el.stopAutoplay().
+            then(() => {
+              console.log("Autoplay stopped")
+              next(false)
+            }
+          )
         }
-      const ionSwiper = true
-      return { slideOpts, ionSwiper }
-    }
+        */
+      })
+      const slideOpts = {
+            initialSlide: 0,
+            // multiple per view
+            //slidesPerView: 2,
+            spaceBetween: 20,
+            speed: 1200,
+            //watchSlidesProgress: true,
+            autoplay: true, // 2500
+            loop: false,
+      }
+    const ionSwiper = true
+    return { slideOpts, ionSwiper }
+  }
 });
 
 </script>
