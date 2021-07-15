@@ -47,6 +47,11 @@ export default defineComponent ({
       ],
       type: "bar",
       options : {
+        chart: {
+          toolbar: {
+            show: false,
+          },
+        },
         xaxis: {
           categories: ["Juli"],
           labels: {
