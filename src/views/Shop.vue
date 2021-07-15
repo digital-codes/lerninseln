@@ -10,10 +10,10 @@
     </ion-header>
     -->
     <ion-content >
-      <ion-card>
-      <ion-card-content>
 
       <div v-if="hasEvent">
+      <ion-card>
+      <ion-card-content>
         <Event 
           :date=getEvent.date 
           :time=getEvent.time 
@@ -56,20 +56,33 @@
         </Ion-button>
         </ion-item>
         -->
-      </div>
-      <div v-else> 
-    <ion-card-header>
-      <ion-card-subtitle>Bitte wähle zuerst eine Veranstaltung aus.</ion-card-subtitle>
-    </ion-card-header>
-    <ScoreSheet />
-    </div>
-      <!-- optionally display url query parameter (see router/index.js)
-      <div>Query: {{query}}</div>
-      -->
 
       </ion-card-content>
 
       </ion-card>
+
+      </div>
+      <div v-else> 
+      <ion-card>
+      <ion-card-header>
+      <ion-card-subtitle>Zur Buchung wähle bitte eine Veranstaltung aus unseren Angeboten</ion-card-subtitle>
+      Du siehts im Diagramm, was im letzten Monat los war und Deinen Status. Für die Top-10 winkt eine Verlosung!
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ScoreSheet></ScoreSheet>
+
+      </ion-card-content>
+
+      </ion-card>
+
+    </div>
+
+      <!-- optionally display url query parameter (see router/index.js)
+      <div>Query: {{query}}</div>
+      -->
+
 
 
     </ion-content>

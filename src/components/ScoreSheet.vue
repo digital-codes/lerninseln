@@ -1,6 +1,6 @@
 <template>
 
-  <h3>Score Sheet</h3>
+
   <!--
   <apexchart width="500" :type="type" :options="options" :series="series"></apexchart>
   -->
@@ -30,25 +30,25 @@ export default defineComponent ({
       series: [
         {
           name: 'Angebote',
-          data: [12,15,15],
+          data: [15],
         },
         {
           name: 'Buchungen',
-          data: [20,30,35],
+          data: [35],
         },
         {
           name: 'Bewertungen',
-          data: [10,20,30],
+          data: [30],
         },
         {
           name: 'Dein Status',
-          data: [1,2,2],
+          data: [2],
         },
       ],
       type: "bar",
       options : {
         xaxis: {
-          categories: ["Mai","Juni","Juli"],
+          categories: ["Juli"],
           labels: {
             style: {
               colors: '#000000',
@@ -60,13 +60,13 @@ export default defineComponent ({
         },
         yaxis: [
         {
-          opposite: false,
+          show: false,
           axisTicks: {
             show: true,
           },
           axisBorder: {
             show: true,
-            color: '#ff0000'
+            color: '#00ffff'
           },
           labels: {
             style: {
@@ -79,7 +79,7 @@ export default defineComponent ({
           title: {
             text: "Angebote",
             style: {
-              color: '#ff0000',
+              color: '#00ffff',
               fontSize: '1em',
               fontFamily: 'sans-serif',
               fontWeight: 400,
@@ -90,6 +90,7 @@ export default defineComponent ({
           }
         },
         {
+          show: false,
           axisTicks: {
             show: true,
           },
@@ -119,6 +120,7 @@ export default defineComponent ({
           }
         },
         {
+          show: false,
           axisTicks: {
             show: true,
           },
@@ -157,7 +159,7 @@ export default defineComponent ({
           },
           axisBorder: {
             show: true,
-            color: '#00ffff'
+            color: '#ff0000'
           },
           labels: {
             formatter: (value: any) => { return ranks[value - 1] },
@@ -172,7 +174,7 @@ export default defineComponent ({
             text: "Dein Status",
             rotate: 90,
             style: {
-              color: '#00ffff',
+              color: '#ff0000',
               fontSize: '1em',
               fontFamily: 'sans-serif',
               fontWeight: 400,
@@ -184,7 +186,7 @@ export default defineComponent ({
         },
         ],
         // https://apexcharts.com/docs/colors/
-        colors: ['#ff0000', '#00ff00','#0000ff',"#00ffff"], // global for series
+        colors: ['#00ffff', '#00ff00','#0000ff',"#ff0000"], // global for series
         /* 
         fill: {
           colors: ['#ff0000', '#00ff00'] // bars, lines ...
@@ -221,7 +223,7 @@ export default defineComponent ({
             options: {
               plotOptions: {
                 bar: {
-                  horizontal: true
+                  horizontal: false
                 }
               },
               legend: {
