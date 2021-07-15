@@ -1,6 +1,6 @@
 <template>
 
-  <ion-slides v-if="ionSwiper" ref="slider" class="slides" pager="true" 
+  <ion-slides ref="slider" class="slides" pager="false" 
     :options="slideOpts" 
     @ionSlidesDidLoad="slidesLoaded" 
     >
@@ -15,25 +15,6 @@
     </ion-slide>
   </ion-slides>
 
-  <!-- vue swiper   -->
-  
-  <swiper v-if="!ionSwiper" class="vueslides" v-bind="updated"
-    :slides-per-view="1"
-    :space-between="50"
-    :autoplay="{delay: 2500, disableOnInteraction: false,}"
-    :pagination="{ clickable: false }"
-    :loop="false"
-    :centeredSlides="true"
-    @swiper="onSwiper"
-    @slideChange="onSlideChange"
-    effect='slide'
-    enabled="true"
-  >
-    <swiper-slide class="vueslide" ><img class="frontImg" src="/assets/img/front/1.jpg"></swiper-slide>
-    <swiper-slide class="vueslide"><img class="frontImg" src="/assets/img/front/2.jpg"></swiper-slide>
-    <swiper-slide class="vueslide"><img class="frontImg" src="/assets/img/front/3.jpg"></swiper-slide>
-  </swiper>
-
 
 </template>
 
@@ -41,19 +22,6 @@
 import { IonImg, IonSlides, IonSlide } from '@ionic/vue';
 
 import { defineComponent } from 'vue';
-
-// test, see https://next.router.vuejs.org/api/#onbeforerouteleave
-import { onBeforeRouteLeave,  onBeforeRouteUpdate } from "vue-router";
-
-// vue swiper 
-import SwiperCore, { Navigation, Pagination, Autoplay, EffectFlip } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/vue';
- // install Swiper modules
-SwiperCore.use([Navigation, Pagination, Autoplay, EffectFlip]);
-
-  // Import Swiper styles
-//import 'swiper/swiper.scss';
-import 'swiper/swiper-bundle.min.css';
 
 
 // maybe check https://thewebdev.info/2021/01/10/add-a-swiper-carousel-into-a-vue-3-app-with-swiper-6/
@@ -76,37 +44,18 @@ export default defineComponent({
         if (this.sliderLoaded) {
           this.$refs.slider.$el.startAutoplay().then(() => {console.log("Autoplay started")})
         }
-        if (this.swiper) {
-          console.log('swiper init');
-          this.swiper.init()
-          this.swiper.autoplay.stop()
-          const s = this.swiper
-          setTimeout(() => {s.autoplay.start()},1000)
-          //this.swiper.autoplay.start()
-          this.updated++
-        }
       }
     }
   },
   components: { IonSlides, IonSlide, IonImg,
-   Swiper, SwiperSlide,
   },
   data : function() {
     return {
         sliderLoaded:false,
-        swiper: null,
         updated: 0,
     }
   },
   methods: {
-      onSwiper(swiper) {
-        console.log("Swiper set")
-        this.swiper = swiper
-      },
-      onSlideChange() {
-        console.log('slide change');
-      },
-
     /*
     @ionSlideDidChange="slideChanged($event)" 
     @ionSlideNextStart="slideNext($event)" 
@@ -147,26 +96,6 @@ export default defineComponent({
     },
   },
   setup(){
-    /* update not working
-      onBeforeRouteUpdate(function (to, from, next) {
-        debugger
-      console.log("Update: ",to,from)
-      next()
-      })
-      */
-      onBeforeRouteLeave(function (to, from, next) {
-        console.log("Leaving ...")
-        /* no access to this here!
-        if (this.sliderLoaded) {
-          this.$refs.slider.$el.stopAutoplay().
-            then(() => {
-              console.log("Autoplay stopped")
-              next(false)
-            }
-          )
-        }
-        */
-      })
       const slideOpts = {
             initialSlide: 0,
             // multiple per view
@@ -177,8 +106,7 @@ export default defineComponent({
             autoplay: true, // 2500
             loop: false,
       }
-    const ionSwiper = true
-    return { slideOpts, ionSwiper }
+    return { slideOpts}
   }
 });
 

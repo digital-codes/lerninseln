@@ -11,12 +11,19 @@
    
     <ion-content :fullscreen="true" >
     
+     <ion-loading
+    :is-open="loading"
+    cssClass="loader-class"
+    message="Bitte warten..."
+    >
+    </ion-loading>
+
     <IntroText></IntroText>
     <!--    
     <LoginForm></LoginForm>
     -->
 
-    <IntroSlides></IntroSlides>
+    <IntroSlides v-if="!loading" ></IntroSlides>
 
     <Providers></Providers>
 
@@ -28,7 +35,9 @@
 <script lang="js">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,  } from '@ionic/vue';
 
-import { defineComponent } from 'vue'; 
+import { IonLoading } from '@ionic/vue';
+
+import { defineComponent, ref } from 'vue'; 
 
 //import ExploreContainer from '@/components/ExploreContainer.vue';
 //import LoginForm from '@/components/LoginForm.vue';
@@ -53,7 +62,7 @@ const { App } = Plugins;
 export default  defineComponent ({
   name: 'Intro',
   components: { //LoginForm, 
-    IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IntroSlides
+    IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IntroSlides,IonLoading
   },
   data: function() {
     return {
@@ -106,11 +115,15 @@ export default  defineComponent ({
         //console.log("Store id: ",this.store.state.identity)
 
       }
+      console.log("Loading complete")
+      this.loading = false
 
     }
 
   },
   setup() {
+    const loading = ref(true);
+
     const store = useStore();
     const ionRouter = useIonRouter();
     useBackButton(-1, () => {
@@ -118,8 +131,16 @@ export default  defineComponent ({
         App.exitApp();
       }
     });
-    return { store};
+    return { store, loading};
   }
 })
 
 </script>
+
+<style scoped>
+
+.loader-class {
+
+}
+
+</style>
