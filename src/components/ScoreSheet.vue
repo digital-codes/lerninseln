@@ -7,6 +7,10 @@
   <div  class="chart">
   <apexchart  width="100%" height="100%" :type="type" :options="options" :series="series"></apexchart>
   </div>
+  <h3>Dein Status</h3>
+  <div  class="score">
+  <apexchart  width="100%" height="100%" type="scatter" :options="scoreOptions" :series="score"></apexchart>
+  </div>
 
 </template>
 
@@ -17,6 +21,7 @@ import { defineComponent } from 'vue';
 // https://apexcharts.com/docs/vue-charts/
 // local import working, see axample at https://apexcharts.com/vue-chart-demos/bar-charts/grouped/
 // https://apexcharts.com/javascript-chart-demos/mixed-charts/multiple-yaxis/
+// https://apexcharts.com/react-chart-demos/scatter-charts/scatter-images/
 
 import VueApexCharts from "vue3-apexcharts";
 
@@ -29,6 +34,88 @@ export default defineComponent ({
   },
   data () {
     return {
+      score: [
+        {
+          name: 'Neuling',
+          data: [
+            [0.2,0],
+          ]
+        },
+        {
+          name: 'Mittelfeld',
+          data: [
+          ],
+        },
+        {
+          name: 'Top 10',
+          data: [
+            [2,0]
+          ],
+        },
+        {
+          name: 'Number One',
+          data: [
+            [2.8,0]
+          ],
+        },
+      ],
+      scoreOptions: {
+        title: {
+          text: "Score",
+        },
+        chart: {
+          toolbar: {
+            show: false,
+          }
+        },
+        grid: {
+          show: false,
+        },
+        animations: {
+          enabled: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+        toolbar: {
+          show: false
+        },
+        stroke: {
+          width: 0,
+        },
+        xaxis: {
+          tickAmount: 4,
+          min:0,
+          max:3
+        },
+        yaxis: {
+          show: false,
+          forceNiceScale: true,
+        },
+        labels: ['', '', '', ''],
+        legend: {
+          show: false,
+        },
+        fill: {
+          type: 'image',
+          opacity: 1,
+          image: {
+            src: [
+              '/assets/img/scores/snail.svg',
+              '/assets/img/scores/dog.svg',
+              '/assets/img/scores/horse.svg',
+              '/assets/img/scores/unicorn.svg',
+              ],
+            width: 100,
+            height: 100,
+          }
+        },
+        markers: {
+          shape:"circle",
+          size: 50,
+        },
+      },
+      //
       series: [
         {
           name: 'Angebote',
@@ -41,10 +128,6 @@ export default defineComponent ({
         {
           name: 'Bewertungen',
           data: [30],
-        },
-        {
-          name: 'Dein Status',
-          data: [2],
         },
       ],
       type: "bar",
@@ -156,6 +239,7 @@ export default defineComponent ({
             enabled: false
           }
         },
+        /*
         {
           opposite: true,
           tickAmount: 4,
@@ -191,6 +275,7 @@ export default defineComponent ({
             enabled: false
           }
         },
+        */
         ],
         // https://apexcharts.com/docs/colors/
         colors: ['#00ffff', '#00ff00','#0000ff',"#ff0000"], // global for series
@@ -248,6 +333,10 @@ export default defineComponent ({
 </script>
 
 <style scoped>
+
+.score {
+  height: 100px;
+}
 
 .chart {
   height: 500px;
