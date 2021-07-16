@@ -101,10 +101,10 @@ export default defineComponent ({
           opacity: 1,
           image: {
             src: [
-              '/assets/img/scores/snail.svg',
-              '/assets/img/scores/dog.svg',
-              '/assets/img/scores/horse.svg',
-              '/assets/img/scores/unicorn.svg',
+              '/assets/img/scores/snail.png',
+              '/assets/img/scores/dog.png',
+              '/assets/img/scores/horse.png',
+              '/assets/img/scores/unicorn.png',
               ],
             width: 100,
             height: 100,
