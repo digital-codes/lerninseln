@@ -12,6 +12,12 @@
   <apexchart  width="100%" height="100%" type="scatter" :options="scoreOptions" :series="score"></apexchart>
   </div>
 
+  <!--
+  <div  class="test">
+  <apexchart  width="100%" height="100%" type="scatter" :options="testOptions" :series="test"></apexchart>
+  </div>
+  -->
+  
 </template>
 
 <script lang="ts">
@@ -34,16 +40,78 @@ export default defineComponent ({
   },
   data () {
     return {
+      /*
+      test: [
+      {
+        name: "SAMPLE A",
+        data: [
+          [16.4, 5.4],
+          [21.7, 2],
+          [25.4, 3],
+          [19, 2],
+          [10.9, 1],
+          [13.6, 3.2],
+          [10.9, 7.4],
+          [10.9, 0],
+          [21.7, 1.8],
+          [27.1, 0],
+          [24.5, 0],
+          [27.1, 0],
+          [29.9, 1.5],
+          [27.1, 0.8],
+          [22.1, 2]
+        ]
+      }
+    ],
+
+      testOptions: {
+        tooltip: {
+            enabled: false,
+        },
+        chart: {
+          height: 350,
+          type: "scatter",
+          zoom: {
+            enabled: false,
+          },
+          animations: {
+            enabled: false,
+          }
+        },
+
+        xaxis: {
+          tickAmount: 10
+        },
+        yaxis: {
+          tickAmount: 7
+        },
+        markers: {
+          size: 25
+        },
+        fill: {
+          
+          type: "image",
+          opacity: 1.0,
+          image: {
+            src: ["/assets/img/scores/snail.svg"],
+            width: 50,
+            height: 50
+          }
+        }
+      },
+      */
+      // ------------------------
       score: [
         {
           name: 'Neuling',
           data: [
-            [0.2,0],
+            [.2,0],
           ]
         },
         {
           name: 'Mittelfeld',
           data: [
+            [1,0]
           ],
         },
         {
@@ -63,36 +131,55 @@ export default defineComponent ({
         title: {
           text: "Score",
         },
+        tooltip: {
+          enabled: false,
+        },
         chart: {
           toolbar: {
             show: false,
-          }
+          },
+          animations: {
+            enabled: false,
+          },
+          zoom: {
+            enabled: false,
+          },
         },
         grid: {
           show: false,
-        },
-        animations: {
-          enabled: false,
-        },
-        zoom: {
-          enabled: false,
-        },
-        toolbar: {
-          show: false
         },
         stroke: {
           width: 0,
         },
         xaxis: {
+          type: 'category',
+          categories: [],
+          overwriteCategories: ["a","B","c","d"],
+          tickPlacement: 'between',
           tickAmount: 4,
           min:0,
-          max:3
+          max:3,
+          position: 'bottom',
+          labels: {
+              show: false,
+          },
+          // no ticks without labels
+          /*
+           axisTicks: {
+            show: true,
+            borderType: 'solid',
+            color: '#ff0000',
+            height: 26,
+            offsetX: 0,
+            offsetY: 0
+           }
+        */
         },
         yaxis: {
           show: false,
           forceNiceScale: true,
         },
-        labels: ['', '', '', ''],
+        //labels: ["|","|","|","|"],
         legend: {
           show: false,
         },
@@ -106,13 +193,18 @@ export default defineComponent ({
               '/assets/img/scores/horse.png',
               '/assets/img/scores/unicorn.png',
               ],
-            width: 100,
-            height: 100,
+            width: 70,
+            height: 70,
           }
         },
         markers: {
           shape:"circle",
-          size: 50,
+          size: 35,
+          hover: {
+            sizeOffset: 0
+          },
+          showNullDataPoints: false,
+          offsetY: -30,
         },
       },
       //
@@ -333,6 +425,10 @@ export default defineComponent ({
 </script>
 
 <style scoped>
+
+.test {
+  height: 300px;
+}
 
 .score {
   height: 100px;
