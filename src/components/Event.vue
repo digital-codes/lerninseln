@@ -12,12 +12,32 @@
       </ion-label>
       <ion-label class="eventMore">
       <a href="https://www.cern.ch" target="_blank">Mehr ...</a>
+      <!--span @click="popState(true)" >Mehr ...</span-->
       </ion-label>
     </ion-item>
     <ion-item-divider>
       <ion-label  class="event"><p>{{text}}</p></ion-label>
     </ion-item-divider>
  </ion-item-group>
+
+  <!--
+ <ion-popover
+    :is-open="popOpen"
+    css-class="eventPop"
+    :translucent="true"
+    @didDismiss="popState(false)"
+  >
+    <Popover>
+    <iframe 
+      width="400px" 
+      height="40%" 
+      overflow="overflow-scroll" 
+      src="https://www.cern.ch" 
+      >
+      </iframe>
+    </Popover>
+  </ion-popover>
+  -->
 
   <!--
   <div>
@@ -27,9 +47,13 @@
   -->
 </template>
 
-<script> 
-import { IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel } from '@ionic/vue';
+<script lang="ts"> 
+import { IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel,
+  IonPopover,
+ } from '@ionic/vue';
 import { walk, warning, wifi, wine } from 'ionicons/icons';
+
+import Popver from './popover.vue'
 
 // could use thumbnails or avatars in place of icons.
 /*
@@ -46,8 +70,19 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: ['title','text',"date",'time','id','icon'],
-  components: {IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel},
+  components: {IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel,
+    },
+  data () {
+    return {
+      popOpen: false,
+    }
+  },
   methods: {
+    popState(v: boolean) {
+      this.popOpen = v
+      console.log("Close:",v)
+    },
+
     getIcon(){
       //console.log("Icon id:",parseInt(this.icon))
       switch (parseInt(this.icon)) {
@@ -80,6 +115,13 @@ h2 {
   padding-bottom: .2rem;
 }
 
+.eventPop {
+  width: 100%;
+}
+
+.popover-content {
+  width:600px;
+}
 .event {
   text-align: left;
   white-space: normal;
