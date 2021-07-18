@@ -7,7 +7,7 @@
   <div  class="chart">
   <apexchart  width="100%" height="100%" :type="type" :options="options" :series="series"></apexchart>
   </div>
-  
+
   <h3>Dein Status:</h3>
   <div class="scoreContainer">
   <ion-chip v-for="(score,id) in scores" :key="id" :disabled="score.disabled" 
@@ -18,6 +18,16 @@
     <ion-label class="scoreLabel" >{{score.label}}
     </ion-label>
   </ion-chip>
+
+ <ion-popover
+    :is-open="popOpen"
+    css-class="scorePop"
+    :translucent="true"
+    @didDismiss="popState(false)"
+  >
+    <Popover>{{scoreInfo}}</Popover>
+  </ion-popover>
+
   </div>
 
   
@@ -25,9 +35,10 @@
 
 <script lang="ts">
 
-import { IonItem, IonImg, IonLabel, IonChip } from '@ionic/vue';
+import { IonItem, IonImg, IonLabel, IonChip, IonPopover } from '@ionic/vue';
 
 import { defineComponent } from 'vue';
+import Popver from './popover.vue'
 
 // https://apexcharts.com/docs/vue-charts/
 // local import working, see axample at https://apexcharts.com/vue-chart-demos/bar-charts/grouped/
@@ -44,34 +55,50 @@ export default defineComponent ({
       apexchart: VueApexCharts, 
       IonImg, IonLabel, IonChip,
       //IonItem, 
+      IonPopover,
   },
   methods: {
-    scoreClicked(s: any) {
-      console.log("Clicked:",s)
+    popState(v: boolean) {
+      this.popOpen = v
+      if (!v) {
+        this.scoreInfo = ""
+        console.log("Close pop")
+      }
+    },
+    scoreClicked(i: number) {
+      console.log("Clicked:",i)
+      this.scoreInfo = this.scores[i].text
+      this.popState(true)
     },
   },
   data () {
     return {
+      popOpen: false,
+      scoreInfo: "",
       scores: [
         {
           icon: "/assets/img/scores/snail.png",
           label: "Neuling",
           disabled:"true",
+          text: "Du hast wohl grade erst angefangen. Mach ein paar Buchungen",
         },
         {
           icon: "/assets/img/scores/dog.png",
           label: "Mittelfeld",
           disabled:"false",
+          text: "Du hast schon einiges erreicht. Weiter so",
         },
         {
           icon: "/assets/img/scores/horse.png",
           label: "Top Ten",
           disabled:"true",
+          text: "Du bist in der Führungsgruppe. Schaffst Du den ersten Platz?",
         },
         {
           icon: "/assets/img/scores/unicorn.png",
           label: "Number One",
           disabled:"true",
+          text: "Ganz vorne! Glückwunsch.",
         },
       ],
       //
@@ -302,17 +329,35 @@ export default defineComponent ({
 }
 
 @media only screen and (max-width: 600px) {
+  /*
   .score {
     display:block;
   }
+.scoreLabel {
+  padding-left: 0;
+}
+*/
+.score {
+  height: 60px;
+}
 
 .scoreIcon {
   width: 50px;
   height: 50px;
   padding-left: .2em;
 }
-.scoreLabel {
-  padding-left: 0;
+
+.pos1 {
+  grid-column: 1 / span 2;
+}
+.pos2 {
+  grid-column: 3 / span 2;
+}
+.pos3 {
+  grid-column: 1 / span 2;
+}
+.pos4 {
+  grid-column: 3 / span 2;
 }
 
 }
