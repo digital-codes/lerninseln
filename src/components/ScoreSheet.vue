@@ -7,20 +7,25 @@
   <div  class="chart">
   <apexchart  width="100%" height="100%" :type="type" :options="options" :series="series"></apexchart>
   </div>
-  <h3>Dein Status</h3>
-  <div  class="score">
-  <apexchart  width="100%" height="100%" type="scatter" :options="scoreOptions" :series="score"></apexchart>
+  
+  <h3>Dein Status:</h3>
+  <div class="scoreContainer">
+  <ion-chip v-for="(score,id) in scores" :key="id" :disabled="score.disabled" 
+    :class="{score, pos1: id == 0, pos2: id == 1, pos3: id == 2, pos4: id == 3 }" 
+    @click="scoreClicked(id)">
+    <ion-img class="scoreIcon" :src="score.icon">
+    </ion-img>
+    <ion-label class="scoreLabel" >{{score.label}}
+    </ion-label>
+  </ion-chip>
   </div>
 
-  <!--
-  <div  class="test">
-  <apexchart  width="100%" height="100%" type="scatter" :options="testOptions" :series="test"></apexchart>
-  </div>
-  -->
   
 </template>
 
 <script lang="ts">
+
+import { IonItem, IonImg, IonLabel, IonChip } from '@ionic/vue';
 
 import { defineComponent } from 'vue';
 
@@ -36,177 +41,39 @@ const ranks = ["Neuling","Mittelfeld","Top 10","Number One"]
 export default defineComponent ({
   name: "ScoreSheet",
   components: {
-      apexchart: VueApexCharts,
+      apexchart: VueApexCharts, 
+      IonImg, IonLabel, IonChip,
+      //IonItem, 
+  },
+  methods: {
+    scoreClicked(s: any) {
+      console.log("Clicked:",s)
+    },
   },
   data () {
     return {
-      /*
-      test: [
-      {
-        name: "SAMPLE A",
-        data: [
-          [16.4, 5.4],
-          [21.7, 2],
-          [25.4, 3],
-          [19, 2],
-          [10.9, 1],
-          [13.6, 3.2],
-          [10.9, 7.4],
-          [10.9, 0],
-          [21.7, 1.8],
-          [27.1, 0],
-          [24.5, 0],
-          [27.1, 0],
-          [29.9, 1.5],
-          [27.1, 0.8],
-          [22.1, 2]
-        ]
-      }
-    ],
-
-      testOptions: {
-        tooltip: {
-            enabled: false,
-        },
-        chart: {
-          height: 350,
-          type: "scatter",
-          zoom: {
-            enabled: false,
-          },
-          animations: {
-            enabled: false,
-          }
-        },
-
-        xaxis: {
-          tickAmount: 10
-        },
-        yaxis: {
-          tickAmount: 7
-        },
-        markers: {
-          size: 25
-        },
-        fill: {
-          
-          type: "image",
-          opacity: 1.0,
-          image: {
-            src: ["/assets/img/scores/snail.svg"],
-            width: 50,
-            height: 50
-          }
-        }
-      },
-      */
-      // ------------------------
-      score: [
+      scores: [
         {
-          name: 'Neuling',
-          data: [
-            [.2,0],
-          ]
+          icon: "/assets/img/scores/snail.png",
+          label: "Neuling",
+          disabled:"true",
         },
         {
-          name: 'Mittelfeld',
-          data: [
-            [1,0]
-          ],
+          icon: "/assets/img/scores/dog.png",
+          label: "Mittelfeld",
+          disabled:"false",
         },
         {
-          name: 'Top 10',
-          data: [
-            [2,0]
-          ],
+          icon: "/assets/img/scores/horse.png",
+          label: "Top Ten",
+          disabled:"true",
         },
         {
-          name: 'Number One',
-          data: [
-            [2.8,0]
-          ],
+          icon: "/assets/img/scores/unicorn.png",
+          label: "Number One",
+          disabled:"true",
         },
       ],
-      scoreOptions: {
-        title: {
-          text: "Score",
-        },
-        tooltip: {
-          enabled: false,
-        },
-        chart: {
-          toolbar: {
-            show: false,
-          },
-          animations: {
-            enabled: false,
-          },
-          zoom: {
-            enabled: false,
-          },
-        },
-        grid: {
-          show: false,
-        },
-        stroke: {
-          width: 0,
-        },
-        xaxis: {
-          type: 'category',
-          categories: [],
-          overwriteCategories: ["a","B","c","d"],
-          tickPlacement: 'between',
-          tickAmount: 4,
-          min:0,
-          max:3,
-          position: 'bottom',
-          labels: {
-              show: false,
-          },
-          // no ticks without labels
-          /*
-           axisTicks: {
-            show: true,
-            borderType: 'solid',
-            color: '#ff0000',
-            height: 26,
-            offsetX: 0,
-            offsetY: 0
-           }
-        */
-        },
-        yaxis: {
-          show: false,
-          forceNiceScale: true,
-        },
-        //labels: ["|","|","|","|"],
-        legend: {
-          show: false,
-        },
-        fill: {
-          type: 'image',
-          opacity: 1,
-          image: {
-            src: [
-              '/assets/img/scores/snail.png',
-              '/assets/img/scores/dog.png',
-              '/assets/img/scores/horse.png',
-              '/assets/img/scores/unicorn.png',
-              ],
-            width: 70,
-            height: 70,
-          }
-        },
-        markers: {
-          shape:"circle",
-          size: 35,
-          hover: {
-            sizeOffset: 0
-          },
-          showNullDataPoints: false,
-          offsetY: -30,
-        },
-      },
       //
       series: [
         {
@@ -242,6 +109,7 @@ export default defineComponent ({
         },
         yaxis: [
         {
+          //opposite: true,
           show: false,
           axisTicks: {
             show: true,
@@ -311,6 +179,7 @@ export default defineComponent ({
             color: '#0000ff'
           },
           labels: {
+            //formatter: (value: any) => { return ranks[value - 1] },
             style: {
               colors: '#000000',
               fontSize: '1em',
@@ -331,43 +200,6 @@ export default defineComponent ({
             enabled: false
           }
         },
-        /*
-        {
-          opposite: true,
-          tickAmount: 4,
-          //min: 3,
-          max: 4,
-          axisTicks: {
-            show: false,
-          },
-          axisBorder: {
-            show: true,
-            color: '#ff0000'
-          },
-          labels: {
-            formatter: (value: any) => { return ranks[value - 1] },
-            style: {
-              colors: '#000000',
-              fontSize: '1em',
-              fontFamily: 'sans-serif',
-              fontWeight: 400,
-            }
-          },
-          title: {
-            text: "Dein Status",
-            rotate: 90,
-            style: {
-              color: '#ff0000',
-              fontSize: '1em',
-              fontFamily: 'sans-serif',
-              fontWeight: 400,
-            }
-          },
-          tooltip: {
-            enabled: false
-          }
-        },
-        */
         ],
         // https://apexcharts.com/docs/colors/
         colors: ['#00ffff', '#00ff00','#0000ff',"#ff0000"], // global for series
@@ -426,12 +258,37 @@ export default defineComponent ({
 
 <style scoped>
 
-.test {
-  height: 300px;
-}
-
 .score {
   height: 100px;
+  text-align: center;
+}
+
+.scoreContainer {
+  width:100%;
+  display: grid;
+}
+
+.pos1 {
+  grid-column: 1;
+}
+.pos2 {
+  grid-column: 2;
+}
+.pos3 {
+  grid-column: 3;
+}
+.pos4 {
+  grid-column: 4;
+}
+
+.scoreIcon {
+  width: 80px;
+  height: 80px;
+  padding-left: 1em;
+}
+
+.scoreLabel {
+  padding-left: .5em;
 }
 
 .chart {
@@ -444,10 +301,27 @@ export default defineComponent ({
   }
 }
 
+@media only screen and (max-width: 600px) {
+  .score {
+    display:block;
+  }
+
+.scoreIcon {
+  width: 50px;
+  height: 50px;
+  padding-left: .2em;
+}
+.scoreLabel {
+  padding-left: 0;
+}
+
+}
+
 @media only screen and (min-width: 600px) {
   .chart {
     height: 400px;
   }
+
 }
 
 @media only screen and (min-width: 1000px) {
