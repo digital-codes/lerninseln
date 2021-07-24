@@ -8,6 +8,7 @@
     <ion-card-content>
     <ul class="list">
       <li v-for="item in getCodes"  :key="item.qrsrc" class="listItem">
+
             <h2 class="qrlabel">{{item.title}}</h2>
             <p> {{ item.date }}  {{ item.time }} </p>
             <p> {{ item.provider }} {{ item.count }} Person(en)</p>
@@ -16,6 +17,28 @@
               :class="{ 'qrcode': isZoomed }"
               @click="zoomQr(item)" 
             >
+
+            
+            <hr>
+            Item: {{ item.title }}
+
+          <!--
+                props: ["title","date","time","provider","id","count","qrscr","event"],
+            -->
+            <QrShow 
+              :id="item.id" 
+              :date="item.date" 
+              :time="item.time" 
+              :provider="item.provider" 
+              :event="item.event" 
+              :count="item.count" 
+              :qrsrc="item.qrsrc" 
+              :title="item.title" 
+              >
+              </QrShow>
+
+            <p>new</p>
+            <hr>
       </li>
     </ul>
     </ion-card-content>
@@ -31,7 +54,6 @@
 
 <script> 
 
-import { modalController } from '@ionic/vue';
 import { defineComponent,  } from 'vue'; // ref for modal
 
 // load all data from server and write to database
@@ -40,11 +62,14 @@ import DataStorage from "../services/dstore";
 
 import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 
+import { modalController } from '@ionic/vue';
 import QrModal from '@/components/QrModal.vue'
+
+import QrShow from '@/components/QrShow.vue'
 
 
 export default defineComponent({
-  components: {  },
+  components: { QrShow,  },
   data: function() {
     return {
       isZoomed: false,
