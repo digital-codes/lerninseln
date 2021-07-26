@@ -17,8 +17,8 @@
 -->
 
  <l-tile-layer 
-        :url="stl3" 
-        :attribution="attr3"
+        :url="stl1" 
+        :attribution="attr1"
   >
   </l-tile-layer>
 
@@ -128,9 +128,11 @@ export default defineComponent ({
       },
       ds: "",
       updated: 0,
+      stl0: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       stl1: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png",
       stl2: "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
       stl3: "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
+      attr0: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       attr1: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
       attr2: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
       attr3: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',
