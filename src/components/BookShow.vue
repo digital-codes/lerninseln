@@ -9,21 +9,8 @@
     <ul class="list">
       <li v-for="item in getCodes"  :key="item.qrsrc" class="listItem">
 
-            <h2 class="qrlabel">{{item.title}}</h2>
-            <p> {{ item.date }}  {{ item.time }} </p>
-            <p> {{ item.provider }} {{ item.count }} Person(en)</p>
-            <img 
-              :src="item.qrsrc"  
-              :class="{ 'qrcode': isZoomed }"
-              @click="zoomQr(item)" 
-            >
-
-            
-            <hr>
-            Item: {{ item.title }}
-
           <!--
-                props: ["title","date","time","provider","id","count","qrscr","event"],
+                props: ["title","date","time","provider","id","count","qrscr","event","info"],
             -->
             <QrShow 
               :id="item.id" 
@@ -34,11 +21,9 @@
               :count="item.count" 
               :qrsrc="item.qrsrc" 
               :title="item.title" 
+              :info="item.info" 
               >
               </QrShow>
-
-            <p>new</p>
-            <hr>
       </li>
     </ul>
     </ion-card-content>
@@ -62,11 +47,31 @@ import DataStorage from "../services/dstore";
 
 import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 
-import { modalController } from '@ionic/vue';
-import QrModal from '@/components/QrModal.vue'
-
 import QrShow from '@/components/QrShow.vue'
 
+// define dummy code or note ...
+const DUMMY_CODE = true
+const DUMMY_ITEM = {
+  id: 1,
+  title:"Title",
+  provider: "Provider",
+  event:2,
+  date:"2021-12-31",
+  time:"12:00",
+  count:1,
+  info:"Dummy",
+  qrsrc:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAHqAQMAAADxo595AAAABlBMVEUAAAD///+l2Z/dAAAAAnRS\
+TlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAH4SURBVHic7dtLbsQgDIBhSzkAR+LqORIH\
+GIkJYPNIK2Uy4+x+FlFL+OjGAmxSyT81gcPhcDgcDofD4XA4HA6Hw+FwOBwO/5on0RbTlo+HSN7D\
+0b/L8au2DQ735fpOYn61oSJBXxx98xA43I83VOK1ztHGTH1w+LO8DN1F10s4/HG+2bYcyqIJhz/J\
+W2csjyZH0C5D4HAvLtpi0sidHtrgcF++vtFl8Tgb7icEh/vxGrQh9yi1A2JdL/P1Bg2Hf8f7gHE2\
+rBnJhystHH6X9804WLmvFv7imC1kONyX16Aty2JDpdxns/2/S8Phv/Jl/AhffZGz3XTA4d68Vlpq\
+lIq+HYWXc+TC4Q5cpluNCUmLZjjcnSdLN1r2Ma2XZY7wWv8WHO7Ct6wZiYWv7tclaFsyfJHLwOF3\
+uZ3+/uzIoxizajj8Z56stNxTkLZyaiDD4Q/wtelXyCL23UD/CQ535FrVs/rKS5Phfl68LrzA4Xd5\
+b2kNVTsvXmTQcPh9bh8KzNdo5dGu1pL97w8c7slHztGLzCNU0xqvcLgX1wAtv+2jyNc36HiaAw73\
+43arNl3j7nWKqy9e4PDveX+UMXq1oUPgcGfeOjX70AsNu+T4/FgIh3/ORVtM87JYu/SACIc78/sN\
+DofD4XA4HA6Hw+FwOBwOh8PhcDj8VnsDg+O/lIZXxKIAAAAASUVORK5CYII="
+}
 
 export default defineComponent({
   components: { QrShow,  },
@@ -76,38 +81,19 @@ export default defineComponent({
     }
   },
   methods:{
-    zoom(e) {
-      console.log(e)
-      this.isZoomed = !this.isZoomed
-      console.log("zoomed:",this.isZoomed)
-    },
-    async zoomQr(data) {
-      // see also https://stackoverflow.com/questions/65740559/cant-close-the-modal-in-ionic-vue-5-5-2
-      const modal = await modalController
-        .create({
-          component: QrModal,
-          cssClass: 'my-custom-class',
-          componentProps: {
-            title: data.title,
-            qrsrc:data.qrsrc,
-            date: data.date,
-            time: data.time,
-            count: data.count,
-            provider: data.provider,
-            info: ""
-          },
-        })
-      await modal.present()
-      await modal.onDidDismiss();
-      console.log('Modal dismissed');
-    },
   },
   computed: {
     hasCodes() {
-      return (this.store.state.qrcode.length > 0)
+      if (DUMMY_CODE)
+        return true
+      else
+        return (this.store.state.qrcode.length > 0)
     },
     getCodes() {
-      return this.store.state.qrcode
+      if (DUMMY_CODE)
+        return [DUMMY_ITEM]
+      else
+        return this.store.state.qrcode
     }
   },
   // store

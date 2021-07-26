@@ -1,8 +1,5 @@
 <template>
 
-    <h2>QrShow </h2>
-
-    code: {{ title }}
     <h2 class="qrlabel">{{title}}</h2>
     <p> {{ date }}  {{ time }} </p>
     <p> {{ provider }} {{ count }} Person(en)</p>
@@ -24,7 +21,7 @@ import QrModal from '@/components/QrModal.vue'
 
 export default defineComponent({
     name: "QrShow",
-    props: ["title","date","time","provider","id","count","qrsrc","event"],
+    props: ["title","date","time","provider","id","count","qrsrc","event","info"],
   components: {  },
   data: function() {
     return {
@@ -50,7 +47,7 @@ export default defineComponent({
             time: this.time,
             count: this.count,
             provider: this.provider,
-            info: ""
+            info: this.info,
           },
         })
       await modal.present()
