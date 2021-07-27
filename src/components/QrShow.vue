@@ -10,17 +10,22 @@
         @click="zoomQr()" 
     >
     <div class="qrscore">
+
       <div class="qrstars">
-      <ion-range min="0" max="5" step="1" snaps="true" disabled="true">
+      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" disabled="false" 
+        @ionChange="starsSelected($event)"
+        ref="stars"
+        >
        <ion-avatar class="smallStar" slot="start">
-          <img src="/assets/img/scores/star.png">
+          <img src="/assets/img/scores/star.svg">
         </ion-avatar>
        <ion-avatar class="bigStar" slot="end">
-          <img src="/assets/img/scores/star.png">
+          <img src="/assets/img/scores/star.svg">
         </ion-avatar>
       </ion-range>
-
       </div>
+
+      <!--
       <div class="qrpros">
        <ion-select name="pros" placeholder="Positiv" @ionChange="prosSelected($event)">
           <ion-select-option value="0">Nichts</ion-select-option>
@@ -39,6 +44,7 @@
           <ion-select-option value="4">Programm</ion-select-option>
         </ion-select>
       </div>
+      -->
     </div>
   </div>
 
@@ -46,7 +52,7 @@
 
 <script> 
 
-import { defineComponent,  } from 'vue'; // ref for modal
+import { defineComponent, ref } from 'vue'; // ref for modal
 
 import { modalController,IonSelect, IonSelectOption, IonRange, IonAvatar  } from '@ionic/vue';
 import QrModal from '@/components/QrModal.vue'
@@ -56,7 +62,7 @@ import QrModal from '@/components/QrModal.vue'
 export default defineComponent({
     name: "QrShow",
     props: ["title","date","time","provider","id","count","qrsrc","event","info"],
-  components: {IonSelect, IonSelectOption, IonRange,  IonAvatar },
+  components: { IonRange,  IonAvatar },
   data: function() {
     return {
       isZoomed: false,
@@ -65,10 +71,13 @@ export default defineComponent({
   methods:{
     prosSelected(e){
       console.log("Pros: ",e.target.value)
-      console.log("Event target: ",e.target)
     },
     consSelected(e){
       console.log("Cons: ",e.target.value)
+    },
+    starsSelected(e){
+      console.log("Stars: ",e.target.value)
+      //console.log("Event target: ",e.target)
     },
     zoom(e) {
       console.log(e)
@@ -121,11 +130,11 @@ export default defineComponent({
 
 }
 
-img {
-  width:64px;
-  height:64px;
-}
 
+.qrimg  {
+  max-width:96px;
+  max-height:96px;
+}
 
 h2 {
   padding-bottom: .2rem;
@@ -160,19 +169,20 @@ h2 {
 .qrscore {
   grid-column: 2 / span 2;
 }
+
 .qrstars {
   /*grid-column: 1 / span 2;*/
-  display: block;
+  /*display: block;*/
 }
 
-.smallStar img {
+.smallStar {
   width:32px;
   height:32px;
   margin-top:8px;
-  opacity: 50%;
+  opacity: 70 %;  /* problem on android ... translated to 1% */
 }
 
-.bigStar img{
+.bigStar {
   width:48px;
   height:48px;
 }
@@ -180,7 +190,10 @@ h2 {
 ion-range {
   padding:0;
   --knob-size: 20px;
+  /* same height as qrimg */
+  --height: 96px;
 }
+
 
 .qrpros {
   /*grid-column: 3;*/

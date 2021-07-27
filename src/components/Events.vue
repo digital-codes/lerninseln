@@ -36,6 +36,7 @@
           :text=item.provider 
           :id=item.id  
           :icon=item.category_id
+          :url=item.url 
           ></Event>
           <ion-checkbox class="eventCheck" 
             @ionChange="select(item.id)"
@@ -119,6 +120,7 @@ export default defineComponent({
       //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
       items[i].checked = 0
+      items[i].url = "https://www.cern.ch"
       validItems.push(items[i])
     }
     this.items = validItems

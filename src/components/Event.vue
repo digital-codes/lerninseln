@@ -10,8 +10,12 @@
       <div>{{date}}</div>
       <div>{{time}}</div>
       </ion-label>
+      <ion-label class="eventMore" @click="more">Mehr ...
+      <!--
       <ion-label class="eventMore">
+      <a @click="more">Mehr ...</a>
       <a href="https://www.cern.ch" target="_blank">Mehr ...</a>
+      -->
       <!--span @click="popState(true)" >Mehr ...</span-->
       </ion-label>
     </ion-item>
@@ -55,6 +59,10 @@ import { walk, warning, wifi, wine } from 'ionicons/icons';
 
 import Popver from './popover.vue'
 
+import { Plugins } from '@capacitor/core';
+const { Browser } = Plugins;
+
+
 // could use thumbnails or avatars in place of icons.
 /*
 https://ionicframework.com/docs/api/thumbnail
@@ -69,7 +77,7 @@ https://ionicframework.com/docs/api/avatar
 import { defineComponent } from 'vue'; 
 
 export default defineComponent({
-  props: ['title','text',"date",'time','id','icon'],
+  props: ['title','text',"date",'time','id','icon',"url"],
   components: {IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel,
     },
   data () {
@@ -82,7 +90,13 @@ export default defineComponent({
       this.popOpen = v
       console.log("Close:",v)
     },
-
+    more() {
+      try {
+        Browser.open({ 'url': this.url }).then((r: any) => {console.log("loaded:",r)})
+      } catch  {
+        console.log("No browser")
+      }
+    },
     getIcon(){
       //console.log("Icon id:",parseInt(this.icon))
       switch (parseInt(this.icon)) {
@@ -145,6 +159,13 @@ h2 {
   text-align: left;
   /* with position: fixed adjust size */
   display: inline-block;
+  text-decoration-line: underline;
+  text-decoration-color: blue;
+  color: blue;
+}
+
+.eventMore:hover {
+    cursor:pointer;
 }
 
 .footer {
