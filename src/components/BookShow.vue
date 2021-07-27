@@ -6,12 +6,10 @@
     </ion-card-header>
 
     <ion-card-content>
+    <!--
     <ul class="list">
       <li v-for="item in getCodes"  :key="item.qrsrc" class="listItem">
 
-          <!--
-                props: ["title","date","time","provider","id","count","qrscr","event","info"],
-            -->
             <QrShow 
               :id="item.id" 
               :date="item.date" 
@@ -26,6 +24,24 @@
               </QrShow>
       </li>
     </ul>
+    -->
+          <!--
+                props: ["title","date","time","provider","id","count","qrscr","event","info"],
+            -->
+            <QrShow v-for="item in getCodes"  :key="item.id" class="listItem"  
+              :id="item.id" 
+              :date="item.date" 
+              :time="item.time" 
+              :provider="item.provider" 
+              :event="item.event" 
+              :count="item.count" 
+              :qrsrc="item.qrsrc" 
+              :title="item.title" 
+              :info="item.info" 
+              >
+              </QrShow>
+
+
     </ion-card-content>
     </div>
     <div v-else>

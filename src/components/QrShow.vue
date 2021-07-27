@@ -1,13 +1,46 @@
 <template>
 
+  <div class="qrContainer">
     <h2 class="qrlabel">{{title}}</h2>
-    <p> {{ date }}  {{ time }} </p>
-    <p> {{ provider }} {{ count }} Person(en)</p>
+    <p class="qrinfo"> {{ date }}  {{ time }} </p>
+    <p class="qrinfo"> {{ provider }} {{ count }} Person(en)</p>
     <img 
         :src="qrsrc"  
-        :class="{ 'qrcode': isZoomed }"
+        :class=" {'qrcode': isZoomed, 'qrimg':true } "
         @click="zoomQr()" 
     >
+    <div class="qrscore">
+      <div class="qrstars">
+      <ion-range min="0" max="5" step="1" snaps="true" disabled="true">
+       <ion-avatar class="smallStar" slot="start">
+          <img src="/assets/img/scores/star.png">
+        </ion-avatar>
+       <ion-avatar class="bigStar" slot="end">
+          <img src="/assets/img/scores/star.png">
+        </ion-avatar>
+      </ion-range>
+
+      </div>
+      <div class="qrpros">
+       <ion-select name="pros" placeholder="Positiv" @ionChange="prosSelected($event)">
+          <ion-select-option value="0">Nichts</ion-select-option>
+          <ion-select-option value="1">Team</ion-select-option>
+          <ion-select-option value="2">Raum</ion-select-option>
+          <ion-select-option value="3">Ausstattung</ion-select-option>
+          <ion-select-option value="4">Programm</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="qrcons">
+       <ion-select name="cons" disabled="true" placeholder="Negativ" @ionChange="consSelected($event)">
+          <ion-select-option value="0">Nichts</ion-select-option>
+          <ion-select-option value="1">Team</ion-select-option>
+          <ion-select-option value="2">Raum</ion-select-option>
+          <ion-select-option value="3">Ausstattung</ion-select-option>
+          <ion-select-option value="4">Programm</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+  </div>
 
 </template>
 
@@ -15,20 +48,28 @@
 
 import { defineComponent,  } from 'vue'; // ref for modal
 
-import { modalController } from '@ionic/vue';
+import { modalController,IonSelect, IonSelectOption, IonRange, IonAvatar  } from '@ionic/vue';
 import QrModal from '@/components/QrModal.vue'
+
 
 
 export default defineComponent({
     name: "QrShow",
     props: ["title","date","time","provider","id","count","qrsrc","event","info"],
-  components: {  },
+  components: {IonSelect, IonSelectOption, IonRange,  IonAvatar },
   data: function() {
     return {
       isZoomed: false,
     }
   },
   methods:{
+    prosSelected(e){
+      console.log("Pros: ",e.target.value)
+      console.log("Event target: ",e.target)
+    },
+    consSelected(e){
+      console.log("Cons: ",e.target.value)
+    },
     zoom(e) {
       console.log(e)
       this.isZoomed = !this.isZoomed
@@ -99,4 +140,76 @@ h2 {
   width:100%;
 }
 
+/* eval */
+.qrContainer {
+  width:100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  text-align:left;
+}
+.qrlabel {
+  grid-column: 1 / span 2;
+}
+.qrinfo {
+  grid-column: 1 / span 2;
+}
+.qrimg {
+  grid-column: 1;
+}
+.qrscore {
+  grid-column: 2 / span 2;
+}
+.qrstars {
+  /*grid-column: 1 / span 2;*/
+  display: block;
+}
+
+.smallStar img {
+  width:32px;
+  height:32px;
+  margin-top:8px;
+  opacity: 50%;
+}
+
+.bigStar img{
+  width:48px;
+  height:48px;
+}
+
+ion-range {
+  padding:0;
+  --knob-size: 20px;
+}
+
+.qrpros {
+  /*grid-column: 3;*/
+  /*
+  display: inline-block;
+  margin-right: 1rem;
+  */
+}
+.qrcons {
+  /*grid-column: 4;*/
+  /*
+  display: inline-block;
+  */
+}
+
+ion-select {
+  /* Applies to the value and placeholder color 
+  color: #545ca7;
+
+  /* Set a different placeholder color 
+  --placeholder-color: #971e49;
+
+  /* Set full opacity on the placeholder 
+  --placeholder-opacity: 1;
+  */
+  --padding-start:0;
+  --padding-top:0;
+  --padding-bottom:0;  
+}
+
 </style>
+
