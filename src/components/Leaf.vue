@@ -72,6 +72,8 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 // database
 import DataStorage from "../services/dstore";
 
+import { Geolocation } from '@capacitor/geolocation';
+
 
 // ----------------------- 
 
@@ -178,6 +180,19 @@ export default defineComponent ({
       this.currentCenter = center;
     },
     async initialize() {
+      const geoLoc = await Geolocation.getCurrentPosition();
+      console.log('Current position:', geoLoc);
+      const pnt =  [geoLoc.coords.latitude,geoLoc.coords.longitude]
+      //console.log(ll)
+      const content = '<div class="popInfo"><h3>Du bist hier!</h3></div>'
+      const iconUrl = "/assets/img/map/bulb.png"
+      const iconSize = [48,48]
+      const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}
+      this.markers.push({"id":0,"latlng":pnt,
+      "content":content,
+      "iconOptions":iconOptions})
+
+
       const storedProviders = await this.ds.getItem("provider") || "[]"
       const pp = JSON.parse(storedProviders)
       if (pp.length > 0) {

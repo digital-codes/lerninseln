@@ -10,6 +10,7 @@
       <div>{{date}}</div>
       <div>{{time}}</div>
       </ion-label>
+      <div v-if="isMobile()">
       <ion-label class="eventMore" @click="more">Mehr ...
       <!--
       <ion-label class="eventMore">
@@ -18,6 +19,12 @@
       -->
       <!--span @click="popState(true)" >Mehr ...</span-->
       </ion-label>
+      </div>
+      <div v-else>
+      <ion-label class="eventMore" >
+      <a href="https://www.cern.ch" target="_blank">Mehr ...</a>
+      </ion-label>
+      </div>
     </ion-item>
     <ion-item-divider>
       <ion-label  class="event"><p>{{text}}</p></ion-label>
@@ -62,6 +69,8 @@ import Popver from './popover.vue'
 import { Plugins } from '@capacitor/core';
 const { Browser } = Plugins;
 
+import { useStore, Device, MUTATIONS } from '../services/quickStore';
+
 
 // could use thumbnails or avatars in place of icons.
 /*
@@ -90,6 +99,10 @@ export default defineComponent({
       this.popOpen = v
       console.log("Close:",v)
     },
+    isMobile(){
+      console.log("Platform: ",this.store.state.device.platform)
+      return this.store.state.device.platform != "web"
+    },
     more() {
       try {
         Browser.open({ 'url': this.url }).then((r: any) => {console.log("loaded:",r)})
@@ -112,7 +125,9 @@ export default defineComponent({
     }
   },
   setup() {
+    const store = useStore();
     return {
+      store,
       walk, 
       wifi,
       warning,

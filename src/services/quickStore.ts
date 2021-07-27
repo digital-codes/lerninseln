@@ -6,6 +6,7 @@ import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store, MutationTree, } from 'vuex';
 
 // interfaces for our State and todos
+export type Device = { platform: string};
 export type Identity = { email: string; pwd: string};
 export type Selection = { eventId: number; providerId: number};
 export type Purchase = { ticketId: number; email: string; count: number };
@@ -13,11 +14,12 @@ export type Qrcode = {
    "event": string;"date": string; "time": string; 
     "count": number;"location": string;"qrsrc": string;
   };
-export type State = { selection: Selection; purchase: Purchase; qrcode: Qrcode[]; identity: Identity };
+export type State = { device: Device; selection: Selection; purchase: Purchase; qrcode: Qrcode[]; identity: Identity };
 
 
 export const key: InjectionKey<Store <State> > = Symbol();
 const state: State = {
+  device: {platform: "web"},  // default to web
   selection: {eventId: 0, providerId: 0},
   purchase: {ticketId: 0, email: "", count: 0},
   qrcode: [],
@@ -30,6 +32,7 @@ const state: State = {
  * Mutations must be synchronous
  */
 export const enum MUTATIONS {
+  SET_DEVICE = 'SET_DEVICE',
   RESET_ID = 'RESET_ID',
   SET_ID = 'SET_ID',
   RESET_EVENT = 'RESET_EVENT',
@@ -49,6 +52,9 @@ const mutations: MutationTree<State> = {
     [MUTATIONS.RESET_EVENT](state) {
       state.selection.eventId = 0;
       state.selection.providerId = 0;
+    },
+    [MUTATIONS.SET_DEVICE](state, device: Device ) {
+      state.device = device
     },
     [MUTATIONS.SET_ID](state, identity: Identity ) {
       state.identity = identity

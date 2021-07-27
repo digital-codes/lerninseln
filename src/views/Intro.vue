@@ -57,6 +57,8 @@ import { useBackButton, useIonRouter } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
 const { App } = Plugins;
 
+import { Device } from '@capacitor/device';
+
 
 
 export default  defineComponent ({
@@ -77,6 +79,20 @@ export default  defineComponent ({
 
     this.df = await DataFetch.getInstance()
     this.ds = await DataStorage.getInstance()
+
+    // device info
+    try {
+      const info = await Device.getInfo()  
+      const platform = info.platform.toLowerCase()
+      console.log("Info: ",info)
+      console.log("Platform: ",platform)
+      if ((platform == "android") || (platform == "ios")) {
+        await this.store.commit(MUTATIONS.SET_DEVICE, {platform:platform})
+        console.log("Mobile device detected: ",platform)
+      }
+    } catch {
+      console.log("No device info")
+    }
     /* test 
     const x = await this.df.getTable("ticket");
     console.log("X:",x)
@@ -88,8 +104,10 @@ export default  defineComponent ({
     } else {
       console.log("Datastore verified")
 
+      /* remote log
       let posting = {request:9,payload:{text:"Datastore OK"}}
       await this.df.post(posting)
+      */
       // load data
       const tables = ["config","provider","event","ticket","feature","category","audience"]
       for (const ti in tables) {
@@ -108,8 +126,10 @@ export default  defineComponent ({
           "email": dbId.email,
           "pwd": dbId.pwd
         }
+        /* remote log
         posting = {request:9,payload:{text:"Identity: valid"}}
         await this.df.post(posting)
+        */
         //console.log("Saving id: ",id)
         await this.store.commit(MUTATIONS.SET_ID,id)
         //console.log("Store id: ",this.store.state.identity)

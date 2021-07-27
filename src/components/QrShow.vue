@@ -58,7 +58,6 @@ import { modalController,IonSelect, IonSelectOption, IonRange, IonAvatar  } from
 import QrModal from '@/components/QrModal.vue'
 
 
-
 export default defineComponent({
     name: "QrShow",
     props: ["title","date","time","provider","id","count","qrsrc","event","info"],
@@ -106,20 +105,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    console.log("Props:",props)
-    return {
-      /*
-      item: {
-            title: props.title,
-            qrsrc: props.qrsrc,
-            date: props.date,
-            time: props.time,
-            count: props.count,
-            provider: props.provider,
-            info: ""
-      }
-      */
-    }
+    //console.log("Props:",props)
   },
 }); 
 </script>
