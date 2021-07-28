@@ -6,7 +6,7 @@
     <p class="qrinfo"> {{ provider }} {{ count }} Person(en)</p>
     <img 
         :src="qrsrc"  
-        :class=" {'qrcode': isZoomed, 'qrimg':true } "
+        :class=" {'qrcode': isZoomed, 'qrthumb':true } "
         @click="zoomQr()" 
     >
     <div class="qrscore">
@@ -134,8 +134,7 @@ export default defineComponent({
 
 }
 
-
-.qrimg  {
+.qrthumb  {
   max-width:96px;
   max-height:96px;
 }
@@ -147,10 +146,6 @@ h2 {
 .qrcode {
   width:90%;
   height:90%;
-}
-
-.w {
-  width:100%;
 }
 
 /* eval */
@@ -167,11 +162,12 @@ h2 {
 .qrinfo {
   grid-column: 1 / span 2;
 }
-.qrimg {
+.qrthumb {
   grid-column: 1;
 }
 .qrscore {
   grid-column: 2 / span 2;
+  height: 96px; /* same as qrthumb *"
 }
 
 .qrstars {
@@ -198,8 +194,8 @@ h2 {
 ion-range {
   padding:0;
   --knob-size: 20px;
-  /* same height as qrimg */
-  --height: 48px;
+  /* same height as qrthumb */
+  --height: 54px;
 }
 
 
