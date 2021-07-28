@@ -22,7 +22,7 @@
       </div>
       <div v-else>
       <ion-label class="eventMore" >
-      <a href="https://www.cern.ch" target="_blank">Mehr ...</a>
+      <a :href="url" target="_blank">Mehr ...</a>
       </ion-label>
       </div>
     </ion-item>

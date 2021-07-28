@@ -38,6 +38,7 @@
               :qrsrc="item.qrsrc" 
               :title="item.title" 
               :info="item.info" 
+              :url="item.url" 
               >
               </QrShow>
 
@@ -75,6 +76,7 @@ const DUMMY_ITEM = {
   date:"2021-12-31",
   time:"12:00",
   count:1,
+  url:"https://www.cern.ch",
   info:"Dummy",
   qrsrc:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAHqAQMAAADxo595AAAABlBMVEUAAAD///+l2Z/dAAAAAnRS\
 TlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAH4SURBVHic7dtLbsQgDIBhSzkAR+LqORIH\

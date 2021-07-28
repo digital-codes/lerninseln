@@ -303,6 +303,8 @@ class Event(Base):
     time = Column(String(255), nullable=False)
     avail = Column(Integer, nullable=False) 
     
+    url = Column(String(255))
+    
     location1 = Column(String(255))
     location2 = Column(String(255))
 
@@ -318,7 +320,7 @@ class Event(Base):
 
     #----------------------------------------------------------------------
     def __init__(self, title, date, time, avail,
-                 location1, location2, provider, feature, audience):
+                 location1, location2, provider, url, feature, audience):
         """"""
         self.title = title
         self.date = date
@@ -327,6 +329,7 @@ class Event(Base):
         self.location1 = location1
         self.location2 = location2
         self.provider_id = provider
+        self.url = url
         self.category_id = feature
         self.audience_id = audience
 
@@ -627,6 +630,7 @@ for i,f in enumerate(FEATURE_TITLES):
 
 EVENT_TITLES = ["Schach","Musik","Sport","Robots"]
 event_ids = []
+event_url = "https://www.cern.ch" # dummy
 for e in range(20):
     event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
                   "2021-" + f'{random.randint(6,12):02}' + "-" + f'{random.randint(1,28):02}',
@@ -635,6 +639,7 @@ for e in range(20):
                   "Location 1 " + str(random.randint(1,10)),
                   "Location 2 " + str(random.randint(1,10)),
                   random.randint(1,50),
+                  event_url,
                   random.randint(1,3),
                   random.randint(1,3)
                   )

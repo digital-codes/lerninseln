@@ -120,7 +120,6 @@ export default defineComponent({
       //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
       items[i].checked = 0
-      items[i].url = "https://www.cern.ch"
       validItems.push(items[i])
     }
     this.items = validItems
