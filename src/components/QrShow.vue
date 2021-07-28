@@ -25,7 +25,7 @@
       </ion-range>
       </div>
 
-      <!--
+      <!-- 
       <div class="qrpros">
        <ion-select name="pros" placeholder="Positiv" @ionChange="prosSelected($event)">
           <ion-select-option value="0">Nichts</ion-select-option>
@@ -44,7 +44,12 @@
           <ion-select-option value="4">Programm</ion-select-option>
         </ion-select>
       </div>
-      -->
+       -->
+      <div class="qrbutton">
+       <ion-button class="qrbutton1" @click="sendScore()">
+        Bewerten
+        </ion-button>
+      </div>
     </div>
   </div>
 
@@ -52,31 +57,44 @@
 
 <script> 
 
-import { defineComponent, ref } from 'vue'; // ref for modal
+import { defineComponent,  } from 'vue'; // ref for modal
 
-import { modalController,IonSelect, IonSelectOption, IonRange, IonAvatar  } from '@ionic/vue';
+import { modalController,IonSelect, IonSelectOption, IonRange, IonAvatar, IonButton  } from '@ionic/vue';
 import QrModal from '@/components/QrModal.vue'
 
 
 export default defineComponent({
     name: "QrShow",
     props: ["title","date","time","provider","id","count","qrsrc","event","info"],
-  components: { IonRange,  IonAvatar },
+  components: { IonRange,  IonAvatar,
+    //IonSelect, IonSelectOption,
+    IonButton,
+   },
   data: function() {
     return {
+      score: {stars:0,
+              pros: 0,
+              cons: 0,
+              },
       isZoomed: false,
     }
   },
   methods:{
     prosSelected(e){
       console.log("Pros: ",e.target.value)
+      this.score.pros = e.target.value
     },
     consSelected(e){
       console.log("Cons: ",e.target.value)
+      this.score.cons = e.target.value
     },
     starsSelected(e){
       console.log("Stars: ",e.target.value)
       //console.log("Event target: ",e.target)
+      this.score.stars = e.target.value
+    },
+    sendScore(){
+      console.log("Scoring:", this.score.stars,this.score.pros,this.score.cons)
     },
     zoom(e) {
       console.log(e)
@@ -104,7 +122,7 @@ export default defineComponent({
       console.log('Modal dismissed');
     },
   },
-  setup(props) {
+  setup(){ //props) {
     //console.log("Props:",props)
   },
 }); 
@@ -161,6 +179,10 @@ h2 {
   /*display: block;*/
 }
 
+.qrbutton {
+  text-align: center;
+}
+
 .smallStar {
   width:32px;
   height:32px;
@@ -177,7 +199,7 @@ ion-range {
   padding:0;
   --knob-size: 20px;
   /* same height as qrimg */
-  --height: 96px;
+  --height: 48px;
 }
 
 
