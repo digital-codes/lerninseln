@@ -258,6 +258,7 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
         $pdo->rollback();
         return $r;
     }
+
     // check pendings for ticket and user
     $p = dbAccess($pdo,"GET_PENDING",array($uid,$ticket));
     mlog("Pending: " . print_r($p,true));
@@ -273,7 +274,11 @@ function reserveTicket($ticket,$count,$email,$pwd,$remote){
     if (($avail < $count) || ($evAvail < $count)) {
         mlog("Sold out");
         $r["status"] = RESERVATION_STATUS["ERROR"];
-        $r["text"] = "Leider kein Ticket mehr da";
+        if ($count == 1) {
+            $r["text"] = "Leider kein Ticket mehr da";
+        } else {
+            $r["text"] = "Leider nicht so viele Tickets da";
+        }
         $pdo->rollback();
         return $r;
     }     

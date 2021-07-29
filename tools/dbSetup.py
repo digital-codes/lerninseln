@@ -644,7 +644,7 @@ for e in range(20):
                   random.randint(1,30),
                   "Location 1 " + str(random.randint(1,10)),
                   "Location 2 " + str(random.randint(1,10)),
-                  random.randint(1,50),
+                  random.randint(10,50),
                   event_url,
                   random.randint(1,3),
                   random.randint(1,3)
