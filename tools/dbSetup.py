@@ -48,11 +48,17 @@ import hashlib
 # audience # zeilgruppe
 #   id, type
 
-# events
-#   id, title,date,time, feature, provider id, feature id, audiency id
+# events, avail here is total seats 
+#   id, title,date,time, avail, feature, provider id, url, feature id, audiency id
 
-# tickets
+# tickets. avail here is by ticket. We can have multiple tickets per event
+# so need to check and update event avail as well!
 #   id, avail, reserved, cost (normally 0), limit,  event id
+
+# feedback (by event)
+# verify user provides only single feedback per event
+# id, stars, pro, con, event_id, user_id
+                           
 
 # pending (unfinished reservations). label might be useful
 #   id, label, count, date, user_id, ticket_id, remote_ip
@@ -341,9 +347,9 @@ class Feedback(Base):
     __tablename__ = "feedback"
  
     id = Column(Integer, primary_key=True)
-    score = Column(Integer, nullable=False) 
-    pro = Column(String(255))
-    con = Column(String(255))
+    stars = Column(Integer) 
+    pro = Column(Integer)
+    con = Column(Integer)
     
     event_id = Column(Integer, ForeignKey('event.id', ondelete="CASCADE"), nullable=False)
     event = relationship("Event", back_populates="feedback")
@@ -354,9 +360,9 @@ class Feedback(Base):
                             
 
     #----------------------------------------------------------------------
-    def __init__(self, score, pro, con, user, event):
+    def __init__(self, stars, pro, con, user, event):
         """"""
-        self.score = score
+        self.stars = stars
         self.pro = pro
         self.con = con
         self.user_id = user
@@ -652,7 +658,7 @@ for e in range(20):
 
 
 for t in range(1,20):
-    ticket = Ticket(random.randint(1,30),0,random.choices(event_ids)[0],0,"Kostenlos")
+    ticket = Ticket(random.randint(1,30),0,random.choices(event_ids)[0],0,"Kostenlos",random.randint(1,3))
     session.add(ticket)
     session.commit()
     print("New ticket: ",t)
