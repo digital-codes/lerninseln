@@ -12,7 +12,7 @@
     <div class="qrscore">
 
       <div class="qrstars">
-      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" disabled="false" 
+      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" :disabled="disabled" 
         @ionChange="starsSelected($event)"
         ref="stars"
         >
@@ -46,7 +46,7 @@
       </div>
        -->
       <div class="qrbutton">
-       <ion-button class="qrbutton1" @click="sendScore()">
+       <ion-button class="qrbutton1" :disabled="disabled" @click="sendScore()">
         Bewerten
         </ion-button>
       </div>
@@ -65,7 +65,8 @@ import QrModal from '@/components/QrModal.vue'
 
 export default defineComponent({
     name: "QrShow",
-    props: ["title","date","time","provider","id","count","qrsrc","event","info"],
+    props: ["title","date","time","provider","id","count","qrsrc","info","disabled"],
+    emits:["scoring"],
   components: { IonRange,  IonAvatar,
     //IonSelect, IonSelectOption,
     IonButton,
@@ -95,6 +96,7 @@ export default defineComponent({
     },
     sendScore(){
       console.log("Scoring:", this.score.stars,this.score.pros,this.score.cons)
+      this.$emit("scoring",this.score)
     },
     zoom(e) {
       console.log(e)

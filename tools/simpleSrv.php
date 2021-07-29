@@ -457,7 +457,8 @@ function purchaseTicket($ticket,$email,$label){
     $d["date"] = $event["date"];
     $d["time"] = $event["time"];
     $d["count"] = $pcnt;
-    $d["event_id"] = $eid;  // add event for feedback
+    // don't need to add eventid, known at client already
+    // $d["event_id"] = $eid;  // add event for feedback
     $d["location1"] = $event["location1"];
     $d["location2"] = $event["location2"];
 

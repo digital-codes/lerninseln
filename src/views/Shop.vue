@@ -203,6 +203,8 @@ export default  defineComponent ({
           qr.time = result.data.event.time
           qr.provider = result.data.event.provider
           qr.count = result.data.event.count
+          qr.scored = false
+          qr.eventId = event //maybe we don't need this: result.data.event.event_id
           // ----------------
           // local store
           /*

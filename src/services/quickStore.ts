@@ -10,10 +10,19 @@ export type Device = { platform: string};
 export type Identity = { email: string; pwd: string};
 export type Selection = { eventId: number; providerId: number};
 export type Purchase = { ticketId: number; email: string; count: number };
+
 export type Qrcode = {
-   "event": string;"date": string; "time": string; 
-    "count": number;"location": string;"qrsrc": string;
-  };
+  "title": string;
+  "ticketId": number;
+  "eventId": number; 
+  "date": string; 
+  "time": string; 
+  "count": number;
+  "location": string;
+  "qrsrc": string;
+  "scored": boolean;
+ };
+
 export type State = { device: Device; selection: Selection; purchase: Purchase; qrcode: Qrcode[]; identity: Identity };
 
 

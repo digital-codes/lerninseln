@@ -28,17 +28,17 @@
           <!--
                 props: ["title","date","time","provider","id","count","qrscr","event","info"],
             -->
-            <QrShow v-for="item in getCodes"  :key="item.id" class="listItem"  
-              :id="item.id" 
+            <QrShow v-for="item in getCodes"  :key="item.eventId" class="listItem"  
               :date="item.date" 
               :time="item.time" 
               :provider="item.provider" 
-              :event="item.event" 
               :count="item.count" 
               :qrsrc="item.qrsrc" 
               :title="item.title" 
               :info="item.info" 
               :url="item.url" 
+              :disabled="item.scored"
+              @scoring="score($event,item.eventId)"
               >
               </QrShow>
 
@@ -69,10 +69,9 @@ import QrShow from '@/components/QrShow.vue'
 // define dummy code or note ...
 const DUMMY_CODE = true
 const DUMMY_ITEM = {
-  id: 1,
   title:"Title",
   provider: "Provider",
-  event:2,
+  eventId:5,
   date:"2021-12-31",
   time:"12:00",
   count:1,
@@ -99,6 +98,9 @@ export default defineComponent({
     }
   },
   methods:{
+    score(s,e){
+      console.log("Scoring:",s,e)
+    }
   },
   computed: {
     hasCodes() {
