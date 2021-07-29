@@ -72,7 +72,7 @@ const DUMMY_ITEM = {
   title:"Title",
   provider: "Provider",
   eventId:5,
-  date:"2021-12-31",
+  date:"2021-08-29",
   time:"12:00",
   count:1,
   url:"https://www.cern.ch",

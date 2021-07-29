@@ -5,10 +5,15 @@
 Scoring incomplete
 Score display incomplete
 
-Seats must be checked by ticket limit, tickets and event avail. So far only ticket checked
-Database: event avail checking too simple as we can have more tickets than event seats (if multiple ticket options)
-    block user on too many pendings (OK)
-    invoice handling    
+Seats checked by ticket limit, ticket avail and event avail to support multiple ticket options. Should work
+
+block user on too many pendings (OK)
+invoice handling    
+
+Pending cleanup not yet implemented. Make sure to update ticket and event!
+
+Statistics not yet implemented
+
 
 registration: create password on first booking, to be saved in app (recorded)
 show registration info on home page

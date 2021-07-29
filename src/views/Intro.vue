@@ -76,6 +76,11 @@ export default  defineComponent ({
   },
   async beforeMount() {
     console.log("QR length:", this.store.state.qrcode.length)
+    const dt = new Date()
+    const date = dt.toISOString().split("T")[0]
+    const tm = dt.toLocaleTimeString('de-DE')
+    const time = tm.split(":")[0] + ":" + tm.split(":")[1]
+    console.log("date: ",date, time)
 
     this.df = await DataFetch.getInstance()
     this.ds = await DataStorage.getInstance()

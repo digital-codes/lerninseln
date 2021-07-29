@@ -12,7 +12,7 @@
     <div class="qrscore">
 
       <div class="qrstars">
-      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" :disabled="disabled" 
+      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" :disabled="isDisabled()" 
         @ionChange="starsSelected($event)"
         ref="stars"
         >
@@ -46,7 +46,7 @@
       </div>
        -->
       <div class="qrbutton">
-       <ion-button class="qrbutton1" :disabled="disabled" @click="sendScore()">
+       <ion-button class="qrbutton1" :disabled="isDisabled()" @click="sendScore()">
         Bewerten
         </ion-button>
       </div>
@@ -97,6 +97,17 @@ export default defineComponent({
     sendScore(){
       console.log("Scoring:", this.score.stars,this.score.pros,this.score.cons)
       this.$emit("scoring",this.score)
+    },
+    isDisabled(){
+      if (this.disabled) return true
+      // cehck date and time and
+      const dt = new Date()
+      const date = dt.toISOString().split("T")[0]
+      const tm = dt.toLocaleTimeString('de-DE')
+      const time = tm.split(":")[0] + ":" + tm.split(":")[1]
+      console.log("date: ",date, time)
+
+      return (date < this.date) || (time < this.time) 
     },
     zoom(e) {
       console.log(e)
