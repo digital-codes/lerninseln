@@ -69,7 +69,7 @@ import Popver from './popover.vue'
 import { Plugins } from '@capacitor/core';
 const { Browser } = Plugins;
 
-import { useStore, Device, MUTATIONS } from '../services/quickStore';
+import { useStore, Device, } from '../services/quickStore';
 
 
 // could use thumbnails or avatars in place of icons.

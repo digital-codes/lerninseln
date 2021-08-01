@@ -38,9 +38,10 @@ import hashlib
 
 ## Tables ##
 # config. for company (single row!)
-# id, organisation, contact name, email, phone, www
+# id, organisation, contact name, email, phone, www,scantoken
+# scantoken verifies qr download for checking
 # providers
-#   id, name, info, city, plz, country, street, streetnum, geo, email, phone, www
+#   id, name, info, city, plz, country, street, streetnum, geo, email, phone, www, scantoken
 
 # features
 #   id, name, color, icon
@@ -207,11 +208,12 @@ class Provider(Base):
     email = Column(String(255), nullable=False)
     phone = Column(String(255))
     www = Column(String(255), nullable=False)
+    scantoken = Column(String(255),default="1234")
 
 
     #----------------------------------------------------------------------
     def __init__(self, name, info, country, city, citycode, street,
-                 streetnum, latlon, person, email, phone, www):
+                 streetnum, latlon, person, email, phone, www, scantoken):
         """"""
         self.name = name
         self.info = info
@@ -225,6 +227,7 @@ class Provider(Base):
         self.email = email
         self.phone = phone
         self.www = www
+        self.scantoken = scantoken
 
 
 ########################################################################
@@ -520,6 +523,7 @@ if DROP_ALL:
         return json.dumps({"lat":x.lat,"lon":x.lon})
     # create geo string
     p["geo"] = p.apply(geo,axis=1)
+    p["scantoken"] = "1234"
 
     for r in p.itertuples():
         #print(r)
@@ -544,7 +548,7 @@ if DROP_ALL:
         if None == session.query(Provider).filter(Provider.name == r.Name).first():
             provider = Provider(r.Name,r.description,"Deutschland",r.Ort,r.PLZ,
                                 " ".join(r.Strasse.split(" ")[:-1]),r.Strasse.split(" ")[-1],
-                                r.geo,"","","","")
+                                r.geo,"","","","",r.scantoken)
             session.add(provider)
             session.commit()
             print("Provider inserted ",r.Name)
@@ -650,7 +654,7 @@ for e in range(20):
                   random.randint(1,3)
                   )
     session.add(event)
-    event_ids.append(e)
+    event_ids.append(e+1)
     session.commit()
     print("New event: ",e+1)
 
