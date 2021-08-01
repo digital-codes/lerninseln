@@ -3,7 +3,7 @@
     <ion-item class="ticket">
     <ion-label
       >
-      Ticket Option: {{costinfo}},  {{cost}} € 
+      {{costinfo}},  {{cost}} € 
       </ion-label>
     <ion-label slot="end"
       >
