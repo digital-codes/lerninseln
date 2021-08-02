@@ -2,6 +2,8 @@
 // however, when using a phaser game we need to control webpack loader to
 // handle also small files with the XHR loader
 // check if this impacts other resources ...
+// see also https://cli.vuejs.org/guide/webpack.html#chaining-advanced
+// and https://github.com/Sun0fABeach/vue-phaser3
 
 module.exports = {
   chainWebpack: config => {
