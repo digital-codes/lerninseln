@@ -18,18 +18,22 @@
         </div>
 
         <div v-if="isMobile()">
-        <p class="extLink" @click="imprint">Impressum
-        </p>
-        <p class="extLink" @click="gdpr">Datenschutz
-        </p>
+          <p class="extLink" @click="imprint">Impressum
+          </p>
+          <p class="extLink" @click="gdpr">Datenschutz
+          </p>
         </div>
         <div v-else>
-        <p>
-        <a :href="imprintUrl" target="_blank">Impressum</a>
-        </p>
-        <p>
-        <a :href="gdprUrl" target="_blank">Datenschutz</a>
-        </p>
+          <p>
+          <a :href="imprintUrl" target="_blank">Impressum</a>
+          </p>
+          <p>
+          <a :href="gdprUrl" target="_blank">Datenschutz</a>
+          </p>
+        </div>
+
+        <div  v-if="isMobile()">
+        <ion-button  @click="shareIt()">App Teilen</ion-button>
         </div>
 
     </ion-card-content>
@@ -39,20 +43,30 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle,  } from '@ionic/vue';
+import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 import { Plugins } from '@capacitor/core';
 const { Browser } = Plugins;
 import { useStore, Device } from '../services/quickStore';
 
+// https://capacitorjs.com/docs/apis/share
+import { Share } from '@capacitor/share';
 
 export default defineComponent ({
   name: "IntroText",
   components: { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle,  
-    
+     IonButton, 
   },
   methods: {
+    async shareIt() {
+      await Share.share({
+        title: 'Lerninsel App',
+        text: 'Mach mit, gibt coole Angebote!',
+        url: 'https://lerninseln.ok-lab-karlsruhe.de/',
+        dialogTitle: 'Teilen',
+      })
+    },
     isMobile(){
       console.log("Platform: ",this.store.state.device.platform)
       return this.store.state.device.platform != "web"
