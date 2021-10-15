@@ -35,3 +35,14 @@ export default  {
   components: { BookShow, IonPage,IonCard,   }
 }
 </script>
+
+
+<style scoped>
+
+ion-content {
+    --background: url('/assets/img/bg/backIcons_white.png');
+    --background-repeat: repeat;
+}
+
+
+</style>

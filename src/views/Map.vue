@@ -72,4 +72,11 @@ export default  {
 .map {
   margin-bottom:0;
 }
+
+ion-content {
+    --background: url('/assets/img/bg/backIcons_white.png');
+    --background-repeat: repeat;
+}
+
+
 </style>

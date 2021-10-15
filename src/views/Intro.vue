@@ -168,4 +168,9 @@ export default  defineComponent ({
 
 }
 
+ion-content {
+    --background: url('/assets/img/bg/backIcons_white.png');
+    --background-repeat: repeat;
+}
+
 </style>

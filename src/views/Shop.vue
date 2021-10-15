@@ -9,7 +9,7 @@
       </ion-toolbar>
     </ion-header>
     -->
-    <ion-content class="shop">
+    <ion-content>
 
       <div v-if="hasEvent">
       <ion-card>
@@ -354,10 +354,11 @@ export default  defineComponent ({
   padding: 1em;
 }
 
-.shop {
-  background-image: url("/assets/img/bg/backIcons_white.png");
-  background-repeat: repeat;
-  background-size: 30%;  
+
+ion-content {
+    --background: url('/assets/img/bg/backIcons_white.png');
+    --background-repeat: repeat;
 }
+
 
 </style>
