@@ -47,9 +47,15 @@
     </div>
     <div v-else>
     <ion-card-header>
-      <ion-card-subtitle>Du hast noch keine Codes</ion-card-subtitle>
-      Buche eine Veranstaltung ...
+      <ion-card-subtitle>Keine Codes!</ion-card-subtitle>
     </ion-card-header>
+    <ion-card-content>
+    <p>Hast Du noch nichts gebucht?</p>
+    <ion-img src="/assets/img/codes/qr1.jpg"></ion-img>
+    <p>Bitte wähle eine Veranstaltung aus unseren <a href="/map">Angeboten</a></p>
+    </ion-card-content>
+
+
     </div>
 
 </template>
@@ -67,7 +73,7 @@ import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 import QrShow from '@/components/QrShow.vue'
 
 // define dummy code or note ...
-const DUMMY_CODE = true
+const DUMMY_CODE = false
 const DUMMY_ITEM = {
   title:"Title",
   provider: "Provider",

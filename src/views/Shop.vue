@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page >
     <!--
     <ion-header>
       <ion-toolbar>
@@ -9,7 +9,7 @@
       </ion-toolbar>
     </ion-header>
     -->
-    <ion-content >
+    <ion-content class="shop">
 
       <div v-if="hasEvent">
       <ion-card>
@@ -65,6 +65,7 @@
       </div>
       <div v-else> 
       <ion-card>
+      <!--
       <ion-card-header>
       <ion-card-subtitle>Zur Buchung wähle bitte eine Veranstaltung aus unseren Angeboten</ion-card-subtitle>
       Im Diagram siehst Du, was im letzten Monat los war und Deinen Status. Für die Top-10 winkt eine Verlosung!
@@ -97,6 +98,19 @@
       </p>
 
       </ion-card-content>
+      -->
+      <ion-card-header>
+      <ion-card-subtitle>Hmmm.</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+      <p>Scheinbar hast Du noch nicht das Richtige gefunden.</p>
+      <!--
+      <ion-img src="/assets/img/book/compass.jpg"></ion-img>
+      -->
+      <ion-img src="/assets/img/book/binoc.jpg"></ion-img>
+      <p>Bitte wähle eine Veranstaltung aus unseren <a href="/map">Angeboten</a></p>
+      </ion-card-content>
 
       </ion-card>
 
@@ -117,11 +131,12 @@
 import { IonPage, IonButton, IonHeader, 
   IonToolbar, IonTitle, IonCardHeader, IonCardSubtitle,
   IonContent,IonCard, IonCardContent,
-  IonList, IonItem, IonLabel,
+  IonList, IonItem, IonLabel, 
+  IonImg,
   modalController } from '@ionic/vue';
 
 import QrModal from '@/components/QrModal.vue'
-import ScoreSheet from '@/components/ScoreSheet.vue'
+//import ScoreSheet from '@/components/ScoreSheet.vue'
 
 import Event from '@/components/Event.vue';
 import Ticket from '@/components/Ticket.vue';
@@ -150,6 +165,10 @@ https://dev.to/freakflames29/how-to-pass-data-from-child-to-parent-in-vue-js-2d9
 https://v3.vuejs.org/guide/migration/emits-option.html#_3-x-behavior
 */
 
+// router for programmed navigation
+import { useRouter } from 'vue-router';
+
+
 export default  defineComponent ({
   name: 'Tickets',
   props: {
@@ -165,7 +184,8 @@ export default  defineComponent ({
     }
   },
   components: { Event, IonContent, IonPage,IonCard, IonCardContent, 
-  Ticket, OrderForm,  Paypal, ScoreSheet, 
+  Ticket, OrderForm,  Paypal, 
+  //ScoreSheet, 
   IonCardHeader, IonCardSubtitle, },
   methods: {
     async costUpdate(e,t) {
@@ -253,6 +273,7 @@ export default  defineComponent ({
         })
       await modal.present()
       await modal.onDidDismiss();
+      this.router.push('/codes')
       console.log('Modal dismissed');
     },
   },
@@ -315,7 +336,8 @@ export default  defineComponent ({
   // store
   setup() {
     const store = useStore();
-    return { store };
+    const router = useRouter();
+    return { router, store };
   },
 })
 
@@ -330,6 +352,12 @@ export default  defineComponent ({
 
 .center-button>button {
   padding: 1em;
+}
+
+.shop {
+  background-image: url("/assets/img/bg/backIcons_white.png");
+  background-repeat: repeat;
+  background-size: 30%;  
 }
 
 </style>
