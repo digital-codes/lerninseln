@@ -24,10 +24,18 @@ https://ionicframework.com/docs/theming/themes
 */
 /*
 KA Colors:
-#048500   green
-#f7f9f5   light green
-#404040   gray
-#000000   black
+#048500   green 4,133,0   hsv: 118,100,52    shade:#037300;, tint: #05aa00
+#f7f9f5   light green 247,249,245  hsv: 90,2,98
+#404040   gray 
+#000000   black 64,64,64
+
+shadows
+Big
+0px 16px 14px rgba(0,0,0,.2)
+umgedreht: 0px -16px 14px
+Small
+0px 3px 6px rgba(0,0,0,.16)
+umgedreht: 0px -3px 6px
 
 */
 
