@@ -52,7 +52,23 @@
     <ion-card-content>
     <p>Hast Du noch nichts gebucht?</p>
     <ion-img src="/assets/img/codes/qr1.jpg"></ion-img>
-    <p>Bitte wähle eine Veranstaltung aus unseren <a href="/map">Angeboten</a></p>
+    <p>Bitte wähle eine Veranstaltung aus unseren 
+    <ion-button @click="toMap()" class="ka-tab-btn">
+          <ion-icon :icon="albumsOutline" />
+          <ion-label>Angeboten</ion-label>
+    </ion-button>
+    </p>
+
+
+<!--
+<ion-tabs @ionTabsWillChange="x" @ionTabsDidChange="y">
+    <ion-tab-button tab="map" hf="/map" class="ka-tab-btn">
+          <ion-icon :icon="albumsOutline" click="x()"/>
+          <ion-label>Angebote</ion-label>
+    </ion-tab-button>
+</ion-tabs>
+-->
+
     </ion-card-content>
 
 
@@ -61,6 +77,11 @@
 </template>
 
 <script> 
+
+import { IonButton, IonLabel, IonIcon, IonPage } from '@ionic/vue';
+import { 
+  albumsOutline,
+ } from 'ionicons/icons';
 
 import { defineComponent,  } from 'vue'; // ref for modal
 
@@ -71,6 +92,9 @@ import DataStorage from "../services/dstore";
 import { useStore, Selection, MUTATIONS } from '../services/quickStore';
 
 import QrShow from '@/components/QrShow.vue'
+
+import router from "../router";
+
 
 // define dummy code or note ...
 const DUMMY_CODE = false
@@ -97,7 +121,9 @@ DofD4XA4HA6Hw+FwOBwOh8PhcDj8VnsDg+O/lIZXxKIAAAAASUVORK5CYII="
 }
 
 export default defineComponent({
-  components: { QrShow,  },
+  components: { QrShow,
+    IonLabel, IonButton, IonIcon
+    },
   data: function() {
     return {
       isZoomed: false,
@@ -106,6 +132,9 @@ export default defineComponent({
   methods:{
     score(s,e){
       console.log("Scoring:",s,e)
+    },
+    toMap(){
+      router.push("/map")
     }
   },
   computed: {
@@ -125,7 +154,7 @@ export default defineComponent({
   // store
   setup() {
     const store = useStore();
-    return { store };
+    return { store, albumsOutline };
   },
 }); 
 </script>

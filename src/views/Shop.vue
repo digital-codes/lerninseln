@@ -109,7 +109,12 @@
       <ion-img src="/assets/img/book/compass.jpg"></ion-img>
       -->
       <ion-img src="/assets/img/book/binoc.jpg"></ion-img>
-      <p>Bitte wähle eine Veranstaltung aus unseren <a href="/map">Angeboten</a></p>
+      <p>Bitte wähle eine Veranstaltung aus unseren 
+        <ion-button @click="toMap()" class="ka-tab-btn">
+              <ion-icon :icon="albumsOutline" />
+              <ion-label>Angeboten</ion-label>
+        </ion-button>
+      </p>
       </ion-card-content>
 
       </ion-card>
@@ -133,7 +138,9 @@ import { IonPage, IonButton, IonHeader,
   IonContent,IonCard, IonCardContent,
   IonList, IonItem, IonLabel, 
   IonImg,
+  IonIcon,
   modalController } from '@ionic/vue';
+
 
 import QrModal from '@/components/QrModal.vue'
 //import ScoreSheet from '@/components/ScoreSheet.vue'
@@ -166,7 +173,9 @@ https://v3.vuejs.org/guide/migration/emits-option.html#_3-x-behavior
 */
 
 // router for programmed navigation
-import { useRouter } from 'vue-router';
+//import { useRouter } from 'vue-router';
+
+import router from "../router";
 
 
 export default  defineComponent ({
@@ -185,6 +194,7 @@ export default  defineComponent ({
   },
   components: { Event, IonContent, IonPage,IonCard, IonCardContent, 
   Ticket, OrderForm,  Paypal, 
+  IonButton, IonIcon,
   //ScoreSheet, 
   IonCardHeader, IonCardSubtitle, },
   methods: {
@@ -206,6 +216,9 @@ export default  defineComponent ({
     },
     purchase() {
       console.log("Buy ticket: ")
+    },
+    toMap(){
+      router.push("/map")
     },
     async purchaseCompleted(result) {
         console.log("Completed: ",result,"status: ",
@@ -338,8 +351,11 @@ export default  defineComponent ({
   // store
   setup() {
     const store = useStore();
+    /*
     const router = useRouter();
     return { router, store };
+    */
+    return { store };
   },
 })
 

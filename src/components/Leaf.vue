@@ -106,7 +106,7 @@ export default defineComponent ({
   data() {
     return {
       geokey:0,
-      zoom:13,
+      zoom:12,
       maxZoom:17,
       //center1: latlng(49.004,  8.403),
       //center2: geojsonOptions.latlng(49.004,  8.403),

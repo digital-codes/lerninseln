@@ -186,5 +186,12 @@ ion-content {
     --background-repeat: repeat;
 }
 
+/*
+.ion-page {
+  max-width:960px;
+  margin-left:auto;
+  margin-right:auto;
+}
+*/
 
 </style>

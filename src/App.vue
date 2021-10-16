@@ -41,4 +41,10 @@ KA Colors:
   --ion-tab-bar-color-selected:#048500; /* selected  color for icon and label */
 }
 
+.ion-page {
+  max-width:960px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
 </style>
