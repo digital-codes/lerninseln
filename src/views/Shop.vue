@@ -252,6 +252,9 @@ export default  defineComponent ({
           await this.store.commit(MUTATIONS.ADD_QR,qr)
           console.log("total QRs: ",this.store.state.qrcode.length)
           //this.presentActionSheet()
+          //  go to codes page
+          //this.router.push('/codes')
+          this.router.replace('/codes')
         }
     },
     async openQr(data) {
@@ -273,7 +276,6 @@ export default  defineComponent ({
         })
       await modal.present()
       await modal.onDidDismiss();
-      this.router.push('/codes')
       console.log('Modal dismissed');
     },
   },

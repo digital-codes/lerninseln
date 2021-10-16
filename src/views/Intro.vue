@@ -162,7 +162,20 @@ export default  defineComponent ({
 
 </script>
 
+
 <style scoped>
+
+ion-toolbar {
+  /* https://ionicframework.com/docs/api/toolbar */
+  /* background color from app.vue */
+  --border-color:#048500;
+  --border-width:3px;
+  --border-style:solid none none none;
+}
+
+/* https://stackoverflow.com/questions/54956372/how-to-change-the-toolbar-color-in-ionic-4 
+
+*/
 
 .loader-class {
 
@@ -172,5 +185,6 @@ ion-content {
     --background: url('/assets/img/bg/backIcons_white.png');
     --background-repeat: repeat;
 }
+
 
 </style>

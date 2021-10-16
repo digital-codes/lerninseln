@@ -1,23 +1,23 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="intro" href="/intro">
+      <ion-tab-bar slot="bottom" class="ka-tabs">
+        <ion-tab-button tab="intro" href="/intro" class="ka-tab-btn">
           <ion-icon :icon="homeOutline" />
           <ion-label>Intro</ion-label>
         </ion-tab-button>
           
-        <ion-tab-button tab="map" href="/map">
+        <ion-tab-button tab="map" href="/map" class="ka-tab-btn">
           <ion-icon :icon="albumsOutline" />
           <ion-label>Angebote</ion-label>
         </ion-tab-button>
         
-        <ion-tab-button tab="shop" href="/shop">
+        <ion-tab-button tab="shop" href="/shop" class="ka-tab-btn">
           <ion-icon :icon="cartOutline" />
           <ion-label>Buchen</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="codes" href="/codes">
+        <ion-tab-button tab="codes" href="/codes" class="ka-tab-btn">
           <ion-icon :icon="qrCodeOutline" />
           <ion-label>QRCodes</ion-label>
         </ion-tab-button>
@@ -53,3 +53,38 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+
+/* tab button color from app.vue */
+
+.ka-tabs {
+  background-color: #048500;
+}
+
+.ka-tab-btn {
+  /* default bg
+  background-color:#f7f9f5;
+  */
+  /*
+  margin-left:2px;
+  margin-right:2px;
+  */
+  border-left: solid 2px #404040;
+  border-right: solid 2px #404040;
+
+}
+
+
+/* see https://ionic.io/ionicons/usage */
+ion-icon {
+  --ionicon-stroke-width: 48px;
+}
+
+ion-label {
+  font-size:1em;
+}
+
+
+</style>

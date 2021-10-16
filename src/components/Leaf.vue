@@ -17,8 +17,8 @@
 -->
 
  <l-tile-layer 
-        :url="stl1" 
-        :attribution="attr1"
+        :url="stl3" 
+        :attribution="attr3"
   >
   </l-tile-layer>
 
