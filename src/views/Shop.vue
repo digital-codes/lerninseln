@@ -141,6 +141,9 @@ import { IonPage, IonButton, IonHeader,
   IonIcon,
   modalController } from '@ionic/vue';
 
+import { 
+  albumsOutline,
+ } from 'ionicons/icons';
 
 import QrModal from '@/components/QrModal.vue'
 //import ScoreSheet from '@/components/ScoreSheet.vue'
@@ -267,7 +270,7 @@ export default  defineComponent ({
           //this.presentActionSheet()
           //  go to codes page
           //this.router.push('/codes')
-          this.router.replace('/codes')
+          router.replace('/codes')
         }
     },
     async openQr(data) {
@@ -355,7 +358,7 @@ export default  defineComponent ({
     const router = useRouter();
     return { router, store };
     */
-    return { store };
+    return { store, albumsOutline };
   },
 })
 
