@@ -48,7 +48,7 @@ import { defineComponent } from 'vue';
 
 import { Plugins } from '@capacitor/core';
 const { Browser } = Plugins;
-import { useStore, Device } from '../services/quickStore';
+import { useStore } from '../services/quickStore';
 
 // https://capacitorjs.com/docs/apis/share
 import { Share } from '@capacitor/share';
@@ -65,7 +65,7 @@ export default defineComponent ({
         text: 'Mach mit, gibt coole Angebote!',
         url: 'https://lerninseln.ok-lab-karlsruhe.de/',
         dialogTitle: 'Teilen',
-      })
+      }) 
     },
     isMobile(){
       console.log("Platform: ",this.store.state.device.platform)
@@ -118,8 +118,8 @@ export default defineComponent ({
   /* with position: fixed adjust size */
   display: block;
   text-decoration-line: underline;
-  text-decoration-color: blue;
-  color: blue;
+  text-decoration-color: #048500; 
+  color: #048500;
 }
 
 .extLink:hover {

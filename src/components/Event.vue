@@ -175,8 +175,8 @@ h2 {
   /* with position: fixed adjust size */
   display: inline-block;
   text-decoration-line: underline;
-  text-decoration-color: blue;
-  color: blue;
+  text-decoration-color: primary;
+  color: primary;
 }
 
 .eventMore:hover {
