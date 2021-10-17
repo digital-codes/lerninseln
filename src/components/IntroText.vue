@@ -12,28 +12,60 @@
         <div>
           <a href="https://lerninseln.ok-lab-karlsruhe.de" target=_blank>Lerninseln Webseite</a>
         </div>
-        -->
         <div>
           <a href="mailto:lerninseln@ok-lab-karlsruhe.de">EMail</a>
         </div>
-
+        -->
         <div v-if="isMobile()">
+          <!--
+          <ion-button  @click="imprint()">
+            <ion-icon :icon="mailOutline" />
+          <ion-label>EMail</ion-label>
+          -->
+          <ion-button  href="mailto:lerninseln@ok-lab-karlsruhe.de">
+            <ion-icon :icon="mailOutline" />
+          <ion-label>EMail</ion-label>
+          </ion-button>
+          <ion-button  @click="imprint()">
+            <ion-icon :icon="informationCircleOutline" />
+          <ion-label>Impressum</ion-label>
+          </ion-button>
+          <ion-button  @click="gdpr()">
+            <ion-icon :icon="shieldOutline" />
+          <ion-label>Datenschutz</ion-label>
+          </ion-button>
+          <ion-button  @click="shareIt()">
+              <ion-icon :icon="shareSocialOutline" />
+              <ion-label>Teilen</ion-label>
+          </ion-button>
+          <!--
           <p class="extLink" @click="imprint">Impressum
           </p>
           <p class="extLink" @click="gdpr">Datenschutz
           </p>
+          -->
         </div>
         <div v-else>
+          <ion-button  href="mailto:lerninseln@ok-lab-karlsruhe.de">
+            <ion-icon :icon="mailOutline" />
+          <ion-label>EMail</ion-label>
+          </ion-button>
+          <ion-button  :href="imprintUrl" target="_blank">
+            <ion-icon :icon="informationCircleOutline" />
+          <ion-label>Impressum</ion-label>
+          </ion-button>
+          <ion-button  :href="gdprUrl" target="_blank">
+            <ion-icon :icon="shieldOutline" />
+          <ion-label>Datenschutz</ion-label>
+          </ion-button>
+          <!--
           <p>
           <a :href="imprintUrl" target="_blank">Impressum</a>
           </p>
           <p>
           <a :href="gdprUrl" target="_blank">Datenschutz</a>
           </p>
-        </div>
-
-        <div  v-if="isMobile()">
-        <ion-button  @click="shareIt()">App Teilen</ion-button>
+          -->
         </div>
 
     </ion-card-content>
@@ -43,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, } from '@ionic/vue';
+import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 import { Plugins } from '@capacitor/core';
@@ -53,10 +85,18 @@ import { useStore } from '../services/quickStore';
 // https://capacitorjs.com/docs/apis/share
 import { Share } from '@capacitor/share';
 
+import { 
+  informationCircleOutline,
+  mailOutline,
+  shieldOutline,
+  shareSocialOutline
+ } from 'ionicons/icons';
+
+
 export default defineComponent ({
   name: "IntroText",
   components: { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle,  
-     IonButton, 
+     IonButton, IonIcon
   },
   methods: {
     async shareIt() {
@@ -84,6 +124,7 @@ export default defineComponent ({
     //const imprint_url = "https://www.karlsruhe.de/impressum.de"
     return {
       store,
+      informationCircleOutline,mailOutline,shieldOutline,shareSocialOutline,
       gdprUrl:"https://www.karlsruhe.de/impressum/datenschutz.de",
       imprintUrl: "https://www.karlsruhe.de/impressum.de",
     }
