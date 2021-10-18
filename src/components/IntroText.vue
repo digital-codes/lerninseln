@@ -22,10 +22,17 @@
             <ion-icon :icon="mailOutline" />
           <ion-label>EMail</ion-label>
           -->
+          <div>
           <ion-button  href="mailto:lerninseln@ok-lab-karlsruhe.de">
             <ion-icon :icon="mailOutline" />
-          <ion-label>EMail</ion-label>
+          <ion-label>Schreib uns</ion-label>
           </ion-button>
+          <ion-button  @click="shareIt()">
+              <ion-icon :icon="shareSocialOutline" />
+              <ion-label>Teil die App</ion-label>
+          </ion-button>
+          </div>
+          <div>
           <ion-button  @click="imprint()">
             <ion-icon :icon="informationCircleOutline" />
           <ion-label>Impressum</ion-label>
@@ -34,10 +41,7 @@
             <ion-icon :icon="shieldOutline" />
           <ion-label>Datenschutz</ion-label>
           </ion-button>
-          <ion-button  @click="shareIt()">
-              <ion-icon :icon="shareSocialOutline" />
-              <ion-label>Teilen</ion-label>
-          </ion-button>
+          </div>
           <!--
           <p class="extLink" @click="imprint">Impressum
           </p>
@@ -46,10 +50,13 @@
           -->
         </div>
         <div v-else>
+          <div>
           <ion-button  href="mailto:lerninseln@ok-lab-karlsruhe.de">
             <ion-icon :icon="mailOutline" />
-          <ion-label>EMail</ion-label>
+          <ion-label>Schreib uns</ion-label>
           </ion-button>
+          </div>
+          <div>
           <ion-button  :href="imprintUrl" target="_blank">
             <ion-icon :icon="informationCircleOutline" />
           <ion-label>Impressum</ion-label>
@@ -58,6 +65,7 @@
             <ion-icon :icon="shieldOutline" />
           <ion-label>Datenschutz</ion-label>
           </ion-button>
+          </div>
           <!--
           <p>
           <a :href="imprintUrl" target="_blank">Impressum</a>
