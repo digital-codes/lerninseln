@@ -39,15 +39,19 @@ umgedreht: 0px -3px 6px
 
 */
 
+
 :root {
-  --ion-color-primary:#048500;
-  --ion-color-secondary: #ff00ff;
   --ion-background-color:#f7f9f5;
   --ion-text-color: #404040; /* so far, affects only toolbar header */
+  --ion-card-color: #404040;
+  /*--ion-item-color: #f0f000; */
+  --color: #404040;
   --ion-font-family:roboto,sans-serif;
   --ion-tab-bar-color:#404040;  /* default color for icon and label */
   --ion-tab-bar-color-selected:#048500; /* selected  color for icon and label */
+
 }
+
 
 .ion-page {
   max-width:960px;

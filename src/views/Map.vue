@@ -19,6 +19,8 @@
 
     <!--ion-content :fullscreen="true"-->
     <ion-content >
+      <div ref="tab2">
+
 
       <ion-card >
       <ion-card-content>
@@ -40,7 +42,7 @@
       </ion-card-content>
       </ion-card>
 
-
+    </div>
     </ion-content>
   </ion-page>
 </template>
@@ -53,19 +55,47 @@ import Events from '@/components/Events.vue';
 
 import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
 
+import { defineComponent, ref } from 'vue'; 
 
-export default  {
+import { createGesture } from '@ionic/vue';
+import router from "../router";
+
+
+export default defineComponent( {
   name: 'Map',
   components: {  IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, },
+  methods : {
+    onSwipe(detail) {
+      const type = detail.type;
+      const cx = detail.currentX;
+      const dx = detail.deltaX;
+      const vx = detail.velocityX;
+      //console.log(type,cx,dx,vx)
+      if ((type == "pan") && (dx > 100) && (vx > 1)) router.push("/intro")
+      if ((type == "pan") && (dx < -100) && (vx < -1)) router.push("/shop")
+    }
+  },
   async beforeMount() {
     await this.store.commit(MUTATIONS.RESET_EVENT);
+  },
+  async mounted(){
+    const gest = this.$refs.tab2 //ref();
+    const r = router.currentRoute.value.path // value is important!
+    //console.log("Current: ",r,"ref2:",gest)
+    //setTimeout(function(){console.log(r.path)},2000)
+    const gesture = createGesture({
+      onMove: (detail) => { this.onSwipe(detail);},
+      gestureName: 'swipe',
+      el: gest,
+    })
+    gesture.enable();
   },
   setup() {
     const store = useStore();
     return { store };
     // mounted
   },
-}
+})
 </script>
 
 <style scoped>

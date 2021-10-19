@@ -1,9 +1,9 @@
 <template>
 
   <ion-card ion-fixed>
-    <ion-card-header>
-      <ion-card-title>Anbieter</ion-card-title>
-      <ion-card-subtitle>Kategorie </ion-card-subtitle>
+    <ion-card-header >
+      <ion-card-title class="hdr">Anbieter</ion-card-title>
+      <ion-card-subtitle class="hdr">Kategorie </ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
@@ -116,5 +116,11 @@ h2 {
   background-color: primary;
 
 }
+
+.hdr {
+  --color: --ka-text-color;  
+}
+
+
 </style>
 

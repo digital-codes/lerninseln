@@ -1,7 +1,7 @@
 <template>
     <ion-card>
     <ion-card-header>
-      <ion-card-subtitle>Eine Initiative der Stadt Karlsruhe</ion-card-subtitle>
+      <ion-card-title class="hdr">Eine Initiative der Stadt Karlsruhe</ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, IonIcon } from '@ionic/vue';
+import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 import { Plugins } from '@capacitor/core';
@@ -103,7 +103,7 @@ import {
 
 export default defineComponent ({
   name: "IntroText",
-  components: { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle,  
+  components: { IonCard, IonCardContent, IonCardHeader, IonCardTitle,  
      IonButton, IonIcon
   },
   methods: {
@@ -174,5 +174,10 @@ export default defineComponent ({
 .extLink:hover {
     cursor:pointer;
 }
+
+.hdr {
+  color: unset;  
+}
+
 
 </style>

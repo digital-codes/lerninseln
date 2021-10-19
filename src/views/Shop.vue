@@ -10,6 +10,8 @@
     </ion-header>
     -->
     <ion-content>
+      <div ref="tab3">
+
 
       <div v-if="hasEvent">
       <ion-card>
@@ -126,7 +128,7 @@
       -->
 
 
-
+    </div>
     </ion-content>
 
   </ion-page>
@@ -150,7 +152,7 @@ import QrModal from '@/components/QrModal.vue'
 
 import Event from '@/components/Event.vue';
 import Ticket from '@/components/Ticket.vue';
-import { defineComponent } from 'vue'; 
+import { defineComponent, ref } from 'vue'; 
 
 import { rocket, trash,  } from 'ionicons/icons';
 
@@ -176,8 +178,7 @@ https://v3.vuejs.org/guide/migration/emits-option.html#_3-x-behavior
 */
 
 // router for programmed navigation
-//import { useRouter } from 'vue-router';
-
+import { createGesture } from '@ionic/vue';
 import router from "../router";
 
 
@@ -294,6 +295,15 @@ export default  defineComponent ({
       await modal.onDidDismiss();
       console.log('Modal dismissed');
     },
+    onSwipe(detail) {
+      const type = detail.type;
+      const cx = detail.currentX;
+      const dx = detail.deltaX;
+      const vx = detail.velocityX;
+      //console.log(type,cx,dx,vx)
+      if ((type == "pan") && (dx > 100) && (vx > 1)) router.push("/map")
+      if ((type == "pan") && (dx < -100) && (vx < -1)) router.push("/codes")
+    },
   },
   computed: {
     hasEvent() {
@@ -350,6 +360,18 @@ export default  defineComponent ({
     //this.tickets = items
     this.tickets = tickets
 
+  },
+  async mounted(){
+    const gest = this.$refs.tab3 //ref();
+    const r = router.currentRoute.value.path // value is important!
+    //console.log("Current: ",r,"ref2:",gest)
+    //setTimeout(function(){console.log(r.path)},2000)
+    const gesture = createGesture({
+      onMove: (detail) => { this.onSwipe(detail);},
+      gestureName: 'swipe',
+      el: gest,
+    })
+    gesture.enable();
   },
   // store
   setup() {

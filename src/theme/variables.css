@@ -29,6 +29,8 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-secondary-shade: #36abe0;
   --ion-color-secondary-tint: #50c8ff;
 
+  --ka-text-color: #404040;
+
   /** tertiary **/
   --ion-color-tertiary: #5260ff;
   --ion-color-tertiary-rgb: 82, 96, 255;

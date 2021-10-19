@@ -8,8 +8,8 @@
       </ion-toolbar>
     </ion-header>
 
-   
     <ion-content :fullscreen="true" >
+    <div ref="tab1">
     
      <ion-loading
     :is-open="loading"
@@ -27,7 +27,7 @@
 
     <Providers></Providers>
 
-
+    </div>
     </ion-content>
   </ion-page>
 </template>
@@ -59,6 +59,8 @@ const { App } = Plugins;
 
 import { Device } from '@capacitor/device';
 
+import { createGesture } from '@ionic/vue';
+import router from "../router";
 
 
 export default  defineComponent ({
@@ -73,6 +75,17 @@ export default  defineComponent ({
       ds: "",
       df: "",
     } 
+  },
+  methods : {
+    onSwipe(detail) {
+      const type = detail.type;
+      const cx = detail.currentX;
+      const dx = detail.deltaX;
+      const vx = detail.velocityX;
+      //console.log(type,cx,dx,vx)
+      //if ((type == "pan") && (dx > 100) && (vx > 1)) router.push("/tabs/tab3")
+      if ((type == "pan") && (dx < -100) && (vx < -1)) router.push("/map")
+    }
   },
   async beforeMount() {
     console.log("QR length:", this.store.state.qrcode.length)
@@ -144,7 +157,18 @@ export default  defineComponent ({
       this.loading = false
 
     }
-
+  },
+  async mounted(){
+    const gest = this.$refs.tab1 //ref();
+    const r = router.currentRoute.value.path // value is important!
+    //console.log("Current: ",r,"ref2:",gest)
+    //setTimeout(function(){console.log(r.path)},2000)
+    const gesture = createGesture({
+      onMove: (detail) => { this.onSwipe(detail);},
+      gestureName: 'swipe',
+      el: gest,
+    })
+    gesture.enable();
   },
   setup() {
     const loading = ref(true);
