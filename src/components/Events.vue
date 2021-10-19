@@ -38,12 +38,32 @@
           :icon=item.category_id
           :url=item.url 
           ></Event>
+
           <ion-checkbox class="eventCheck" 
             @ionChange="select(item.id)"
             @update:modelValue="item.checked = $event"
             :modelValue="item.checked"
           ></ion-checkbox>
+
   </div>
+
+          <!--
+          <ion-button class="eventCheck" 
+            @click="select(item.id)"
+            @update:modelValue="item.checked = $event"
+            :modelValue="item.checked"
+          >
+            <ion-icon :icon="cartOutline" />
+          </ion-button>
+          -->
+
+          <!--
+          <ion-checkbox class="eventCheck" 
+            @ionChange="select(item.id)"
+            @update:modelValue="item.checked = $event"
+            :modelValue="item.checked"
+          ></ion-checkbox>
+          -->
 
   <ion-button 
     v-if="hasEvent" 
@@ -55,6 +75,10 @@
 </template>
 
 <script> 
+
+import { 
+  cartOutline,
+ } from 'ionicons/icons';
 
 import { IonButton, IonCheckbox } from '@ionic/vue';
 
@@ -72,7 +96,7 @@ import router from "../router";
 
 export default defineComponent({
   name: "Events",
-  components: {Event, IonButton,IonCheckbox },
+  components: {Event, IonButton, IonCheckbox,  },
   data () {
     return {
     items : [],
@@ -91,6 +115,13 @@ export default defineComponent({
     },
     async select(e) {
       const item = this.items.find(i => i.id ==e)
+      // for button:
+      /*
+      if (item.checked != true) 
+        item.checked = true
+      else
+        item.checked = false
+      */
       console.log("Checked: ",item.id, item.checked)
       if (item.checked) {
         //this.filter = item.id
@@ -164,7 +195,7 @@ export default defineComponent({
     // store
   setup() {
     const store = useStore();
-    return { store };
+    return { store, cartOutline };
   },
 }
 ); 
@@ -204,7 +235,12 @@ button {
   /* width:10%; */ 
   margin-left:5%;
   margin-bottom: 2em;
+  width: 2em;
+  height: 2em;
+  border: solid 4px #048500;
+  border-radius: 5px;
 }
+
 input.eventCheck  {
   width:1em;
 }

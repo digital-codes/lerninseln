@@ -12,7 +12,7 @@
 
     <ion-content >
     <div ref="tab4">
-      <ion-card>
+      <ion-card >
       <!--
       <ion-card-header>
         <ion-card-title>Deine QR Codes</ion-card-title>
