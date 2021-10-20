@@ -29,6 +29,8 @@
 
     <Providers></Providers>
 
+    <Imprint></Imprint>
+
     </div>
     </ion-content>
   </ion-page>
@@ -46,6 +48,7 @@ import { defineComponent, ref } from 'vue';
 import IntroText from '@/components/IntroText.vue';
 import IntroSlides from '@/components/IntroSlides.vue';
 import Providers from '@/components/Providers.vue';
+import Imprint from '@/components/Imprint.vue';
 
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
@@ -69,7 +72,7 @@ export default  defineComponent ({
   name: 'Intro',
   components: { //LoginForm, 
     IntroText, Providers, IonHeader, IonToolbar, IonTitle, 
-    IonContent, IonPage, //IntroSlides,
+    IonContent, IonPage, Imprint, //IntroSlides,
     IonLoading
   },
   data: function() {
@@ -164,7 +167,7 @@ export default  defineComponent ({
   },
   async mounted(){
     const gest = this.$refs.tab1 //ref();
-    const r = router.currentRoute.value.path // value is important!
+    // const r = router.currentRoute.value.path // value is important!
     //console.log("Current: ",r,"ref2:",gest)
     //setTimeout(function(){console.log(r.path)},2000)
     const gesture = createGesture({
