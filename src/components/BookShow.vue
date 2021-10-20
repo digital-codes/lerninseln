@@ -2,7 +2,7 @@
 
     <div v-if="hasCodes">
     <ion-card-header>
-      <ion-card-subtitle>Deine Codes</ion-card-subtitle>
+      <ion-card-title  class="hdr">Deine Codes</ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
@@ -47,10 +47,10 @@
     </div>
     <div v-else>
     <ion-card-header>
-      <ion-card-subtitle>Keine Codes!</ion-card-subtitle>
+      <ion-card-title class="hdr">Keine Codes!</ion-card-title>
+      <ion-card-subtitle class="hdr">Hast Du noch nichts gebucht?</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-    <p>Hast Du noch nichts gebucht?</p>
     <ion-img src="/assets/img/codes/qr1.jpg"></ion-img>
     <p>Bitte wähle eine Veranstaltung aus unseren 
     <ion-button @click="toMap()" class="ka-tab-btn">
@@ -78,7 +78,7 @@
 
 <script> 
 
-import { IonButton, IonLabel, IonIcon, IonPage } from '@ionic/vue';
+import { IonButton, IonLabel, IonIcon, IonPage, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
 import { 
   albumsOutline,
  } from 'ionicons/icons';
@@ -122,7 +122,7 @@ DofD4XA4HA6Hw+FwOBwOh8PhcDj8VnsDg+O/lIZXxKIAAAAASUVORK5CYII="
 
 export default defineComponent({
   components: { QrShow,
-    IonLabel, IonButton, IonIcon
+    IonLabel, IonButton, IonIcon, IonCardTitle, IonCardSubtitle
     },
   data: function() {
     return {
@@ -193,6 +193,10 @@ img {
 
 h2 {
   padding-bottom: .2rem;
+}
+
+.hdr {
+  --color: --ka-text-color;  
 }
 
 </style>

@@ -29,6 +29,7 @@ export default defineComponent({
     provider: {type: String},
     count: {type: Number},
     info: {type: String, default: ""},
+    class: {type: String, default: "modal"}
   },
   data() {
     return {
@@ -62,6 +63,7 @@ export default defineComponent({
 }
 .qrmodal {
   width:100%;
+  --background: unset;
 }
 .qrimage {
   width:100%;

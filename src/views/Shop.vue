@@ -10,11 +10,14 @@
     </ion-header>
     -->
     <ion-content>
-      <div ref="tab3">
+      <div ref="tab3" class="swiping">
 
 
       <div v-if="hasEvent">
       <ion-card>
+      <ion-card-header>
+      <ion-card-title class="hdr">Du buchst jetzt ...</ion-card-title>
+      </ion-card-header>
       <ion-card-content>
         <Event 
           :date=getEvent.date 
@@ -102,11 +105,12 @@
       </ion-card-content>
       -->
       <ion-card-header>
-      <ion-card-subtitle>Hmmm.</ion-card-subtitle>
+      <ion-card-title class="hdr">Hmmm...</ion-card-title>
+      <ion-card-subtitle class="hdr">Scheinbar hast Du noch nicht das Richtige gefunden.</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-      <p>Scheinbar hast Du noch nicht das Richtige gefunden.</p>
+
       <!--
       <ion-img src="/assets/img/book/compass.jpg"></ion-img>
       -->
@@ -136,7 +140,7 @@
 
 <script lang="js">
 import { IonPage, IonButton, IonHeader, 
-  IonToolbar, IonTitle, IonCardHeader, IonCardSubtitle,
+  IonToolbar, IonTitle, IonCardHeader, IonCardTitle, IonCardSubtitle,
   IonContent,IonCard, IonCardContent,
   IonList, IonItem, IonLabel, 
   IonImg,
@@ -196,7 +200,7 @@ export default  defineComponent ({
       payInvoice : "Inv1234",
     }
   },
-  components: { Event, IonContent, IonPage,IonCard, IonCardContent, 
+  components: { Event, IonContent, IonPage,IonCard, IonCardContent, IonCardTitle,
   Ticket, OrderForm,  Paypal, 
   IonButton, IonIcon,
   //ScoreSheet, 
@@ -398,9 +402,12 @@ export default  defineComponent ({
 }
 
 
-ion-content {
-    --background: url('/assets/img/bg/backIcons_white.png');
-    --background-repeat: repeat;
+.hdr {
+  --color: --ka-text-color;  
+}
+
+.swiping {
+  min-height:90%;
 }
 
 

@@ -16,6 +16,10 @@
           <a href="mailto:lerninseln@ok-lab-karlsruhe.de">EMail</a>
         </div>
         -->
+
+        <ion-img src="/assets/img/front/1.jpg"></ion-img>
+
+
         <div v-if="isMobile()">
           <!--
           <ion-button  @click="imprint()">

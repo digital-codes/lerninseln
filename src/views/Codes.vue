@@ -11,7 +11,7 @@
       -->
 
     <ion-content >
-    <div ref="tab4">
+    <div ref="tab4" class="swiping">
       <ion-card >
       <!--
       <ion-card-header>
@@ -53,7 +53,8 @@ export default  defineComponent({
   },
   async mounted(){
     const gest = this.$refs.tab4 //ref();
-    const r = router.currentRoute.value.path // value is important!
+    // current path:
+    //const r = router.currentRoute.value.path // value is important!
     //console.log("Current: ",r,"ref2:",gest)
     //setTimeout(function(){console.log(r.path)},2000)
     const gesture = createGesture({
@@ -68,11 +69,11 @@ export default  defineComponent({
 
 
 <style scoped>
-
-ion-content {
-    --background: url('/assets/img/bg/backIcons_white.png');
-    --background-repeat: repeat;
+.hdr {
+  --color: --ka-text-color;  
 }
-
+.swiping {
+  min-height:90%;
+}
 
 </style>

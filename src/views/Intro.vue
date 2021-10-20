@@ -9,7 +9,7 @@
     </ion-header>
 
     <ion-content :fullscreen="true" >
-    <div ref="tab1">
+    <div ref="tab1" class="swiping">
     
      <ion-loading
     :is-open="loading"
@@ -23,7 +23,9 @@
     <LoginForm></LoginForm>
     -->
 
+    <!--
     <IntroSlides v-if="!loading" ></IntroSlides>
+    -->
 
     <Providers></Providers>
 
@@ -66,7 +68,9 @@ import router from "../router";
 export default  defineComponent ({
   name: 'Intro',
   components: { //LoginForm, 
-    IntroText, Providers, IonHeader, IonToolbar, IonTitle, IonContent, IonPage,IntroSlides,IonLoading
+    IntroText, Providers, IonHeader, IonToolbar, IonTitle, 
+    IonContent, IonPage, //IntroSlides,
+    IonLoading
   },
   data: function() {
     return {
@@ -205,10 +209,12 @@ ion-toolbar {
 
 }
 
+/* can overwrite here ... **
 ion-content {
     --background: url('/assets/img/bg/backIcons_white.png');
     --background-repeat: repeat;
 }
+*/
 
 /*
 .ion-page {
@@ -217,5 +223,8 @@ ion-content {
   margin-right:auto;
 }
 */
+.swiping {
+  min-height:90%;
+}
 
 </style>

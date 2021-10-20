@@ -59,4 +59,13 @@ umgedreht: 0px -3px 6px
   margin-right:auto;
 }
 
+/* global defs */
+ion-content {
+  /*
+    --background: url('/assets/img/bg/backIcons_white.png');
+    --background-repeat: repeat;
+    */
+    --background: #05aa00;
+}
+
 </style>
