@@ -21,6 +21,12 @@
     <ion-content >
       <div ref="tab2" class="swiping">
 
+      <ion-card >
+      <ion-card-content>
+        <Filter/>
+      </ion-card-content>
+      </ion-card >
+
 
       <ion-card >
       <ion-card-content>
@@ -53,6 +59,8 @@ import Leaf from "@/components/Leaf.vue";
 //import Events from '@/components/Events.vue';
 import Events from '@/components/Events.vue';
 
+import Filter from '@/components/Filter.vue';
+
 import { useStore, Todo, Selection, MUTATIONS, ACTIONS } from '../services/quickStore';
 
 import { defineComponent, ref } from 'vue'; 
@@ -63,7 +71,7 @@ import router from "../router";
 
 export default defineComponent( {
   name: 'Map',
-  components: {  IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, },
+  components: {  IonContent, IonCard, IonCardContent, IonPage, Leaf ,Events, Filter},
   methods : {
     onSwipe(detail) {
       const type = detail.type;

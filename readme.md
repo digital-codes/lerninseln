@@ -60,3 +60,13 @@ Webview with Chromium and USB:
 chrome://inspect/#devices
 see https://developer.chrome.com/docs/devtools/remote-debugging/
 
+# Kategories
+Ruhe, Internet, Unterstützung, Werkstatt, Gemeinschaft
+
+volume-mute-outline / headset-outline
+wifi-outline / laptop-outline
+medkit-outline
+build-outline
+people-outline
+
+

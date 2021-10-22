@@ -232,7 +232,7 @@ button {
 
 .eventCheck {
   display: inline-block;
-  /* width:10%; */ 
+  max-width:10%;  
   margin-left:5%;
   margin-bottom: 2em;
   width: 2em;

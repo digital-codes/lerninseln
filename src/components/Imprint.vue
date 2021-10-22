@@ -17,7 +17,7 @@
           <ion-label>Impressum</ion-label>
           </ion-button>
           <ion-button  :href="gdprUrl" target="_blank">
-            <ion-icon :icon="shieldOutline" alt="Datenschutz"/>
+            <ion-icon :icon="shieldHalfOutline" alt="Datenschutz"/>
           <ion-label>Datenschutz</ion-label>
           </ion-button>
         </div>
@@ -38,7 +38,7 @@ import { useStore } from '../services/quickStore';
 
 import { 
   informationCircleOutline,
-  shieldOutline,
+  shieldHalfOutline,
  } from 'ionicons/icons';
 
 
@@ -63,7 +63,7 @@ export default defineComponent ({
     const store = useStore()
     return {
       store,
-      informationCircleOutline,shieldOutline,
+      informationCircleOutline,shieldHalfOutline,
       gdprUrl:"https://www.karlsruhe.de/impressum/datenschutz.de",
       imprintUrl: "https://www.karlsruhe.de/impressum.de",
     }
