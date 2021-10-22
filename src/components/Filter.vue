@@ -6,54 +6,13 @@
     </ion-card-header>
     <ion-card-content>
 
-          <FilterItem v-for="n in 5" :key="n" v-model="update"
-            name=labels[n-1]
+          <FilterItem v-for="n in 5" :key="n" 
+            :name=labels[n-1]
             :icon=icons[n-1]
             :check=check[n-1]
-            @filter="onFilter(n-1,$event)"
+            @filter="onFilter(n-1)"
           />
 
-        <!--
-          <FilterItem :key=check[0]
-            name="F1"
-            :icon=volumeMuteOutline
-            :check=check[0]
-            @filter="onFilter(0,$event)"
-          >
-          </FilterItem>
-
-          <FilterItem  :key=check[1]
-            name="F2"
-            :icon=wifiOutline
-            :check=check[1]
-            @filter="onFilter(1,$event)"
-          >
-          </FilterItem>
-
-          <FilterItem  :key=check[2]
-            name="F3"
-            :icon=medkitOutline
-            :check=check[2]
-            @filter="onFilter(2,$event)"
-          >
-          </FilterItem>
-
-          <FilterItem  :key=check[3]
-            name="F4"
-            :icon=buildOutline
-            :check=check[3]
-            @filter="onFilter(3,$event)"
-          >
-          </FilterItem>
-
-          <FilterItem  :key=check[4]
-            name="F5"
-            :icon=peopleOutline
-            :check=check[4]
-            @filter="onFilter(4,$event)"
-          >
-          </FilterItem>
-          -->
 
     </ion-card-content>
   </ion-card>
@@ -90,23 +49,19 @@ export default defineComponent ({
   data () {
     return {
       fs1: false,
-      check: [0,0,0,0,0],
+      check: [false,false,false,false,false],
       update: 0,
       icons: icons,
       labels: labels
     }
   },
   methods: {
-    onFilter(x: number,y: number) {
-      console.log("Filter event: ",x,y)
-      if (y) {
-        const a = [0,0,0,0,0]
-        a[x] = 1
-        this.check = a
-      } else 
-        this.check[x] = 0
-      console.log(this.check)
-      this.update++
+    onFilter(x: number) {
+        console.log("Filter event: ",x)
+        for (let i=0;i<this.check.length;i++){
+          this.check[i] = (i == x)
+        }
+        //console.log(this.check)
     },
   },
   setup() {

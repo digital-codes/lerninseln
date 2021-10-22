@@ -15,65 +15,63 @@
           @update:modelValue="checked = $event"
             :modelValue="check"
 
+        .. works almos but toggles too much...
+          :checked=check
+          
+          @ionChange="filter()" 
+
     -->
 
     <ion-item lines="none">
             <ion-icon :icon=icon class="filterIcon"/>
     </ion-item>
     <ion-item class="filterToggle" lines="none">
-          <ion-toggle
-          :checked=check
-          @ionChange="filter()" 
+          <ion-checkbox
+          @update:modelValue="{checked = $event;filter()}"
+          :modelValue="checked"
           >
-          </ion-toggle>
+          </ion-checkbox>
     </ion-item>
     
     </ion-item-group>
 </template>
 
 <script lang="ts">
-import {IonToggle, IonIcon, IonItemGroup, IonItem } from '@ionic/vue';
+import {IonCheckbox, IonIcon, IonItemGroup, IonItem } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 
 
 export default defineComponent ({
   name: "FilterItem",
-  components: { IonToggle, IonIcon, IonItemGroup, IonItem
+  components: { IonCheckbox, IonIcon, IonItemGroup, IonItem
   },
   data () {
     return {
+      checked: this.check
     }
   },
   props: {
     "name": String,
     "icon": IonIcon,
-    "check": Number
-    },
+    "check": Boolean
+  },
   emits: ['filter'],
   methods: {
-    pr(x: any) {
-      console.log(x.target)
-    },
-    // x not needed, probably
-    /*
-    @ionChange="x($event)"
-
-    x(e: Event){
-      console.log(e.target)
-    },
-    */
     filter(){
-      console.log("Local filter:", this.check)
-      this.$emit("filter",this.check?0:1)
-      /*
-      if (this.checked)
-        $emit("filter")
-      else
-        $emit("clear")
-        */
+      console.log("F1:", this.name," - ",this.check, this.checked)
+      if (this.checked) {
+        this.$emit("filter")
+      }
     },
   },
+
+  watch: {
+    "check": function (a,b) { 
+        console.log(this.name," : ",a,b)
+        this.checked = a
+    }
+  }
 
 });
 </script>
