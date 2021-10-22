@@ -13,8 +13,6 @@
             @filter="onFilter(n-1,$event)"
           />
 
-    <p>{{filterOff}}</p>
-
     </ion-card-content>
   </ion-card>
 
@@ -66,7 +64,7 @@ export default defineComponent ({
           }
           this.filterOff = false
         } else {
-          this.filterOff = true
+          if (this.check[x]) this.filterOff = true
         }
         //console.log(this.check)
     },
@@ -90,6 +88,9 @@ export default defineComponent ({
   color: unset;  
 }
 
+ion-card {
+  margin: 0;
+}
 ion-card-content {
   padding: 0;
   text-align: center;
@@ -103,6 +104,16 @@ ion-card-header {
 ion-card-subtitle {
   text-align:center;
 }
+
+ion-card-content {
+  line-height: 1.2em;
+}
+
+ion-card-content .card-content-ios {
+  padding-inline-start: 5px;
+  padding-inline-end: 5px;
+}
+
 
 .label {
 

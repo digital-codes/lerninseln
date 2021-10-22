@@ -113,19 +113,11 @@ export default defineComponent ({
   text-align: center;
 }
 
-ion-toggle {
-  width: 40px;
-   height: 16px;
-   --handle-width: 16px;
-   --handle-height: 20px;
-  --handle-spacing: 0px;
-  --border-radius: 12px;
-  --handle-border-radius: 12px;
-}
 
 ion-item {
-  --padding-start: 5px;
+  --padding-start: 15px;
   --inner-padding-end: 5px;
+  --min-height: 30px;
 }
 
 </style>
