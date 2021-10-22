@@ -61,7 +61,9 @@ export default defineComponent ({
     filter(){
       console.log("F1:", this.name," - ",this.check, this.checked)
       if (this.checked) {
-        this.$emit("filter")
+        this.$emit("filter",true)
+      } else {
+        this.$emit("filter",false)
       }
     },
   },

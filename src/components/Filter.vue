@@ -10,9 +10,10 @@
             :name=labels[n-1]
             :icon=icons[n-1]
             :check=check[n-1]
-            @filter="onFilter(n-1)"
+            @filter="onFilter(n-1,$event)"
           />
 
+    <p>{{filterOff}}</p>
 
     </ion-card-content>
   </ion-card>
@@ -52,14 +53,20 @@ export default defineComponent ({
       check: [false,false,false,false,false],
       update: 0,
       icons: icons,
-      labels: labels
+      labels: labels,
+      filterOff: true
     }
   },
   methods: {
-    onFilter(x: number) {
-        console.log("Filter event: ",x)
-        for (let i=0;i<this.check.length;i++){
-          this.check[i] = (i == x)
+    onFilter(x: number, y: boolean) {
+        console.log("Filter event: ",x,y)
+        if (y) {
+          for (let i=0;i<this.check.length;i++){
+            this.check[i] = (i == x)
+          }
+          this.filterOff = false
+        } else {
+          this.filterOff = true
         }
         //console.log(this.check)
     },
