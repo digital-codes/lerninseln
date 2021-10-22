@@ -62,7 +62,7 @@
 import { IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel,
   IonPopover,
  } from '@ionic/vue';
-import { walk, warning, wifi, wine } from 'ionicons/icons';
+import { wifiOutline, medkitOutline, buildOutline, peopleOutline } from 'ionicons/icons';
 
 import Popver from './popover.vue'
 
@@ -114,13 +114,13 @@ export default defineComponent({
       //console.log("Icon id:",parseInt(this.icon))
       switch (parseInt(this.icon)) {
         case 1:
-          return wifi;
+          return buildOutline;
         case 2:
-          return wine;
+          return peopleOutline;
         case 3:
-          return walk;
+          return wifiOutline;
         default:
-          return warning;
+          return medkitOutline;
       } 
     }
   },
@@ -128,10 +128,10 @@ export default defineComponent({
     const store = useStore();
     return {
       store,
-      walk, 
-      wifi,
-      warning,
-      wine,
+      wifiOutline, 
+      buildOutline,
+      medkitOutline,
+      peopleOutline,
     }
   }
 });
