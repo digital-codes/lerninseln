@@ -114,7 +114,7 @@ export default defineComponent({
       router.push("/shop")
     },
     async select(e) {
-      const item = this.items.find(i => i.id ==e)
+      const item = this.items.find(i => (i.id == e))
       // for button:
       /*
       if (item.checked != true) 
@@ -163,16 +163,21 @@ export default defineComponent({
       // https://v3.vuejs.org/guide/computed.html#computed-properties
       //console.log("Filter on:", this.filter,"length: ",this.items.length)
       console.log("computed: ",this.items, this.items.length)
-      const filter = this.store.state.selection.eventId
-      console.log("Filter on:", filter,"length: ",this.items.length)
+      const evtFilter = this.store.state.selection.eventId
+      const catFilter = 0 // should get it from store this.store.state.selection.eventId
+      console.log("Event filter on:", evtFilter,"length: ",this.items.length)
+      console.log("Category filter on:", catFilter)
       const i = []
-      if (filter == 0) {
+      if (evtFilter == 0) {
         this.items.forEach(item => { 
           item.checked = 0
-          i.push(item)
+          // filter by category
+          if ((catFilter == 0) || (item.category_id == catFilter)) {
+            i.push(item)
+          } 
         })
       } else {
-        const item = this.items.find(x => x.id == filter) || 0
+        const item = this.items.find(x => x.id == evtFilter) || 0
         if (i != 0)
         item.checked = 1
         i.push(item)
