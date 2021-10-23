@@ -164,7 +164,8 @@ export default defineComponent({
       //console.log("Filter on:", this.filter,"length: ",this.items.length)
       console.log("computed: ",this.items, this.items.length)
       const evtFilter = this.store.state.selection.eventId
-      const catFilter = 0 // should get it from store this.store.state.selection.eventId
+      const catFilter = this.store.state.filter.catId
+      //const catFilter = 0 // should get it from store this.store.state.selection.eventId
       console.log("Event filter on:", evtFilter,"length: ",this.items.length)
       console.log("Category filter on:", catFilter)
       const i = []
@@ -172,7 +173,7 @@ export default defineComponent({
         this.items.forEach(item => { 
           item.checked = 0
           // filter by category
-          if ((catFilter == 0) || (item.category_id == catFilter)) {
+          if ((catFilter == -1) || (item.category_id == catFilter)) {
             i.push(item)
           } 
         })

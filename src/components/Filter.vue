@@ -24,6 +24,7 @@ import { defineComponent } from 'vue';
 
 import FilterItem from '@/components/FilterItem.vue';
 
+import { useStore, Filter, MUTATIONS } from '../services/quickStore';
 
 import { 
   volumeMuteOutline,
@@ -55,21 +56,30 @@ export default defineComponent ({
     }
   },
   methods: {
-    onFilter(x: number, y: boolean) {
-        console.log("Filter event: ",x,y)
+    async onFilter(x: number, y: boolean) {
+        console.log("Filter event: ",x,y,"Store filter: ",this.store.state.filter.catId)
+        const filter = this.store.state.filter
         if (y) {
           for (let i=0;i<this.check.length;i++){
             this.check[i] = (i == x)
           }
           this.filterOff = false
+          filter.catId = x
+          await this.store.commit(MUTATIONS.SET_FILTER,filter)
         } else {
-          if (this.check[x]) this.filterOff = true
+          if (this.check[x]) {
+            filter.catId = -1
+            await this.store.commit(MUTATIONS.SET_FILTER,filter)
+            this.filterOff = true
+          }
         }
         //console.log(this.check)
     },
   },
   setup() {
+    const store = useStore()
     return {
+      store,
       volumeMuteOutline,
       //wifiOutline,
       medkitOutline,

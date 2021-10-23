@@ -9,6 +9,7 @@ import { createStore, useStore as baseUseStore, Store, MutationTree, } from 'vue
 export type Device = { platform: string};
 export type Identity = { email: string; pwd: string};
 export type Selection = { eventId: number; providerId: number};
+export type Filter = { catId: number; featId: number};
 export type Purchase = { ticketId: number; email: string; count: number };
 
 export type Qrcode = {
@@ -23,13 +24,14 @@ export type Qrcode = {
   "scored": boolean;
  };
 
-export type State = { device: Device; selection: Selection; purchase: Purchase; qrcode: Qrcode[]; identity: Identity };
+export type State = { device: Device; selection: Selection; filter: Filter; purchase: Purchase; qrcode: Qrcode[]; identity: Identity };
 
 
 export const key: InjectionKey<Store <State> > = Symbol();
 const state: State = {
   device: {platform: "web"},  // default to web
   selection: {eventId: 0, providerId: 0},
+  filter: {catId: -1, featId: -1},
   purchase: {ticketId: 0, email: "", count: 0},
   qrcode: [],
   identity: {"email":"","pwd":""},
@@ -46,6 +48,8 @@ export const enum MUTATIONS {
   SET_ID = 'SET_ID',
   RESET_EVENT = 'RESET_EVENT',
   SET_EVENT = 'SET_EVENT',
+  RESET_FILTER = 'RESET_FILTER',
+  SET_FILTER = 'SET_FILTER',
   RESET_PURCHASE = 'RESET_PURCHASE',
   SET_PURCHASE = 'SET_PURCHASE',
   RESET_QR = 'RESET_QR',
@@ -70,6 +74,12 @@ const mutations: MutationTree<State> = {
     },
     [MUTATIONS.RESET_ID](state) {
       state.identity = {"email":"","pwd":""};
+    },
+    [MUTATIONS.SET_FILTER](state, filter: Filter) {
+      state.filter = filter
+    },
+    [MUTATIONS.RESET_FILTER](state) {
+      state.filter = {"catId":-1,"featId":-1};
     },
     [MUTATIONS.SET_PURCHASE](state, purchase: Purchase ) {
       state.purchase = purchase
