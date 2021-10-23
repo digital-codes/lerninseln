@@ -31,7 +31,7 @@ export const key: InjectionKey<Store <State> > = Symbol();
 const state: State = {
   device: {platform: "web"},  // default to web
   selection: {eventId: 0, providerId: 0},
-  filter: {catId: -1, featId: -1},
+  filter: {catId: 0, featId: 0},
   purchase: {ticketId: 0, email: "", count: 0},
   qrcode: [],
   identity: {"email":"","pwd":""},
@@ -79,7 +79,7 @@ const mutations: MutationTree<State> = {
       state.filter = filter
     },
     [MUTATIONS.RESET_FILTER](state) {
-      state.filter = {"catId":-1,"featId":-1};
+      state.filter = {"catId":0,"featId":0};
     },
     [MUTATIONS.SET_PURCHASE](state, purchase: Purchase ) {
       state.purchase = purchase

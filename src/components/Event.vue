@@ -62,7 +62,7 @@
 import { IonItemGroup, IonIcon, IonItem, IonItemDivider, IonLabel,
   IonPopover,
  } from '@ionic/vue';
-import { volumeMuteOutline, medkitOutline, constructOutline, peopleOutline } from 'ionicons/icons';
+import { volumeMuteOutline, medkitOutline, constructOutline, peopleOutline, helpOutline } from 'ionicons/icons';
 
 import Popver from './popover.vue'
 
@@ -114,13 +114,15 @@ export default defineComponent({
       //console.log("Icon id:",parseInt(this.icon))
       switch (parseInt(this.icon)) {
         case 1:
-          return constructOutline;
-        case 2:
-          return peopleOutline;
-        case 3:
           return volumeMuteOutline;
-        default:
+        case 2:
           return medkitOutline;
+        case 3:
+          return constructOutline;
+        case 4:
+          return medkitOutline;
+        default:
+          return helpOutline;
       } 
     }
   },
@@ -132,6 +134,7 @@ export default defineComponent({
       constructOutline,
       medkitOutline,
       peopleOutline,
+      helpOutline,
     }
   }
 });

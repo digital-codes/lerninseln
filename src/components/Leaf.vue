@@ -144,12 +144,18 @@ export default defineComponent ({
     selIitems() {
       // https://v3.vuejs.org/guide/computed.html#computed-properties
       const provId = this.store.state.selection.providerId
+      const catFilter = this.store.state.filter.catId
       const m = []
       this.markers.forEach(marker => { 
         //console.log(marker)
         //if ((this.filter == 0) || (item.category_id == this.filter)) 
-        if ((provId == 0) || (marker.id == provId)) 
-          m.push(marker)
+        if ((provId == 0) || (marker.id == provId)) {
+          // filter by category ... doesn't work. we show providers in the map, 
+          // but categories are tied to events
+          { //if ((catFilter == 0) || true) { //marker.category_id == catFilter)) 
+            m.push(marker)
+          }
+        }
         })
       return m
     },

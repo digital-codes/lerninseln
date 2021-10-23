@@ -173,7 +173,7 @@ export default defineComponent({
         this.items.forEach(item => { 
           item.checked = 0
           // filter by category
-          if ((catFilter == -1) || (item.category_id == catFilter)) {
+          if ((catFilter == 0) || (item.category_id == catFilter)) {
             i.push(item)
           } 
         })

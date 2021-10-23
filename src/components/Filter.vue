@@ -64,11 +64,11 @@ export default defineComponent ({
             this.check[i] = (i == x)
           }
           this.filterOff = false
-          filter.catId = x
+          filter.catId = x + 1 // categories run from 1
           await this.store.commit(MUTATIONS.SET_FILTER,filter)
         } else {
           if (this.check[x]) {
-            filter.catId = -1
+            filter.catId = 0
             await this.store.commit(MUTATIONS.SET_FILTER,filter)
             this.filterOff = true
           }
