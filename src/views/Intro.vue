@@ -181,12 +181,21 @@ export default  defineComponent ({
     const loading = ref(true);
 
     const store = useStore();
+    /*
     const ionRouter = useIonRouter();
     useBackButton(-1, () => {
       if (!ionRouter.canGoBack()) {
         App.exitApp();
       }
     });
+    */
+    const ionRouter = useIonRouter();
+    useBackButton(-1, () => {
+      if ((!ionRouter.canGoBack()) || (router.currentRoute.value.path == "/intro")) {
+        App.exitApp();
+      }
+    });
+
     return { store, loading};
   }
 })

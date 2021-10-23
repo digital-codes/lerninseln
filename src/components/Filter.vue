@@ -6,7 +6,7 @@
     </ion-card-header>
     <ion-card-content>
 
-          <FilterItem v-for="n in 5" :key="n" 
+          <FilterItem v-for="n in 4" :key="n" 
             :name=labels[n-1]
             :icon=icons[n-1]
             :check=check[n-1]
@@ -27,19 +27,19 @@ import FilterItem from '@/components/FilterItem.vue';
 
 import { 
   volumeMuteOutline,
-  wifiOutline,
+  //wifiOutline,
   medkitOutline,
-  buildOutline,
+  constructOutline,
   peopleOutline,
  } from 'ionicons/icons';
 
 const icons=[ volumeMuteOutline,
-  wifiOutline,
+  //wifiOutline,
   medkitOutline,
-  buildOutline,
+  constructOutline,
   peopleOutline]
 
-const labels = ["F1","F2","F3","F4","F5"]
+const labels = ["F1","F2","F3","F4"]
 
 export default defineComponent ({
   name: "Filter",
@@ -47,8 +47,7 @@ export default defineComponent ({
   },
   data () {
     return {
-      fs1: false,
-      check: [false,false,false,false,false],
+      check: [false,false,false,false],
       update: 0,
       icons: icons,
       labels: labels,
@@ -72,9 +71,9 @@ export default defineComponent ({
   setup() {
     return {
       volumeMuteOutline,
-      wifiOutline,
+      //wifiOutline,
       medkitOutline,
-      buildOutline,
+      constructOutline,
       peopleOutline,
     }
   },
