@@ -97,14 +97,16 @@ export default defineComponent ({
   color: unset;  
 }
 
+
 ion-card {
   margin: 0;
 }
+
 ion-card-content {
   padding: 0;
   text-align: center;
-
 }
+
 
 ion-card-header {
   padding: 0;
@@ -121,6 +123,8 @@ ion-card-content {
 ion-card-content .card-content-ios {
   padding-inline-start: 5px;
   padding-inline-end: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 
