@@ -17,8 +17,8 @@
 -->
 
  <l-tile-layer 
-        :url="stl3" 
-        :attribution="attr3"
+        :url="stl0" 
+        :attribution="attr0"
   >
   </l-tile-layer>
 
@@ -74,6 +74,9 @@ import DataStorage from "../services/dstore";
 
 import { Geolocation } from '@capacitor/geolocation';
 
+let bookFunction = function (x=0) {
+  console.log("BF: ",x)
+}
 
 // ----------------------- 
 
@@ -113,9 +116,11 @@ export default defineComponent ({
       //center: this.geojsonOptions.latlng(49.004,  8.403),
       center: [49.004,  8.403],
       //url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      /*
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        */
       markers : [],
       geojson: {},
       geojsonOptions: {
@@ -182,6 +187,9 @@ export default defineComponent ({
     zoomUpdate(zoom) {
       this.currentZoom = zoom;
     },
+    book(x=0) {
+      console.log("Book: ",x)
+    },
     centerUpdate(center) {
       this.currentCenter = center;
     },
@@ -207,12 +215,14 @@ export default defineComponent ({
           const ll = JSON.parse(p.latlon)
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
-          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>'
+          bookFunction = this.book
+          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div> '
+          //                <ion-button color="primary" @click="bookFunction("' + p.id + '")">Book</ion-button>'
           const iconUrl = "https://placekitten.com/50/100"
-          const iconSize = [0,0]
+          const iconSize = [0,0]  // set 0 to suppress icon
           const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}
-          this.markers.push({"id":p.id,"latlng":pnt,
-          "content":content  + "<p>"+ p.id + "</p>",
+          this.markers.push({"id":p.id,"latlng":pnt, 
+          "content":content, //  + "<p>"+ p.id + "</p>",
           "iconOptions":iconOptions
           })
         })

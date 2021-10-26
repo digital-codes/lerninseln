@@ -10,6 +10,7 @@
             :name=labels[n-1]
             :icon=icons[n-1]
             :check=check[n-1]
+            :info=infos[n-1]
             @filter="onFilter(n-1,$event)"
           />
 
@@ -41,6 +42,9 @@ const icons=[ volumeMuteOutline,
   peopleOutline]
 
 const labels = ["F1","F2","F3","F4"]
+const infos = [
+  "Ruhe","Unterstützung","Werkstatt","Gemeinschaft"
+  ]
 
 export default defineComponent ({
   name: "Filter",
@@ -52,7 +56,8 @@ export default defineComponent ({
       update: 0,
       icons: icons,
       labels: labels,
-      filterOff: true
+      filterOff: true,
+      infos: infos
     }
   },
   methods: {

@@ -68,6 +68,7 @@ export default defineComponent({
 .qrimage {
   width:100%;
   margin:0;
+  padding:10%;
 }
 </style>
 

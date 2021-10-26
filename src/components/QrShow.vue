@@ -9,6 +9,8 @@
         :class=" {'qrcode': isZoomed, 'qrthumb':true } "
         @click="zoomQr()" 
     >
+
+
     <div class="qrscore">
 
       <div class="qrstars">
@@ -50,6 +52,8 @@
         Bewerten
         </ion-button>
       </div>
+
+
     </div>
   </div>
 
@@ -157,8 +161,8 @@ h2 {
 }
 
 .qrcode {
-  width:90%;
-  height:90%;
+  width:70%;
+  height:70%;
 }
 
 /* eval */

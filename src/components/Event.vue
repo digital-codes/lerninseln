@@ -4,7 +4,7 @@
     <ion-item-divider>
       <ion-label class="event"><h2>{{title}}, ID {{id}}</h2></ion-label>
     </ion-item-divider>
-    <ion-item color="light">
+    <ion-item color="light" >
       <ion-icon :icon="getIcon()" slot="start" class="eventIcon"/>
       <ion-label position="fixed" class="eventDate">
       <div>{{date}}</div>
@@ -31,31 +31,6 @@
     </ion-item-divider>
  </ion-item-group>
 
-  <!--
- <ion-popover
-    :is-open="popOpen"
-    css-class="eventPop"
-    :translucent="true"
-    @didDismiss="popState(false)"
-  >
-    <Popover>
-    <iframe 
-      width="400px" 
-      height="40%" 
-      overflow="overflow-scroll" 
-      src="https://www.cern.ch" 
-      >
-      </iframe>
-    </Popover>
-  </ion-popover>
-  -->
-
-  <!--
-  <div>
-  <h2>{{date}}</h2>
-  <p>{{text}}</p>
-  </div>
-  -->
 </template>
 
 <script lang="ts"> 

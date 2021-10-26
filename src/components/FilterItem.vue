@@ -23,7 +23,7 @@
     -->
 
     <ion-item lines="none">
-            <ion-icon :icon=icon class="filterIcon"/>
+            <ion-icon :icon=icon class="filterIcon" @click="iconHelp"/>
     </ion-item>
     <ion-item class="filterToggle" lines="none">
           <ion-checkbox
@@ -38,42 +38,61 @@
 
 <script lang="ts">
 import {IonCheckbox, IonIcon, IonItemGroup, IonItem } from '@ionic/vue';
-import { defineComponent } from 'vue';
 
+import { IonButton, IonPopover, popoverController } from '@ionic/vue';
+import { defineComponent, ref } from 'vue';
+
+import FilterInfo from "./FilterInfo.vue"
 
 
 export default defineComponent ({
   name: "FilterItem",
-  components: { IonCheckbox, IonIcon, IonItemGroup, IonItem
+  components: { IonCheckbox, IonIcon, IonItemGroup, IonItem, 
   },
   data () {
     return {
-      checked: this.check
+      checked: this.check,
     }
   },
   props: {
     "name": String,
+    "info": String,
     "icon": IonIcon,
     "check": Boolean
   },
   emits: ['filter'],
   methods: {
     filter(){
-      console.log("F1:", this.name," - ",this.check, this.checked)
+      console.log("F1:", this.name," - ",this.check, this.checked, this.info)
       if (this.checked) {
         this.$emit("filter",true)
       } else {
         this.$emit("filter",false)
       }
     },
-  },
+    async iconHelp(ev: Event) {
+      console.log("help")
+      const popover = await popoverController
+        .create({
+          component: FilterInfo,
+          componentProps: {"info":this.info},
+          cssClass: 'filterInfoClass',
+          event: ev,
+          translucent: true
+        })
+      await popover.present();
+      const { role } = await popover.onDidDismiss();
+      console.log('onDidDismiss resolved with role', role);
+    },
 
+  },
+  
   watch: {
     "check": function (a,b) { 
         console.log(this.name," : ",a,b)
         this.checked = a
     }
-  }
+  },
 
 });
 </script>
@@ -102,11 +121,14 @@ export default defineComponent ({
   text-align: center;
 
 }
+
 .filterIcon {
   text-align: center;
   margin-left:auto;
   margin-right:auto;
   width:100;
+  background: #fff;
+  border-bottom: solid 4px #5260ff; 
 }
 
 .filterToggle {
