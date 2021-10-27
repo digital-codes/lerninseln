@@ -217,7 +217,7 @@ export default defineComponent ({
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
           bookFunction = this.book
-          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div> 
+          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>' 
                           //<ion-button color="primary" @click="global.Object.book(123)">Book</ion-button>'
           const iconUrl = "https://placekitten.com/50/100"
           const iconSize = [0,0]  // set 0 to suppress icon
