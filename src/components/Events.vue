@@ -1,32 +1,10 @@
 <template>
 
-  <!--
-  <ion-item>
-  <div>
-  <ion-label >dweewf</ion-label>
-  <ion-checkbox v-model="chk1"></ion-checkbox>
-  </div>
-  <div>
-  <ion-label >123</ion-label>
-  <ion-checkbox v-model="chk2"></ion-checkbox>
-  </div>
-  <div>
-  <ion-label >123</ion-label>
-  <ion-checkbox v-model="chk3"></ion-checkbox>
-  </div>
-  </ion-item>
-
-  <ion-checkbox
-        @update:modelValue="check1.isChecked = $event"
-        :modelValue="check1.isChecked">
-  </ion-checkbox>
-  <ion-checkbox
-        @update:modelValue="entry.isChecked = $event"
-        :modelValue="entry.isChecked">
-  </ion-checkbox>
--->
-  <!--ion-button @click="toggle()">Toggle</ion-button-->
-
+  <ion-button 
+    v-if="hasEvent" 
+    @click="buy()"
+    >Zur Buchung
+  </ion-button>
 
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
           <Event class="eventItem" 
@@ -46,30 +24,6 @@
           ></ion-checkbox>
 
   </div>
-
-          <!--
-          <ion-button class="eventCheck" 
-            @click="select(item.id)"
-            @update:modelValue="item.checked = $event"
-            :modelValue="item.checked"
-          >
-            <ion-icon :icon="cartOutline" />
-          </ion-button>
-          -->
-
-          <!--
-          <ion-checkbox class="eventCheck" 
-            @ionChange="select(item.id)"
-            @update:modelValue="item.checked = $event"
-            :modelValue="item.checked"
-          ></ion-checkbox>
-          -->
-
-  <ion-button 
-    v-if="hasEvent" 
-    @click="buy()"
-    >Zur Buchung
-  </ion-button>
 
 
 </template>

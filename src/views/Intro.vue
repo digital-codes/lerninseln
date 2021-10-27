@@ -92,7 +92,11 @@ export default  defineComponent ({
       //console.log(type,cx,dx,vx)
       //if ((type == "pan") && (dx > 100) && (vx > 1)) router.push("/tabs/tab3")
       if ((type == "pan") && (dx < -100) && (vx < -1)) router.push("/map")
-    }
+    },
+    async saveQr(qr) {
+        await this.store.commit(MUTATIONS.ADD_QR,qr)
+        console.log("Added code for ",qr.title)
+    },
   },
   async beforeMount() {
     console.log("QR length:", this.store.state.qrcode.length)
@@ -159,9 +163,26 @@ export default  defineComponent ({
         await this.store.commit(MUTATIONS.SET_ID,id)
         //console.log("Store id: ",this.store.state.identity)
 
+        // loading codes from database if id exists
+        console.log("Loading qrcodes")
+        await this.store.commit(MUTATIONS.RESET_QR)
+        const qrString = await this.ds.getItem("code") || "[]"
+        if (qrString.length > 0) {
+          const qrCodes = JSON.parse(qrString)
+          qrCodes.forEach(qr => this.saveQr (qr))
+            /* 
+            {
+            await this.store.commit(MUTATIONS.ADD_QR,qr)
+            console.log("Added code for ",qr.title)
+            }
+            */
+        }
+
       }
+
       console.log("Loading complete")
       this.loading = false
+
 
     }
   },
