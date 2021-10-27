@@ -1,20 +1,35 @@
 <template>
 
-  <div class="qrContainer">
-    <h2 class="qrlabel">{{title}}</h2>
-    <p class="qrinfo"> {{ date }}  {{ time }} </p>
-    <p class="qrinfo"> {{ provider }} {{ count }} Person(en)</p>
+  <div class="qrtop">
+    <ion-item-group class="qrContainer">
+    <ion-item lines="none" class="qritem">
+      <h2 class="qrlabel">{{title}}</h2>
+    </ion-item>
+    <ion-item lines="none" class="qritem">
+      <p class="qrinfo"> {{ date }}  {{ time }} </p>
+    </ion-item>
+    <ion-item lines="none" class="qritem">
+      <p class="qrinfo"> {{ provider }} {{ count }} Person(en)</p>
+    </ion-item>
+    <ion-item lines="none" class="qritem">
     <img 
         :src="qrsrc"  
         :class=" {'qrcode': isZoomed, 'qrthumb':true } "
         @click="zoomQr()" 
     >
+    </ion-item>
+   
+    </ion-item-group>
 
-
-    <div class="qrscore">
-
-      <div class="qrstars">
-      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" :disabled="isDisabled()" 
+    <ion-item-group class="scoreContainer">
+      <ion-item class="cancel">
+       <ion-button class="qrbutton" :disabled="isCancelDisabled()" @click="cancel()">
+        Abmelden
+        </ion-button>
+    </ion-item>
+    <ion-item lines="none" class="qritem">
+      <div class="qrStars">
+      <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" :disabled="isScoreDisabled()" 
         @ionChange="starsSelected($event)"
         ref="stars"
         >
@@ -26,36 +41,16 @@
         </ion-avatar>
       </ion-range>
       </div>
-
-      <!-- 
-      <div class="qrpros">
-       <ion-select name="pros" placeholder="Positiv" @ionChange="prosSelected($event)">
-          <ion-select-option value="0">Nichts</ion-select-option>
-          <ion-select-option value="1">Team</ion-select-option>
-          <ion-select-option value="2">Raum</ion-select-option>
-          <ion-select-option value="3">Ausstattung</ion-select-option>
-          <ion-select-option value="4">Programm</ion-select-option>
-        </ion-select>
-      </div>
-      <div class="qrcons">
-       <ion-select name="cons" disabled="true" placeholder="Negativ" @ionChange="consSelected($event)">
-          <ion-select-option value="0">Nichts</ion-select-option>
-          <ion-select-option value="1">Team</ion-select-option>
-          <ion-select-option value="2">Raum</ion-select-option>
-          <ion-select-option value="3">Ausstattung</ion-select-option>
-          <ion-select-option value="4">Programm</ion-select-option>
-        </ion-select>
-      </div>
-       -->
-      <div class="qrbutton">
-       <ion-button class="qrbutton1" :disabled="isDisabled()" @click="sendScore()">
+    </ion-item>
+    <ion-item lines="none" class="qritem">
+       <ion-button class="qrbutton" :disabled="isScoreDisabled()" @click="sendScore()">
         Bewerten
         </ion-button>
-      </div>
+    </ion-item>
+    </ion-item-group>
 
-
-    </div>
   </div>
+
 
 </template>
 
@@ -70,7 +65,7 @@ import QrModal from '@/components/QrModal.vue'
 export default defineComponent({
     name: "QrShow",
     props: ["title","date","time","provider","id","count","qrsrc","info","disabled"],
-    emits:["scoring"],
+    emits:["scoring","cancel"],
   components: { IonRange,  IonAvatar,
     //IonSelect, IonSelectOption,
     IonButton,
@@ -102,7 +97,11 @@ export default defineComponent({
       console.log("Scoring:", this.score.stars,this.score.pros,this.score.cons)
       this.$emit("scoring",this.score)
     },
-    isDisabled(){
+    cancel(){
+      console.log("Cancelling not finished")
+      this.$emit("cancel")
+    },
+    isScoreDisabled(){
       if (this.disabled) return true
       // cehck date and time and
       const dt = new Date()
@@ -112,6 +111,18 @@ export default defineComponent({
       console.log("date: ",date, time)
 
       return (date < this.date) || (time < this.time) 
+    },
+    isCancelDisabled(){
+      console.log("Cancelling must be fixed")
+      if (this.disabled) return true
+      // cehck date and time and
+      const dt = new Date()
+      const date = dt.toISOString().split("T")[0]
+      const tm = dt.toLocaleTimeString('de-DE')
+      const time = tm.split(":")[0] + ":" + tm.split(":")[1]
+      console.log("date: ",date, time)
+
+      return (date >= this.date) // cancel up to the day before 
     },
     zoom(e) {
       console.log(e)
@@ -160,12 +171,8 @@ h2 {
   padding-bottom: .2rem;
 }
 
-.qrcode {
-  width:70%;
-  height:70%;
-}
-
 /* eval */
+/*
 .qrContainer {
   width:100%;
   display: grid;
@@ -173,6 +180,34 @@ h2 {
   grid-gap: 1rem;
   text-align:left;
 }
+*/
+.qrtop {
+  width:100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1rem;
+  text-align:left;
+}
+
+.qrContainer {
+  grid-column: 1 / span 3;
+  width:100%;
+  display: block;
+  text-align:left;
+}
+
+.scoreContainer {
+  grid-column: 4 / span 2;
+  width:100%;
+  display: block;
+  text-align:left;
+}
+
+.qrcode {
+  width:70%;
+  height:70%;
+}
+
 .qrlabel {
   grid-column: 1 / span 2;
 }
@@ -194,25 +229,42 @@ h2 {
 
 .qrbutton {
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+.qritem {
+  --min-height:unset;
+}
+
+.qrStars {
+  width: 100%;
+  /* padding to be fixed */
+  margin-top: 1.0rem;
+  padding-top: 1.0rem;
+}
+
+/* make stars media dependent: width and margin,  
+small: 16/32, 5
+large: 24/48 , 10*/
 .smallStar {
-  width:32px;
-  height:32px;
-  margin-top:8px;
+  width:16px;
+  height:16px;
+  margin: 0 5px 0 0;
   opacity: 70 %;  /* problem on android ... translated to 1% */
 }
 
 .bigStar {
-  width:48px;
-  height:48px;
+  width:32px;
+  height:32px;
+  margin: 0 0 0 5px;
 }
 
 ion-range {
   padding:0;
-  --knob-size: 20px;
+  --knob-size: 1.2rem;
   /* same height as qrthumb */
-  --height: 54px;
+  /* --height: 54px; */
 }
 
 
