@@ -63,7 +63,13 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(store, key);
-  
+
 router.isReady().then(() => {
   app.mount('#app');
 });
+
+
+// try to create a global function for leaflet popups
+//https://v3.vuejs.org/guide/migration/global-api.html#config-ignoredelements-is-now-config-compileroptions-iscustomelement
+// https://github.com/vuejs/vue/issues/2417
+app.config.globalProperties.$book = (x=0) => {console.log("Book: ",x)}

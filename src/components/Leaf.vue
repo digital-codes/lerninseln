@@ -29,7 +29,8 @@
   <l-marker v-for="item in selIitems" :key="item.id" :lat-lng="item.latlng"
       @l-add="$event.target.openPopup()"
   >
-      <l-popup :content="item.content"></l-popup>
+      <l-popup :content="item.content">
+      </l-popup>
       <l-icon v-if="item.iconOptions.iconSize[0] != 0"
         :iconUrl="item.iconOptions.iconUrl"
         :iconSize="item.iconOptions.iconSize"
@@ -216,8 +217,8 @@ export default defineComponent ({
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
           bookFunction = this.book
-          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div> '
-          //                <ion-button color="primary" @click="bookFunction("' + p.id + '")">Book</ion-button>'
+          const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div> 
+                          //<ion-button color="primary" @click="global.Object.book(123)">Book</ion-button>'
           const iconUrl = "https://placekitten.com/50/100"
           const iconSize = [0,0]  // set 0 to suppress icon
           const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}
