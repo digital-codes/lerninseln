@@ -75,10 +75,6 @@ import DataStorage from "../services/dstore";
 
 import { Geolocation } from '@capacitor/geolocation';
 
-let bookFunction = function (x=0) {
-  console.log("BF: ",x)
-}
-
 // ----------------------- 
 
 //let startPnt = [49.004,  8.403]
@@ -188,16 +184,16 @@ export default defineComponent ({
     zoomUpdate(zoom) {
       this.currentZoom = zoom;
     },
-    book(x=0) {
-      console.log("Book: ",x)
-    },
     centerUpdate(center) {
       this.currentCenter = center;
     },
     async initialize() {
+      await this.store.commit(MUTATIONS.RESET_POSITION);
       const geoLoc = await Geolocation.getCurrentPosition();
       console.log('Current position:', geoLoc);
       const pnt =  [geoLoc.coords.latitude,geoLoc.coords.longitude]
+      // update position in quickstore
+      await this.store.commit(MUTATIONS.SET_POSITION, {lat:geoLoc.coords.latitude,lon:geoLoc.coords.longitude});
       //console.log(ll)
       const content = '<div class="popInfo"><h3>Du bist hier!</h3></div>'
       const iconUrl = "/assets/img/map/bulb.png"
@@ -216,9 +212,7 @@ export default defineComponent ({
           const ll = JSON.parse(p.latlon)
           const pnt =  [ll.lat,ll.lon]
           //console.log(ll)
-          bookFunction = this.book
           const content = '<div class="popInfo"><h3>' + p.name + "</h3>" + p.info + '</div>' 
-                          //<ion-button color="primary" @click="global.Object.book(123)">Book</ion-button>'
           const iconUrl = "https://placekitten.com/50/100"
           const iconSize = [0,0]  // set 0 to suppress icon
           const iconOptions = {"iconUrl":iconUrl,"iconSize":iconSize}

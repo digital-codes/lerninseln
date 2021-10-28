@@ -8,9 +8,11 @@
   </ion-button>
   <ion-button 
     v-if="hasEvent" 
-    @click="navigate()"
+    :href=osmUrl
+    target="_blank"
     >Hinkommen
   </ion-button>
+
   </div>
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
           <Event class="eventItem" 
@@ -62,6 +64,7 @@ export default defineComponent({
     items : [],
     providers: [],
     ds: "",
+    osmUrl: ""
     /*
     chk1: 1, 
     chk2: 0, 
@@ -75,6 +78,7 @@ export default defineComponent({
     },
     navigate() {
       console.log("OSM nav not implemented")
+      // need provider and current positions
     },
     async select(e) {
       const item = this.items.find(i => (i.id == e))
@@ -89,16 +93,31 @@ export default defineComponent({
       if (item.checked) {
         //this.filter = item.id
         await this.store.commit(MUTATIONS.SET_EVENT, {eventId:item.id,providerId:item.provider_id});
+        const dest = JSON.parse((this.providers.find(p => p.id == item.provider_id)).latlon)
+        const src = this.store.state.position
+        console.log("Pos: ",src.lat,src.lon,dest.lat,dest.lon)
+        // example https://routing.openstreetmap.de/?z=16&center=48.992228%2C8.391194&loc=48.992228%2C8.391194&loc=48.996931%2C8.387783&hl=de&alt=0&srv=2
+        //         https://routing.openstreetmap.de/?z=16&center=48.998874%2C8.477733&loc=48.998867%2C8.477738&hl=en&alt=0&srv=2
+        const osmBaseUrl = "https://routing.openstreetmap.de/"
+        this.osmUrl = osmBaseUrl + "?z=12&center=" + 
+          src.lat + "%2C" + src.lon + 
+          "&loc=" + src.lat + "%2C" + src.lon +
+          "&loc=" + dest.lat + "%2C" + dest.lon +
+          "&hl=de&alt=0&srv=2"
+
+
       } else {
         //this.filter = 0;
         await this.store.commit(MUTATIONS.RESET_EVENT);
+        this.osmUrl = "/map"
       }
     },
   },
   async beforeMount() {
     this.ds = await DataStorage.getInstance()
     const providerString = await this.ds.getItem("provider") || "[]"
-    const providers = JSON.parse(providerString)
+    // we need providers later on
+    this.providers = JSON.parse(providerString)
     const ticketString = await this.ds.getItem("ticket") || "[]"
     const tickets = JSON.parse(ticketString)
     const itemString = await this.ds.getItem("event") || "[]"
@@ -110,7 +129,7 @@ export default defineComponent({
       console.log("Tick: ",tick)
       if (tick == 0) continue
       const pid = items[i].provider_id
-      const name = (providers.find(p => p.id == pid)).name
+      const name = (this.providers.find(p => p.id == pid)).name
       //console.log("i: ",i,", id: ",id, ", name: ",name)
       items[i].provider = name
       items[i].checked = 0

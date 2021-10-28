@@ -11,6 +11,7 @@ export type Identity = { email: string; pwd: string};
 export type Selection = { eventId: number; providerId: number};
 export type Filter = { catId: number; featId: number};
 export type Purchase = { ticketId: number; email: string; count: number };
+export type Position = { lat: number; lon: number};
 
 export type Qrcode = {
   "title": string;
@@ -24,7 +25,8 @@ export type Qrcode = {
   "scored": boolean;
  };
 
-export type State = { device: Device; selection: Selection; filter: Filter; purchase: Purchase; qrcode: Qrcode[]; identity: Identity };
+export type State = { device: Device; selection: Selection; filter: Filter; 
+  purchase: Purchase; qrcode: Qrcode[]; identity: Identity;  position: Position;};
 
 
 export const key: InjectionKey<Store <State> > = Symbol();
@@ -35,6 +37,7 @@ const state: State = {
   purchase: {ticketId: 0, email: "", count: 0},
   qrcode: [],
   identity: {"email":"","pwd":""},
+  position: {lat:0,lon:0},
 };
 
 /*
@@ -46,6 +49,8 @@ export const enum MUTATIONS {
   SET_DEVICE = 'SET_DEVICE',
   RESET_ID = 'RESET_ID',
   SET_ID = 'SET_ID',
+  RESET_POSITION = 'RESET_POSITION',
+  SET_POSITION = 'SET_POSITION',
   RESET_EVENT = 'RESET_EVENT',
   SET_EVENT = 'SET_EVENT',
   RESET_FILTER = 'RESET_FILTER',
@@ -74,6 +79,12 @@ const mutations: MutationTree<State> = {
     },
     [MUTATIONS.RESET_ID](state) {
       state.identity = {"email":"","pwd":""};
+    },
+    [MUTATIONS.SET_POSITION](state, position: Position ) {
+      state.position = position
+    },
+    [MUTATIONS.RESET_POSITION](state ) {
+      state.position = {lat:0,lon:0} // well, 0,0 is a valid position. just very unlikely
     },
     [MUTATIONS.SET_FILTER](state, filter: Filter) {
       state.filter = filter
