@@ -1,11 +1,17 @@
 <template>
 
+  <div>
   <ion-button 
     v-if="hasEvent" 
     @click="buy()"
     >Zur Buchung
   </ion-button>
-
+  <ion-button 
+    v-if="hasEvent" 
+    @click="navigate()"
+    >Hinkommen
+  </ion-button>
+  </div>
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
           <Event class="eventItem" 
           :date=item.date 
@@ -66,6 +72,9 @@ export default defineComponent({
   methods:{
     buy() {
       router.push("/shop")
+    },
+    navigate() {
+      console.log("OSM nav not implemented")
     },
     async select(e) {
       const item = this.items.find(i => (i.id == e))
