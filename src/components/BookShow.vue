@@ -39,6 +39,8 @@
               :url="item.url" 
               :disabled="item.scored"
               @scoring="score($event,item.eventId)"
+              @cancel="cancel(item.eventId)"
+              @remove="remove(item.eventId)"
               >
               </QrShow>
 
@@ -102,7 +104,7 @@ const DUMMY_ITEM = {
   title:"Title",
   provider: "Provider",
   eventId:5,
-  date:"2021-08-29",
+  date:"2021-09-29",
   time:"12:00",
   count:1,
   url:"https://www.cern.ch",
@@ -130,8 +132,17 @@ export default defineComponent({
     }
   },
   methods:{
-    score(s,e){
-      console.log("Scoring:",s,e)
+    score(s,item){
+      console.log("Scored:",s.stars,item)
+      console.log("Scoring not finished")
+    },
+    cancel(item){
+      console.log("Cancel:",item)
+      console.log("Cancelling not finished")
+    },
+    remove(item){
+      console.log("Remove:",item)
+      console.log("Removing not finished")
     },
     toMap(){
       router.push("/map")

@@ -22,11 +22,19 @@
     </ion-item-group>
 
     <ion-item-group class="scoreContainer">
-      <ion-item class="cancel">
-       <ion-button class="qrbutton" :disabled="isCancelDisabled()" @click="cancel()">
+      <!-- cancel and remove both delete the code from the database -->
+      <ion-item  v-if="canCancel()" class="qritem">
+       <ion-button class="qrbutton"  @click="cancel()">
         Abmelden
         </ion-button>
-    </ion-item>
+      </ion-item>
+
+      <ion-item  v-if="canRemove()" class="qritem">
+       <ion-button class="qrbutton" @click="remove()">
+        Löschen
+        </ion-button>
+      </ion-item>
+      
     <ion-item lines="none" class="qritem">
       <div class="qrStars">
       <ion-range min="0" max="5" step="1" snaps="true" ticks="true" pin="true" :disabled="isScoreDisabled()" 
@@ -98,31 +106,39 @@ export default defineComponent({
       this.$emit("scoring",this.score)
     },
     cancel(){
-      console.log("Cancelling not finished")
       this.$emit("cancel")
+    },
+    remove(){
+      this.$emit("remove")
     },
     isScoreDisabled(){
       if (this.disabled) return true
-      // cehck date and time and
+      // check date and time and
+      // no scoring before start of event
       const dt = new Date()
       const date = dt.toISOString().split("T")[0]
       const tm = dt.toLocaleTimeString('de-DE')
       const time = tm.split(":")[0] + ":" + tm.split(":")[1]
       console.log("date: ",date, time)
-
       return (date < this.date) || (time < this.time) 
     },
-    isCancelDisabled(){
-      console.log("Cancelling must be fixed")
-      if (this.disabled) return true
-      // cehck date and time and
+    canCancel(){
+      // check date and time and
+      // can cancel im date < event data
       const dt = new Date()
       const date = dt.toISOString().split("T")[0]
       const tm = dt.toLocaleTimeString('de-DE')
       const time = tm.split(":")[0] + ":" + tm.split(":")[1]
-      console.log("date: ",date, time)
-
-      return (date >= this.date) // cancel up to the day before 
+      return (date < this.date) // cancel up to the day before 
+    },
+    canRemove(){
+      // check date and time and
+      // can remove if date > event date
+      const dt = new Date()
+      const date = dt.toISOString().split("T")[0]
+      const tm = dt.toLocaleTimeString('de-DE')
+      const time = tm.split(":")[0] + ":" + tm.split(":")[1]
+      return (date > this.date) // remove from next day 
     },
     zoom(e) {
       console.log(e)
