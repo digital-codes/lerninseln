@@ -135,14 +135,22 @@ export default defineComponent({
     score(s,item){
       console.log("Scored:",s.stars,item)
       console.log("Scoring not finished")
+      // need to add score to database and send to server
     },
     cancel(item){
       console.log("Cancel:",item)
       console.log("Cancelling not finished")
+      // send cancel to server
+      // call remove
     },
     remove(item){
       console.log("Remove:",item)
       console.log("Removing not finished")
+      // use foreach to add all items except this one to new array
+      // store new array
+      // or probably using indexOf and splice like so:
+      //  newArray = myArray.splice (myArray.findIndex(search function), 1));
+
     },
     toMap(){
       router.push("/map")
