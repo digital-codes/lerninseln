@@ -91,7 +91,11 @@ function dbAccess($pdo, $mode, $parms)
     $query = DBCALL[$mode];
     // read table needs special handling. cannot use table name as parameter
     if (strstr($mode, "GET_TABLE")) {
-        $query = DBCALL[$mode] . $parms[0] . ";";
+        if ($parms[0] == "event") 
+            $order = " order by date;"; // could also order ... desc
+        else
+            $order = " order by id;";
+        $query = DBCALL[$mode] . $parms[0] . $order;
     }
 
     mlog("Action: " . $query . ", " . print_r($parms,true));
@@ -530,8 +534,8 @@ switch ($meth) {
         if ($args & ($args["table"] !== null)) {
             $table = $args["table"];
         }
-        
-        define("TABLES", array("config","provider","category","audience","event","feature","ticket","code"));
+        // don't allow to read codes
+        define("TABLES", array("config","provider","category","audience","event","feature","ticket"));
         
         if (array_search($table, TABLES) === false) {
             mlog("Invalid table");

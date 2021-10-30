@@ -114,7 +114,7 @@ const mutations: MutationTree<State> = {
         if (a.time < b.time) return -1
         return 0
         })
-        console.log("Sorted codes: ", state.qrcode)
+        //console.log("Sorted codes: ", state.qrcode)
     },
     [MUTATIONS.REMOVE_QR](state, ticketId: number) {
       //console.log("Removing event ",ticketId)

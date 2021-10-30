@@ -136,15 +136,14 @@ export default defineComponent({
       console.log("Scoring not finished")
       // need to add score to database and send to server
     },
-    cancel(item){
+    async cancel(item){
       console.log("Cancel:",item)
-      console.log("Cancelling not finished")
+      console.log("Cancelling not finished. need to call server!")
       // send cancel to server
-      // call remove
+      await this.remove(item) // call remove
     },
     async remove(item){
       console.log("Remove:",item)
-      console.log("Removing not finished")
       // use foreach to add all items except this one to new array
       // store new array
       // or probably using indexOf and splice like so:
