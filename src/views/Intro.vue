@@ -93,10 +93,6 @@ export default  defineComponent ({
       //if ((type == "pan") && (dx > 100) && (vx > 1)) router.push("/tabs/tab3")
       if ((type == "pan") && (dx < -100) && (vx < -1)) router.push("/map")
     },
-    async saveQr(qr) {
-        await this.store.commit(MUTATIONS.ADD_QR,qr)
-        console.log("Added code for ",qr.title)
-    },
   },
   async beforeMount() {
     console.log("QR length:", this.store.state.qrcode.length)
@@ -168,22 +164,12 @@ export default  defineComponent ({
         await this.store.commit(MUTATIONS.RESET_QR)
         const qrString = await this.ds.getItem("code") || "[]"
         if (qrString.length > 0) {
-          const qrCodes1 = JSON.parse(qrString)
-          // array.sort(compareFunction)  a-b (pos, 0, neg)
-          const qrCodes = qrCodes1.sort((a,b) => {
-            if (a.date > b.date) return 1
-            if (a.date < b.date) return -1
-            if (a.time > b.time) return 1
-            if (a.time < b.time) return -1
-            return 0
-            })
-          qrCodes.forEach(qr => this.saveQr (qr))
-            /* 
-            {
+          const qrCodes = JSON.parse(qrString)
+          for (const qr of qrCodes) {
+            // add qr does sorting
             await this.store.commit(MUTATIONS.ADD_QR,qr)
             console.log("Added code for ",qr.title)
-            }
-            */
+          }
         }
 
       }

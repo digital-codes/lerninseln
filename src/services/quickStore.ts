@@ -106,6 +106,15 @@ const mutations: MutationTree<State> = {
     },
     [MUTATIONS.ADD_QR](state, qr: Qrcode) {
       state.qrcode.push(qr)
+      // sort only here
+      state.qrcode = state.qrcode.sort((a,b) => {
+        if (a.date > b.date) return 1
+        if (a.date < b.date) return -1
+        if (a.time > b.time) return 1
+        if (a.time < b.time) return -1
+        return 0
+        })
+        console.log("Sorted codes: ", state.qrcode)
     },
     [MUTATIONS.REMOVE_QR](state, ticketId: number) {
       //console.log("Removing event ",ticketId)
