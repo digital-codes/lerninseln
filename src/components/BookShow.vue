@@ -39,8 +39,8 @@
               :url="item.url" 
               :disabled="item.scored"
               @scoring="score($event,item.eventId)"
-              @cancel="cancel(item.eventId)"
-              @remove="remove(item.eventId)"
+              @cancel="cancel(item.ticketId)"
+              @remove="remove(item.ticketId)"
               >
               </QrShow>
 
@@ -143,14 +143,17 @@ export default defineComponent({
       // send cancel to server
       // call remove
     },
-    remove(item){
+    async remove(item){
       console.log("Remove:",item)
       console.log("Removing not finished")
       // use foreach to add all items except this one to new array
       // store new array
       // or probably using indexOf and splice like so:
       //  newArray = myArray.splice (myArray.findIndex(search function), 1));
-
+      // well, better use the filter funtion:
+      // https://www.w3schools.com/jsref/jsref_filter.asp
+      // codes.filter((c) => {return c.id != item});
+      await this.store.commit(MUTATIONS.REMOVE_QR,item)
     },
     toMap(){
       router.push("/map")

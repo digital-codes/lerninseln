@@ -59,6 +59,7 @@ export const enum MUTATIONS {
   SET_PURCHASE = 'SET_PURCHASE',
   RESET_QR = 'RESET_QR',
   ADD_QR = 'ADD_QR',
+  REMOVE_QR = 'REMOVE_QR',
 }
 
 const mutations: MutationTree<State> = {
@@ -105,6 +106,14 @@ const mutations: MutationTree<State> = {
     },
     [MUTATIONS.ADD_QR](state, qr: Qrcode) {
       state.qrcode.push(qr)
+    },
+    [MUTATIONS.REMOVE_QR](state, ticketId: number) {
+      //console.log("Removing event ",ticketId)
+      //console.log("Old length: ", state.qrcode.length,state.qrcode)
+      //state.qrcode.forEach(element => {console.log(element.ticketId)})
+      const  newCodes = state.qrcode.filter(c => c.ticketId != ticketId)
+      state.qrcode = newCodes
+      //console.log("New length: ", state.qrcode.length,state.qrcode)
     },
   };
 

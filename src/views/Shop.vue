@@ -238,14 +238,17 @@ export default  defineComponent ({
           console.log("Event: ",event)
           const qr = {}
           qr.qrsrc = result.data.qr
-          qr.ticket = result.data.event.ticket
+          qr.ticketId = this.store.state.purchase.ticket
           qr.title = result.data.event.name
           qr.date = result.data.event.date
           qr.time = result.data.event.time
           qr.provider = result.data.event.provider
           qr.count = result.data.event.count
           qr.scored = false
-          qr.eventId = event //maybe we don't need this: result.data.event.event_id
+          qr.eventId = event.id //maybe we don't need this: result.data.event.event_id
+
+          console.log("New QR: ",qr)
+
           // ----------------
           // local store
           /*
