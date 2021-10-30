@@ -140,7 +140,16 @@ export default  defineComponent ({
         console.log("Get data for table ",t);
         const result = await this.df.getTable(t);
         //console.log("Table ",t,": ",result)
-        await this.ds.setItem(t, JSON.stringify(result))
+        if (t == "event") {
+          // filter only future events
+          const dt = new Date()
+          const date = dt.toISOString().split("T")[0]
+          //console.log("date: ",date)
+          const events = result.filter(e => e.date >= date)
+          await this.ds.setItem(t, JSON.stringify(events))
+        } else {
+          await this.ds.setItem(t, JSON.stringify(result))
+        }
       }
       // try to load id
       const idString = await this.ds.getItem("identity") || ""

@@ -66,7 +66,7 @@ const { Browser } = Plugins;
 
 export default defineComponent({
   name: "Events",
-  components: {Event, IonButton, IonCheckbox,  },
+  components: {Event, IonButton, IonCheckbox, },
   data () {
     return {
     items : [],
