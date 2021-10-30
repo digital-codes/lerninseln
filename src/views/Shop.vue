@@ -287,9 +287,19 @@ export default  defineComponent ({
     async storeCode(qr) {
       console.log("Storing qrcode to database")
       const qrString = await this.ds.getItem("code") || "[]"
-      const qrCodes = JSON.parse(qrString)
-      qrCodes.push(qr)
+      const qrCodes1 = JSON.parse(qrString)
+      qrCodes1.push(qr)
+      const qrCodes = qrCodes1.sort((a,b) => {
+        if (a.date > b.date) return 1
+        if (a.date < b.date) return -1
+        if (a.time > b.time) return 1
+        if (a.time < b.time) return -1
+        return 0
+        })
+      console.log("New qrcodes: ",qrCodes)
       await this.ds.setItem("code",JSON.stringify(qrCodes))
+      await this.store.commit(MUTATIONS.ADD_QR,qr)
+
     },
     async openQr(data) {
       // see also https://stackoverflow.com/questions/65740559/cant-close-the-modal-in-ionic-vue-5-5-2

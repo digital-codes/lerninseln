@@ -168,7 +168,15 @@ export default  defineComponent ({
         await this.store.commit(MUTATIONS.RESET_QR)
         const qrString = await this.ds.getItem("code") || "[]"
         if (qrString.length > 0) {
-          const qrCodes = JSON.parse(qrString)
+          const qrCodes1 = JSON.parse(qrString)
+          // array.sort(compareFunction)  a-b (pos, 0, neg)
+          const qrCodes = qrCodes1.sort((a,b) => {
+            if (a.date > b.date) return 1
+            if (a.date < b.date) return -1
+            if (a.time > b.time) return 1
+            if (a.time < b.time) return -1
+            return 0
+            })
           qrCodes.forEach(qr => this.saveQr (qr))
             /* 
             {

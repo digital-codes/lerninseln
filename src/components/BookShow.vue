@@ -97,6 +97,7 @@ import QrShow from '@/components/QrShow.vue'
 
 import router from "../router";
 
+import AsyncComputed from 'vue-async-computed'
 
 // define dummy code or note ...
 const DUMMY_CODE = false
@@ -153,7 +154,15 @@ export default defineComponent({
       // well, better use the filter funtion:
       // https://www.w3schools.com/jsref/jsref_filter.asp
       // codes.filter((c) => {return c.id != item});
+      // the qr array was sorted before, so it should stay sorted after removal
+      // update database
+
+      const qrString = await this.ds.getItem("code") || "[]"
+      const qrCodes1 = JSON.parse(qrString)
+      const qrCodes = qrCodes1.filter(q => q.ticketId != item)
+      await this.ds.setItem("code",JSON.stringify(qrCodes))
       await this.store.commit(MUTATIONS.REMOVE_QR,item)
+
     },
     toMap(){
       router.push("/map")
@@ -166,12 +175,20 @@ export default defineComponent({
       else
         return (this.store.state.qrcode.length > 0)
     },
-    getCodes() {
+  },
+  asyncComputed: {
+    async getCodes() {
+      console.log("get codes")
       if (DUMMY_CODE)
         return [DUMMY_ITEM]
-      else
-        return this.store.state.qrcode
+      else {
+        const qrString = await this.ds.getItem("code") || "[]"
+        return JSON.parse(qrString)
+      }
     }
+  },
+  async beforeMount(){
+    this.ds = await DataStorage.getInstance()
   },
   // store
   setup() {
