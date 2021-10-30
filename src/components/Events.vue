@@ -6,12 +6,18 @@
     @click="buy()"
     >Zur Buchung
   </ion-button>
+  <div class="navigate" v-if="hasEvent">
   <ion-button 
-    v-if="hasEvent" 
+    v-if="isMobile()" 
+    @click="navigate"
+    >Hinkommen
+  </ion-button>
+  <ion-button v-else 
     :href=osmUrl
     target="_blank"
     >Hinkommen
   </ion-button>
+  </div>
 
   </div>
   <div v-for="item in selIitems"  :key="item.id" class="listItem">
@@ -54,6 +60,8 @@ import Event from '@/components/Event.vue';
 
 import router from "../router";
 
+import { Plugins } from '@capacitor/core';
+const { Browser } = Plugins;
 
 
 export default defineComponent({
@@ -77,8 +85,14 @@ export default defineComponent({
       router.push("/shop")
     },
     navigate() {
-      console.log("OSM nav not implemented")
-      // need provider and current positions
+      try {
+        Browser.open({ 'url': this.osmUrl }).then((r) => {console.log("loaded:",r)})
+      } catch  {
+        console.log("No browser")
+      }
+    },
+    isMobile(){
+      return this.store.state.device.platform != "web"
     },
     async select(e) {
       const item = this.items.find(i => (i.id == e))
@@ -211,6 +225,11 @@ h2 {
 button {
   margin-top: .5rem;
 }
+
+.navigate {
+  display: inline-block;
+}
+
 
 
 .eventItem {
