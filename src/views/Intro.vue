@@ -145,7 +145,9 @@ export default  defineComponent ({
           const dt = new Date()
           const date = dt.toISOString().split("T")[0]
           //console.log("date: ",date)
-          const events = result.filter(e => e.date >= date)
+          // filter for new events
+          //const events = result.filter(e => e.date >= date)
+          const events = result.filter(e => e.date >= "2021-07-01")
           await this.ds.setItem(t, JSON.stringify(events))
         } else {
           await this.ds.setItem(t, JSON.stringify(result))

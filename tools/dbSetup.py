@@ -625,10 +625,10 @@ if MODE != 0:
     
 ######### generate categories ########
 
-FEATURE_TITLES = ["Ruhe","Gruppe","Wifi","Werkzeug","Hilfe"]
-FEATURE_ICONS = ["volume-off-outline",
-                 "people-outline","wifi-outline",
-                 "construct-outline","medkit-outline"]
+FEATURE_TITLES = ["Ruhe","Unterstützung","Werkstatt","Gemeinschaft"]
+FEATURE_ICONS = ["volumeMuteOutline",
+                 "medkitOutline",
+                 "constructOutline","peopleOutline"]
 
 for i,f in enumerate(FEATURE_TITLES):
     feature = Feature(f,"#00ff00",icon=FEATURE_ICONS[i])
@@ -643,7 +643,7 @@ event_ids = []
 event_url = "https://www.cern.ch" # dummy
 for e in range(20):
     event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
-                  "2021-" + f'{random.randint(6,12):02}' + "-" + f'{random.randint(1,28):02}',
+                  "2021-" + f'{random.randint(10,12):02}' + "-" + f'{random.randint(1,28):02}',
                   f'{random.randint(1,24):02}' + ":00",
                   random.randint(1,30),
                   "Location 1 " + str(random.randint(1,10)),

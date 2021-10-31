@@ -37,6 +37,17 @@
             :modelValue="item.checked"
           ></ion-checkbox>
 
+
+          <ion-item>
+            <ion-thumbnail 
+              slot="start">
+              <img :src="item.icon"/>
+            </ion-thumbnail>
+            <ion-text class="previewText">
+            {{item.txt}}
+            </ion-text>
+          </ion-item>
+
   </div>
 
 
@@ -48,7 +59,7 @@ import {
   cartOutline,
  } from 'ionicons/icons';
 
-import { IonButton, IonCheckbox } from '@ionic/vue';
+import { IonButton, IonCheckbox,IonThumbnail, IonText, IonItem, } from '@ionic/vue';
 
 // load all data from server and write to database
 import DataStorage from "../services/dstore";
@@ -63,10 +74,15 @@ import router from "../router";
 import { Plugins } from '@capacitor/core';
 const { Browser } = Plugins;
 
+const dummyText = [
+  "GloW Karlsruhe e.V. - au\u00dferschulischer Lernort, mit Workshops aus der Bildung f\u00fcr nachhaltige Entwicklung (BNE), vor allem Globales Lernen.",
+  "Wir sind f\u00fcr Sie da: Wir bieten Dienstleistungen im sozialen, p\u00e4dagogischen und pflegerischen Bereich in Stadt- und Landkreis Karlsruhe.",
+  "ROCK YOUR LIFE! ist ein Netzwerk aus ehrenamtlich engagierten Studierenden in 52 Vereinen, motivierten Sch\u00fcler*innen, verantwortungsvollen Unternehmen."
+]
 
 export default defineComponent({
   name: "Events",
-  components: {Event, IonButton, IonCheckbox, },
+  components: {Event, IonButton, IonCheckbox, IonThumbnail, IonText, IonItem,},
   data () {
     return {
     items : [],
@@ -168,6 +184,8 @@ export default defineComponent({
       if (evtFilter == 0) {
         this.items.forEach(item => { 
           item.checked = 0
+          item.icon = "/assets/img/thumbs/" + ((item.id % 3) + 1) + ".png"
+          item.txt = dummyText[item.id % 3]
           // filter by category
           if ((catFilter == 0) || (item.category_id == catFilter)) {
             i.push(item)
@@ -177,6 +195,8 @@ export default defineComponent({
         const item = this.items.find(x => x.id == evtFilter) || 0
         if (i != 0)
         item.checked = 1
+        item.icon = "/assets/img/thumbs/" + ((item.id % 3) + 1) + ".png"
+        item.txt = dummyText[item.id % 3]
         i.push(item)
       }
       /*
@@ -252,5 +272,12 @@ input.eventCheck  {
   width:1em;
 }
 
+.previewText {
+  max-height: 4rem;
+  white-space: normal; 
+  overflow: hidden;
+  /* ellispis only with nowrap which gives only 1 line */
+  text-overflow: ellipsis;
+}
 </style>
 
