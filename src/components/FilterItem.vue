@@ -142,4 +142,8 @@ ion-item {
   --min-height: 30px;
 }
 
+.in-item {
+  margin-inline: 0;
+}
+
 </style>

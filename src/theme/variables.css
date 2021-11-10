@@ -20,8 +20,16 @@ see https://forum.ionicframework.com/t/ionic-v4-how-i-import-new-fonts/139063/2
 
 @font-face {
   font-family: 'Exo 2';
-  font-style: regular;
-  src: url('/assets/font/Exo2-Regular.ttf');
+  font-style: bold;
+  font-weight: 800;
+  src: url('/assets/font/Exo2-SemiBold.ttf');
+}
+
+
+@font-face {
+  font-family: 'Exo 2';
+  font-style: boldItalic;
+  src: url('/assets/font/Exo2-SemiBoldItalic.ttf');
 }
 
 @font-face {
@@ -30,23 +38,21 @@ see https://forum.ionicframework.com/t/ionic-v4-how-i-import-new-fonts/139063/2
   src: url('/assets/font/Exo2-Italic.ttf');
 }
 
-@font-face {
-  font-family: 'Exo 2';
-  font-style: bold;
-  src: url('/assets/font/Exo2-SemiBold.ttf');
-}
 
 @font-face {
   font-family: 'Exo 2';
-  font-style: boldItalic;
-  src: url('/assets/font/Exo2-SemiBoldItalic.ttf');
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/font/Exo2-Regular.ttf');
 }
 
 
 * {
   font-family: 'Exo 2', sans-serif;
-}
+  font-style: normal;
+  font-weight: 400;
 
+}
 
 
 /** Ionic CSS Variables **/

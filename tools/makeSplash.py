@@ -90,6 +90,7 @@ shapes = [
 
 
 SRC="insel-logo-white.png"
+SRC="li-logo-white.png"
 
 DST_BASE="/home/kugel/daten/work/mobile/lerninseln/pickUp/android/app/src/main/res/"
 

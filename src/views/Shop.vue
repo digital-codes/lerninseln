@@ -9,10 +9,12 @@
       </ion-toolbar>
     </ion-header>
     -->
+    <!-- refresh on filter 
     <div style="height:50px;">
     <EventsRefresh/>
     <p>Refresh</p>
     </div>
+    -->
 
     <ion-content>
       <div ref="tab3" class="swiping">
@@ -161,7 +163,7 @@ import QrModal from '@/components/QrModal.vue'
 
 import Event from '@/components/Event.vue';
 import Ticket from '@/components/Ticket.vue';
-import EventsRefresh from "@/components/EventsRefresh.vue"
+//import EventsRefresh from "@/components/EventsRefresh.vue"
 
 
 import { defineComponent, ref } from 'vue'; 
@@ -213,7 +215,7 @@ export default  defineComponent ({
   IonButton, IonIcon,
   //ScoreSheet, 
   IonCardHeader, IonCardSubtitle, 
-  EventsRefresh,
+  //EventsRefresh,
   },
   methods: {
     async costUpdate(e,t) {
