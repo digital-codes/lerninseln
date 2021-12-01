@@ -95,7 +95,8 @@ function testPdf() {
     $event["logo"] = 'data:image/jpeg;base64,' . $logo_base_64;
     */
     //$logo = file_get_contents("logo.png", false); //, stream_context_create($opciones_ssl));
-    $logo = file_get_contents("insel-logo.png", false); //, stream_context_create($opciones_ssl));
+    //$logo = file_get_contents("insel-logo.png", false); //, stream_context_create($opciones_ssl));
+    $logo = file_get_contents("li-logo-square.png", false); //, stream_context_create($opciones_ssl));
     $logo_base_64 = base64_encode($logo);
     $event["logo"] = 'data:image/png;base64,' . $logo_base_64;
 

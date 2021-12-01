@@ -641,11 +641,29 @@ for i,f in enumerate(FEATURE_TITLES):
 EVENT_TITLES = ["Schach","Musik","Sport","Robots"]
 event_ids = []
 event_url = "https://www.cern.ch" # dummy
+# 2021
+for e in range(10):
+    event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
+                  "2021-12" + "-" + f'{random.randint(1,31):02}',
+                  f'{random.randint(1,24):02}' + ":00",
+                  random.randint(10,30),
+                  "Location 1 " + str(random.randint(1,10)),
+                  "Location 2 " + str(random.randint(1,10)),
+                  random.randint(10,50),
+                  event_url,
+                  random.randint(1,3),
+                  random.randint(1,3)
+                  )
+    session.add(event)
+    event_ids.append(e+1)
+    session.commit()
+    print("New event: ",e+1)
+# 2022
 for e in range(20):
     event = Event(EVENT_TITLES[random.randint(0,len(EVENT_TITLES))-1],
-                  "2021-" + f'{random.randint(10,12):02}' + "-" + f'{random.randint(1,28):02}',
+                  "2022-" + f'{random.randint(1,6):02}' + "-" + f'{random.randint(1,28):02}',
                   f'{random.randint(1,24):02}' + ":00",
-                  random.randint(1,30),
+                  random.randint(10,30),
                   "Location 1 " + str(random.randint(1,10)),
                   "Location 2 " + str(random.randint(1,10)),
                   random.randint(10,50),
@@ -661,8 +679,8 @@ for e in range(20):
 ######### generate some tickets ########
 
 
-for t in range(1,20):
-    ticket = Ticket(random.randint(1,30),0,random.choices(event_ids)[0],0,"Kostenlos",random.randint(1,3))
+for t in range(1,40):
+    ticket = Ticket(random.randint(10,30),0,random.choices(event_ids)[0],0,"Kostenlos",random.randint(1,3))
     session.add(ticket)
     session.commit()
     print("New ticket: ",t)
