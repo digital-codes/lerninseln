@@ -3,16 +3,30 @@
   <ion-card ion-fixed>
     <ion-card-header >
       <ion-card-title class="hdr">Anbieter</ion-card-title>
-      <ion-card-subtitle class="hdr">Kategorie </ion-card-subtitle>
+      <!--
+      <ion-card-subtitle class="hdr">Kategorien </ion-card-subtitle>
+      -->
     </ion-card-header>
 
     <ion-card-content>
+      Die beteiligten Anbieter stellen ganz verschiedene Möglichkeiten zur 
+      Verfügung, auch in ganz unterschiedlichen Umgebungen. 
+      <br>
+      Wir haben alle Angebote mit Eigenschaften versehen, nach denen Ihr filtern könnt. 
+      Manche Angebote passen natürlich auf mehrere Eigenschaften.
     <ul class="list">
       <li v-for="item in items"  :key="item.id" class="listItem">
+            <ion-icon class="icon" :icon="item.icon" :alt="item.alt"/>
             <h2>{{item.hdr}}</h2>
             <p>{{item.text}}</p>
       </li>
     </ul>
+    Auf der nächsten Seite könnt Ihr in allen Angebote stöbern. 
+            <ion-button @click="toMap()" class="ka-tab-btn">
+              <ion-icon :icon="albumsOutline" />
+              <ion-label>Los!</ion-label>
+        </ion-button>
+
     </ion-card-content>
 
   </ion-card>
@@ -27,51 +41,67 @@
 
 import { defineComponent } from 'vue'; 
 
-import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, } from '@ionic/vue';
-import { walk, warning, wifi, wine } from 'ionicons/icons';
+import { IonCard, IonCardContent, 
+//IonCardSubtitle, 
+IonCardTitle, } from '@ionic/vue';
+
+import { 
+  volumeMuteOutline,
+  medkitOutline,
+  constructOutline,
+  peopleOutline,
+  syncOutline,
+  albumsOutline,
+ } from 'ionicons/icons';
+
+import router from "../router";
 
 export default defineComponent({
   // ----------------------
-  components: {  IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, },
-  setup() {
-    return { warning, walk, wine, wifi };
+  components: {  IonCard, IonCardContent, IonCardTitle, 
+  //IonCardSubtitle, 
   },
+  setup() {
+    return {   
+      volumeMuteOutline,
+      medkitOutline,
+      constructOutline,
+      peopleOutline,
+      albumsOutline,
+
+    }
+  },
+
   // ---------------------
   data: function() {
     return {
       items: [{
-      'hdr': 'Orte der digitalen Teilhabe',
-      'text': 'Hier finden die Menschen/SchülerInnen \
-            freies WLAN und ggfs. bei Bedarf und Verfügbarkeit ExpertInnen, \
-            die einem bei technischen Fragen weiterhelfen können.',
+      'hdr': 'Digitale Teilhabe',
+      'text': 'Hier finden Ihr freies WLAN und eine ruhige, geschütze Umgebung für eigenes Lernen.' ,
       "id":1,
+      "alt":"alt",
+      "icon":this.volumeMuteOutline,
     }, 
     {
-      'hdr': 'MINT-Spaces',
-      'text': 'Es gibt in Karlsruhe bereits zahlreiche tolle Initiativen\
-            und Aktivitäten, die alle im Rahmen von AGs in Schulen, \
-            aber auch außerhalb der Schulen \
-            stattfinden, damit Kinder- und Jugendliche unsere Welt erfahren können.',
+      'hdr': 'Unterstützung',
+      'text': 'Neben freiem Internetzugang findet Ihr hier ein offenes Ohr und Unterstützung beim eigenen Lernen',
       "id":2,
+      "alt":"alt",
+      "icon":this.medkitOutline,
     }, 
     {
-      'hdr': 'Digitale Dritte Orte',
-      'text': 'Orte an denen offen und \
-            partizipativ (mit digitalen \
-            Medien) gelernt werden kann.',
+      'hdr': 'Workshops',
+      'text': 'Hier könnt Ihr an interessanten Angeboten zu verschiedenen Themen teilnehmen',
       "id":3,
+      "alt":"alt",
+      "icon":this.constructOutline,
     },
     {
       'hdr': 'Beteiligungsorte',
-      'text': 'Orte an denen \
-            Einzelaktionen (Hackathons, Kunstaktionen, Fischertechnik-Challenges usw.) \
-            stattfinden',
+      'text': 'An diesen Orten kann offen und partizipativ, auch in Gruppen, gelernt werden. Eigene Initiativen sind möglich.',
       "id":3,
-    },
-    {
-      'hdr': 'Virtuelle Orte',
-      'text': ' Orte an denen virtuelle Treffen möglich sind.',
-      "id":3,
+      "alt":"alt",
+      "icon":this.peopleOutline,
     },
     ],
     }
@@ -79,7 +109,11 @@ export default defineComponent({
   methods:{
     zoom(e) {
       console.log(e)
-    }
+    },
+    toMap(){
+      router.push("/map")
+    },
+
   }
 }); 
 </script>
@@ -121,6 +155,10 @@ h2 {
   --color: --ka-text-color;  
 }
 
+.icon {
+  width:3rem;
+  height:2rem;
+}
 
 </style>
 

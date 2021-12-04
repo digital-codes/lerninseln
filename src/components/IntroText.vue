@@ -2,6 +2,7 @@
     <ion-card>
     <ion-card-header>
       <ion-card-title class="hdr">Lerninseln Karlsruhe</ion-card-title>
+      <ion-card-subtitle class="fake">Dies ist nur ein Prototyp!!!</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
@@ -64,7 +65,9 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon } from '@ionic/vue';
+import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonIcon,
+IonCardSubtitle,
+ } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 import { useStore } from '../services/quickStore';
@@ -78,6 +81,7 @@ import { Share } from '@capacitor/share';
 // custom icons: https://www.joshmorony.com/custom-svg-icons-in-ionic-with-ionicons/
 
 
+
 import { 
   shareSocialOutline,
   mailOutline,
@@ -87,7 +91,8 @@ import {
 export default defineComponent ({
   name: "IntroText",
   components: { IonCard, IonCardContent, IonCardHeader, IonCardTitle,  
-     IonButton, IonIcon
+     IonButton, IonIcon,
+     IonCardSubtitle,
   },
   methods: {
     async shareIt() {
@@ -162,4 +167,8 @@ export default defineComponent ({
   padding-bottom: 1.5rem;
 }
 
+.fake {
+  color: #f00;
+  font-size: 150%;
+}
 </style>
