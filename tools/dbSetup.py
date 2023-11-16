@@ -97,6 +97,7 @@ MODE = 0 # anonymous
 if USE_SQLITE:
     engine = create_engine('sqlite:///lerninseln.db', echo=False)
 else:
+    # needs pip install --user mysqlclient
     engine = create_engine('mysql://lerninseln:lerninseln@localhost/lerninseln', echo=True)
 
 Base = declarative_base()

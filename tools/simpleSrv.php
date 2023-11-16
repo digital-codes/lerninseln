@@ -146,6 +146,15 @@ function readTable($table){
     // returns: data
     global $cfg;
 
+    // for pwa, we just read the json file
+    if ($table == "pwa") {
+        mlog("PWA file access");
+        $a = file_get_contents("anbieter.json");
+        $b = json_decode($a);
+        return $b;
+    }
+
+
     try {
         // setting utf-8 here is IMPORTANT !!!!
         $pdo = new PDO(
@@ -535,7 +544,7 @@ switch ($meth) {
             $table = $args["table"];
         }
         // don't allow to read codes
-        define("TABLES", array("config","provider","category","audience","event","feature","ticket"));
+        define("TABLES", array("pwa","config","provider","category","audience","event","feature","ticket"));
         
         if (array_search($table, TABLES) === false) {
             mlog("Invalid table");
