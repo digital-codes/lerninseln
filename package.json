@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@capacitor-community/sqlite": "^2.9.16",
-    "@capacitor/cli": "3.0.1",
+    "@capacitor/cli": "8.0.2",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
